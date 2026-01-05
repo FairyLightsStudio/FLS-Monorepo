@@ -1,0 +1,12 @@
+syntax = "proto3";
+package terapanel.panel_daemon.v1;
+
+import "google/protobuf/timestamp.proto";
+
+message Heartbeat {
+  string node_id = 1;
+  google.protobuf.Timestamp timestamp = 2;
+  double cpu_load = 3;
+  uint64 memory_used = 4;
+  uint64 memory_total = 5;
+}

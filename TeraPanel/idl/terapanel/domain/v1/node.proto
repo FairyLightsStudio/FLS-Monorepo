@@ -1,0 +1,20 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+import "google/protobuf/timestamp.proto";
+import "terapanel/domain/v1/common.proto";
+
+message Node {
+  string id = 1;
+  string name = 2;
+  string os = 5;
+  NodeStatus status = 7;
+  google.protobuf.Timestamp last_seen = 8;
+  repeated NodeCapability capabilities = 9; // 节点支持的功能列表
+  // map<string, string> tags = 10;
+  // string terad_version = 11;
+}
+
+message NodeConfig {
+  string name = 2;
+}

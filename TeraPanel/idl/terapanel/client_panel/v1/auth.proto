@@ -1,0 +1,75 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+
+service AuthnService {
+  rpc GetLoginMethods(GetLoginMethodsRequest) returns (GetLoginMethodsResponse);
+  // 暂不支持 两步验证 那样的，需要用户在一个登录流程中 多次通过不同方法证明自己的用例、只支持通过选定的一个方法一步登入
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc Logout(LogoutRequest) returns (google.protobuf.Empty);
+  rpc GetSessionInfo(GetSessionInfoRequest) returns (GetSessionInfoResponse);
+  rpc RotateCookies(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+message GetLoginMethodsRequest {}
+
+message GetLoginMethodsResponse {
+  enum LoginMethod {
+    UNSPECIFIED = 0;
+    ADMIN_PASSWORD = 1;
+    // ADMIN_OTP = 2;
+    // ADMIN_OPEN_ID = 3;
+    // // fairy light studio UserCenter
+    // USER_FLS_SSO = 10;
+  }
+  repeated LoginMethod methods = 1;
+}
+
+message LoginRequest {
+  GetLoginMethodsResponse.LoginMethod method = 1;
+  oneof credentials {
+    PasswordCredentials password = 2;
+  }
+}
+
+message PasswordCredentials {
+  string password = 2;
+}
+// message FLSSSOCredentials {
+//   string token = 1;
+//   optional string redirect_uri = 2;
+// }
+
+// session 相关cookie 在响应头中
+message LoginResponse {
+  User user = 2;
+}
+
+// 必须在请求头中正确添加session 相关cookie
+message LogoutRequest {}
+
+message GetSessionInfoRequest {}
+
+message GetSessionInfoResponse {
+  enum InvalidType {
+    UNSPECIFIED = 0;
+    OUTDATED = 1;
+    NOT_FOUND = 2;
+  }
+  oneof result {
+    InvalidType invalid_type = 1;
+    User user = 2;
+  }
+}
+
+message User {
+  enum UserType {
+    UNSPECIFIED = 0;
+    ADMIN = 1;
+    // FLS_SSO_USER = 10;
+  }
+  UserType type = 4;
+  string id = 1;
+  string username = 2;
+}

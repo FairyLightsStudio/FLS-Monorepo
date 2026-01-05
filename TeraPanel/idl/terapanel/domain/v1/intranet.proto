@@ -1,0 +1,31 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+import "google/protobuf/timestamp.proto";
+import "terapanel/domain/v1/common.proto";
+
+enum PortProtocol {
+  PORT_PROTOCOL_UNKNOWN = 0;
+  PORT_PROTOCOL_TCP = 1;
+  PORT_PROTOCOL_UDP = 2;
+}
+
+message PortMapping {
+  string id = 1;
+  string public_node_id = 2;
+  string private_node_id = 3;
+  string instance_id = 4;
+  int32 private_port = 5;
+  int32 public_port = 6;
+  PortProtocol protocol = 7;
+  enum RuleStatus {
+    RULE_STATUS_UNKNOWN = 0;
+    RULE_STATUS_ACTIVE = 1;
+    RULE_STATUS_INACTIVE = 2;
+    RULE_STATUS_ERROR = 3;
+  }
+  RuleStatus status = 8;
+  string error_message = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}

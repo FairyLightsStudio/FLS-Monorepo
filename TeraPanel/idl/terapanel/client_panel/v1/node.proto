@@ -1,0 +1,36 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+import "terapanel/domain/v1/common.proto";
+import "terapanel/domain/v1/node.proto";
+
+service NodeService {
+  rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
+  rpc GetNode(GetNodeRequest) returns (Node);
+  rpc CreateNode(CreateNodeRequest) returns (Node);
+  rpc DeleteNode(DeleteNodeRequest) returns (google.protobuf.Empty);
+}
+
+message ListNodesRequest {
+  optional string search = 1;
+  repeated terapanel.domain.v1.NodeStatus statuses = 2;
+  // Filter by platforms/OS
+  repeated string platforms = 3;
+}
+
+message ListNodesResponse {
+  repeated Node nodes = 1;
+}
+
+message GetNodeRequest {
+  string node_id = 1;
+}
+
+message DeleteNodeRequest {
+  string node_id = 1;
+}
+
+message CreateNodeRequest {
+  NodeConfig config = 1;
+}

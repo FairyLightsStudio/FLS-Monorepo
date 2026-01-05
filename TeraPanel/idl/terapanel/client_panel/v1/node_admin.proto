@@ -1,0 +1,80 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+import "terapanel/domain/v1/deps.proto";
+import "terapanel/domain/v1/file.proto";
+import "terapanel/domain/v1/metrics.proto";
+
+service NodeAdminService {
+  // File operations
+  rpc ListDirectory(ListDirectoryRequest) returns (DirectoryListing);
+  // rpc GetFile(GetFileRequest) returns (stream FileChunk);
+  // rpc PutFile(stream PutFileRequest) returns (PutFileResponse);
+  rpc DeleteFile(DeleteFileRequest) returns (google.protobuf.Empty);
+  rpc RenameFile(RenameFileRequest) returns (google.protobuf.Empty);
+  rpc CreateDirectory(CreateDirectoryRequest) returns (google.protobuf.Empty);
+  rpc GetFileInfo(GetFileInfoRequest) returns (FileInfo);
+
+  // Metrics
+  rpc GetNodeMetrics(GetNodeMetricsRequest) returns (Metrics);
+}
+
+// File requests
+message ListDirectoryRequest {
+  string node_id = 1;
+  string path = 2;
+}
+
+message GetFileRequest {
+  string node_id = 1;
+  string path = 2;
+  uint64 offset = 3;
+  uint64 limit = 4;
+}
+
+message PutFileRequest {
+  oneof data {
+    FileMetadata metadata = 1;
+    bytes chunk = 2;
+  }
+}
+
+message FileMetadata {
+  string node_id = 1;
+  string path = 2;
+  bool overwrite = 3;
+  uint32 mode = 4;
+}
+
+message PutFileResponse {
+  uint64 bytes_written = 1;
+}
+
+message DeleteFileRequest {
+  string node_id = 1;
+  string path = 2;
+  bool recursive = 3;
+}
+
+message RenameFileRequest {
+  string node_id = 1;
+  string old_path = 2;
+  string new_path = 3;
+}
+
+message CreateDirectoryRequest {
+  string node_id = 1;
+  string path = 2;
+  bool recursive = 3;
+  uint32 mode = 4;
+}
+
+message GetFileInfoRequest {
+  string node_id = 1;
+  string path = 2;
+}
+
+message GetNodeMetricsRequest {
+  string node_id = 1;
+}

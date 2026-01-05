@@ -1,0 +1,23 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+enum NodeStatus {
+  NODE_STATUS_UNKNOWN = 0;
+  NODE_STATUS_ONLINE = 1;
+  NODE_STATUS_OFFLINE = 2;
+}
+
+enum NodeCapability {
+  NODE_CAPABILITY_UNKNOWN = 0;
+  NODE_CAPABILITY_FILE_MANAGER = 1; // 节点层面的文件管理器
+  NODE_CAPABILITY_TERMINAL = 2; // 节点层面的终端
+  NODE_CAPABILITY_OBSERVABILITY = 3; // 节点层面的可观测性
+}
+
+enum InstanceStatus {
+  INSTANCE_STATUS_UNKNOWN = 0;
+  INSTANCE_STATUS_CREATED = 1;
+  INSTANCE_STATUS_RUNNING = 2;
+  INSTANCE_STATUS_STOPPED = 3;
+  INSTANCE_STATUS_ERROR = 4;
+}

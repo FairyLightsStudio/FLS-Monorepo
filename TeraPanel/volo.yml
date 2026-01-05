@@ -1,0 +1,164 @@
+  entries:
+    # ==================== 共享类型层 ====================
+    # 只生成结构体，用于序列化/反序列化
+    shared_types:
+      filename: shared-types/src/gen.rs
+      protocol: protobuf
+      touch_all: true                    # 关键：生成所有类型，即使没有服务
+      services:
+        # Google API（基础依赖）
+        - idl:
+            source: local
+            path: idl/google/longrunning/operations.proto
+            includes:
+              - idl/google/longrunning
+
+        # Domain领域模型（9个文件）
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/common.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/deps.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/file.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/instance.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/intranet.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/metrics.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/node.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/runtime.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+        - idl:
+            source: local
+            path: idl/terapanel/domain/v1/terminal.proto
+            includes:
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+    # ==================== Terapanel gRPC层 ====================
+    # 生成完整的gRPC服务代码
+    terapanel_grpc:
+      filename: terapanel/src/grpc_gen.rs
+      protocol: protobuf
+      services:
+        # 认证服务
+        - idl:
+            source: local
+            path: idl/terapanel/client_panel/v1/auth.proto
+            includes:
+              - idl/terapanel/client_panel/v1
+              - idl/terapanel/domain/v1      # 引用共享类型
+              - idl/google/longrunning
+
+        # 实例管理服务
+        - idl:
+            source: local
+            path: idl/terapanel/client_panel/v1/instance.proto
+            includes:
+              - idl/terapanel/client_panel/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+        # 内网穿透服务
+        - idl:
+            source: local
+            path: idl/terapanel/client_panel/v1/intranet_penetration.proto
+            includes:
+              - idl/terapanel/client_panel/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+        # 节点管理服务
+        - idl:
+            source: local
+            path: idl/terapanel/client_panel/v1/node_admin.proto
+            includes:
+              - idl/terapanel/client_panel/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+        # 节点信息服务
+        - idl:
+            source: local
+            path: idl/terapanel/client_panel/v1/node.proto
+            includes:
+              - idl/terapanel/client_panel/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+    # ==================== Terad 消息层 ====================
+    # 只生成结构体，用于NATS消息序列化
+    terad_messages:
+      filename: terad/src/messages_gen.rs
+      protocol: protobuf
+      touch_all: true                    # 关键：只生成结构体，不生成服务
+      services:
+        # 心跳消息
+        - idl:
+            source: local
+            path: idl/terapanel/panel_daemon/v1/heartbeat.proto
+            includes:
+              - idl/terapanel/panel_daemon/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+        # 实例控制消息
+        - idl:
+            source: local
+            path: idl/terapanel/panel_daemon/v1/instance_controller.proto
+            includes:
+              - idl/terapanel/panel_daemon/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+        # 内网穿透消息
+        - idl:
+            source: local
+            path: idl/terapanel/panel_daemon/v1/intranet_penetration.proto
+            includes:
+              - idl/terapanel/panel_daemon/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning
+
+        # 节点管理消息
+        - idl:
+            source: local
+            path: idl/terapanel/panel_daemon/v1/node_admin.proto
+            includes:
+              - idl/terapanel/panel_daemon/v1
+              - idl/terapanel/domain/v1
+              - idl/google/longrunning

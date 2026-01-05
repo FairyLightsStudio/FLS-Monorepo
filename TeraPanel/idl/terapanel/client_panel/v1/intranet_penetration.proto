@@ -1,0 +1,45 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+import "terapanel/domain/v1/intranet.proto";
+
+service IntranetPenetrationService {
+  rpc ListRules(ListRulesRequest) returns (ListRulesResponse);
+  rpc CreateRule(CreateRuleRequest) returns (PortMapping);
+  rpc UpdateRule(UpdateRuleRequest) returns (PortMapping);
+  rpc DeleteRule(DeleteRuleRequest) returns (google.protobuf.Empty);
+  rpc GetRule(GetRuleRequest) returns (PortMapping);
+}
+
+message ListRulesRequest {
+  string public_node_id = 1;
+  string private_node_id = 2;
+  string instance_id = 3;
+}
+
+message ListRulesResponse {
+  repeated PortMapping rules = 1;
+}
+
+message CreateRuleRequest {
+  string public_node_id = 1;
+  string private_node_id = 2;
+  int32 private_port = 3;
+  int32 public_port = 4;
+  PortProtocol protocol = 5;
+  string instance_id = 6;
+}
+
+message UpdateRuleRequest {
+  string rule_id = 1;
+  PortMapping rule = 2;
+}
+
+message DeleteRuleRequest {
+  string rule_id = 1;
+}
+
+message GetRuleRequest {
+  string rule_id = 1;
+}

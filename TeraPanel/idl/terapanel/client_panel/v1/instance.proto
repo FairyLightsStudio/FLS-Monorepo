@@ -1,0 +1,210 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/longrunning/operations.proto";
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "terapanel/domain/v1/file.proto";
+import "terapanel/domain/v1/instance.proto";
+import "terapanel/domain/v1/intranet.proto";
+
+service Instance {
+  // instance CRUD
+  rpc List(ListInstancesRequest) returns (ListInstancesResponse);
+  rpc Get(GetInstanceRequest) returns (Instance);
+  rpc Create(CreateInstanceRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "terapanel.domain.v1.Instance"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  rpc Update(UpdateInstanceRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "terapanel.domain.v1.Instance"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  rpc Delete(DeleteInstanceRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  // Lifecycle
+  rpc Start(StartInstanceRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  rpc Stop(StopInstanceRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  rpc Restart(RestartInstanceRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  // Logs
+  rpc GetInstanceLogs(GetInstanceLogsRequest) returns (stream LogEntry);
+
+  // Instance file management
+  rpc ListInstanceDirectory(ListInstanceDirectoryRequest) returns (DirectoryListing);
+  rpc GetInstanceFile(GetInstanceFileRequest) returns (stream FileChunk);
+  rpc PutInstanceFile(stream PutInstanceFileRequest) returns (PutInstanceFileResponse);
+  rpc DeleteInstanceFile(DeleteInstanceFileRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  // Intranet penetration for instances
+  rpc ExposeInstancePort(ExposeInstancePortRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "terapanel.domain.v1.PortMapping"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  rpc UnexposeInstancePort(UnexposeInstancePortRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "InstanceOperationMetadata"
+    };
+  }
+  rpc ListExposedPorts(ListExposedPortsRequest) returns (ListExposedPortsResponse);
+}
+
+message ListInstancesRequest {
+  string node_id = 1;
+  string filter = 2;
+}
+
+message ListInstancesResponse {
+  repeated Instance instances = 1;
+}
+
+message GetInstanceRequest {
+  string instance_id = 1;
+}
+
+message CreateInstanceRequest {
+  string node_id = 1;
+  string name = 2;
+  RuntimeType runtime_type = 3;
+  oneof config {
+    SystemdRuntimeConfig systemd_config = 4;
+    ContainerRuntimeConfig container_config = 5;
+    ProcessRuntimeConfig process_config = 6;
+    NginxRuntimeConfig nginx_config = 7;
+  }
+}
+
+message UpdateInstanceRequest {
+  string instance_id = 1;
+  Instance instance = 2;
+}
+
+message DeleteInstanceRequest {
+  string instance_id = 1;
+}
+
+message StartInstanceRequest {
+  string instance_id = 1;
+}
+
+message StopInstanceRequest {
+  string instance_id = 1;
+}
+
+message RestartInstanceRequest {
+  string instance_id = 1;
+}
+
+message GetInstanceLogsRequest {
+  string instance_id = 1;
+  int32 lines = 2;
+  bool follow = 3;
+}
+
+message LogEntry {
+  google.protobuf.Timestamp timestamp = 1;
+  string content = 2;
+  bool is_stderr = 3;
+}
+
+// Instance file management
+message ListInstanceDirectoryRequest {
+  string instance_id = 1;
+  string path = 2;
+}
+
+message GetInstanceFileRequest {
+  string instance_id = 1;
+  string path = 2;
+}
+
+message PutInstanceFileRequest {
+  oneof data {
+    InstanceFileMetadata metadata = 1;
+    bytes chunk = 2;
+  }
+}
+
+message InstanceFileMetadata {
+  string instance_id = 1;
+  string path = 2;
+  bool overwrite = 3;
+  uint32 mode = 4;
+}
+
+message PutInstanceFileResponse {
+  uint64 bytes_written = 1;
+}
+
+message DeleteInstanceFileRequest {
+  string instance_id = 1;
+  string path = 2;
+  bool recursive = 3;
+}
+
+// Intranet penetration for instances
+message ExposeInstancePortRequest {
+  string instance_id = 1;
+  int32 private_port = 2;
+  int32 public_port = 3;
+  PortProtocol protocol = 4;
+  string public_node_id = 5;
+}
+
+message UnexposeInstancePortRequest {
+  string mapping_id = 1;
+}
+
+message ListExposedPortsRequest {
+  string instance_id = 1;
+  string node_id = 2;
+}
+
+message ListExposedPortsResponse {
+  repeated PortMapping rules = 1;
+}
+
+// 自定义操作元数据，用于存放领域特定信息
+message InstanceOperationMetadata {
+  // 操作创建时间
+  google.protobuf.Timestamp create_time = 1;
+  // 操作的目标资源链接，例如正在操作的实例
+  string target_link = 2;
+  // 正在执行的操作类型，例如 "create_instance"
+  string verb = 3;
+  // 操作进度，0-100
+  int32 progress = 4;
+  // 实例所属节点ID
+  string node_id = 5;
+  // 实例ID
+  string instance_id = 6;
+}

@@ -1,0 +1,12 @@
+[package]
+name = "shared-types"
+version = "0.1.0"
+publish = false
+edition.workspace = true
+build = "build.rs"
+
+[build-dependencies]
+pilota-build.workspace = true
+
+[dependencies]
+pilota.workspace = true

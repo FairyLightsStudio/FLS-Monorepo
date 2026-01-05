@@ -1,0 +1,29 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+enum PackageManager {
+  PACKAGE_MANAGER_UNKNOWN = 0;
+  PACKAGE_MANAGER_APT = 1;
+  PACKAGE_MANAGER_YUM = 2;
+  PACKAGE_MANAGER_DNF = 3;
+  PACKAGE_MANAGER_PACMAN = 4;
+  PACKAGE_MANAGER_ZYPPER = 5;
+  PACKAGE_MANAGER_BREW = 6;
+  PACKAGE_MANAGER_CHOCO = 7;
+  PACKAGE_MANAGER_PIP = 8;
+  PACKAGE_MANAGER_NPM = 9;
+}
+
+message PackageInfo {
+  string name = 1;
+  string version = 2;
+  string description = 3;
+  bool installed = 4;
+}
+
+message PackageProgress {
+  string package_name = 1;
+  string status = 2;
+  int32 percent = 3;
+  string details = 4;
+}
