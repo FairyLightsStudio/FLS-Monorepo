@@ -2,9 +2,16 @@ syntax = "proto3";
 package terapanel.domain.v1;
 
 import "google/protobuf/timestamp.proto";
-import "terapanel/domain/v1/common.proto";
 import "terapanel/domain/v1/intranet.proto";
 import "terapanel/domain/v1/runtime.proto";
+
+enum InstanceStatus {
+  INSTANCE_STATUS_UNSPECIFIED = 0;
+  INSTANCE_CREATED = 1;
+  INSTANCE_RUNNING = 2;
+  INSTANCE_STOPPED = 3;
+  INSTANCE_ERROR = 4;
+}
 
 message Instance {
   string id = 1;

@@ -5,7 +5,7 @@ import "terapanel/domain/v1/intranet.proto";
 
 // Messages for public node to configure forwarding
 message CreateForwardingRuleRequest {
-  PortMapping rule = 1;
+  terapanel.domain.v1.PortMapping rule = 1;
 }
 
 message CreateForwardingRuleResponse {
@@ -24,12 +24,12 @@ message DeleteForwardingRuleResponse {
 message ListForwardingRulesRequest {}
 
 message ListForwardingRulesResponse {
-  repeated PortMapping rules = 1;
+  repeated terapanel.domain.v1.PortMapping rules = 1;
 }
 
 message UpdateForwardingRuleRequest {
   string rule_id = 1;
-  PortMapping.RuleStatus status = 2;
+  terapanel.domain.v1.PortMapping.RuleStatus status = 2;
 }
 
 message UpdateForwardingRuleResponse {

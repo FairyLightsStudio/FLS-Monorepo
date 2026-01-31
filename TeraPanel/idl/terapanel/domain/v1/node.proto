@@ -1,20 +1,39 @@
 syntax = "proto3";
 package terapanel.domain.v1;
 
-import "google/protobuf/timestamp.proto";
-import "terapanel/domain/v1/common.proto";
+enum Platform {
+  PLATFORM_UNSPECIFIED = 0;
+  WINDOWS = 1;
+  LINUX = 2;
+  MACOS = 3;
+  ANDROID_TERMUX = 4;
+  OPENBSD = 5;
+}
+
+
+enum NodeAdminCapability {
+  NODE_ADMIN_CAPABILITY_UNSPECIFIED = 0;
+  NODE_ADMIN_CAPABILITY_FILE_MANAGER = 1; // 节点层面的文件管理器
+  NODE_ADMIN_CAPABILITY_TERMINAL = 2; // 节点层面的终端
+  NODE_ADMIN_CAPABILITY_OBSERVABILITY = 3; // 节点层面的可观测性
+  // NODE_ADMIN_CAPABILITY_FIREWALL = 4; // 系统防火墙
+}
 
 message Node {
+  // 节点ID，由panel生成并向terad下发。应当在 panel 管理的全部 Node 中唯一
   string id = 1;
+  // 节点名，由terad侧控制
   string name = 2;
-  string os = 5;
-  NodeStatus status = 7;
-  google.protobuf.Timestamp last_seen = 8;
-  repeated NodeCapability capabilities = 9; // 节点支持的功能列表
-  // map<string, string> tags = 10;
+  // 由terad侧控制
+  Platform os = 5;
+  // [NodeAdmin] 该节点支持的管理功能列表，由terad侧控制
+  repeated NodeAdminCapability capabilities = 9;
   // string terad_version = 11;
 }
 
+// 可由用户侧控制的节点配置信息
 message NodeConfig {
   string name = 2;
 }
+
+// TODO 自动化：检测到失败日志就产生提醒

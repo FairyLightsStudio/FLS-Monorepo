@@ -2,44 +2,38 @@ syntax = "proto3";
 package terapanel.client_panel.v1;
 
 import "google/protobuf/empty.proto";
-import "terapanel/domain/v1/intranet.proto";
 
 service IntranetPenetrationService {
-  rpc ListRules(ListRulesRequest) returns (ListRulesResponse);
-  rpc CreateRule(CreateRuleRequest) returns (PortMapping);
-  rpc UpdateRule(UpdateRuleRequest) returns (PortMapping);
-  rpc DeleteRule(DeleteRuleRequest) returns (google.protobuf.Empty);
-  rpc GetRule(GetRuleRequest) returns (PortMapping);
+    rpc ListTunnels(ListTunnelsRequest) returns (ListTunnelsResponse);
+    rpc CreateTunnel(CreateTunnelRequest) returns (Tunnel);
+    rpc DeleteTunnel(DeleteTunnelRequest) returns (google.protobuf.Empty);
 }
 
-message ListRulesRequest {
-  string public_node_id = 1;
-  string private_node_id = 2;
-  string instance_id = 3;
+message Tunnel {
+    string id = 1;
+    string name = 2;
+    // The node that needs access (client)
+    string client_node_id = 3;
+    string client_local_addr = 4; // e.g., "127.0.0.1:8080"
+    
+    // The node with public IP (server)
+    string server_node_id = 5;
+    int32 server_remote_port = 6; // e.g., 8080
 }
 
-message ListRulesResponse {
-  repeated PortMapping rules = 1;
+message ListTunnelsRequest {}
+message ListTunnelsResponse {
+    repeated Tunnel tunnels = 1;
 }
 
-message CreateRuleRequest {
-  string public_node_id = 1;
-  string private_node_id = 2;
-  int32 private_port = 3;
-  int32 public_port = 4;
-  PortProtocol protocol = 5;
-  string instance_id = 6;
+message CreateTunnelRequest {
+    string name = 1;
+    string client_node_id = 2;
+    string client_local_addr = 3;
+    string server_node_id = 4;
+    int32 server_remote_port = 5;
 }
 
-message UpdateRuleRequest {
-  string rule_id = 1;
-  PortMapping rule = 2;
-}
-
-message DeleteRuleRequest {
-  string rule_id = 1;
-}
-
-message GetRuleRequest {
-  string rule_id = 1;
+message DeleteTunnelRequest {
+    string id = 1;
 }

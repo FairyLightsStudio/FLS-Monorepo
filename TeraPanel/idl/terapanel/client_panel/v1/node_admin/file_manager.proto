@@ -1,0 +1,105 @@
+syntax = "proto3";
+package terapanel.client_panel.v1.node_admin;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+service FileManagerService {
+  rpc ListDirectory(ListDirectoryRequest) returns (ListDirectoryResponse);
+  
+  // Create a new directory
+  rpc CreateDirectory(CreateDirectoryRequest) returns (google.protobuf.Empty);
+  
+  // Create a new file (empty)
+  rpc CreateFile(CreateFileRequest) returns (google.protobuf.Empty);
+  
+  // Delete a file or directory
+  rpc Delete(DeleteRequest) returns (google.protobuf.Empty);
+  
+  // Rename or move a file/directory
+  rpc Move(MoveRequest) returns (google.protobuf.Empty);
+  
+  // Copy a file/directory
+  rpc Copy(CopyRequest) returns (google.protobuf.Empty);
+
+  // Read file content
+  // Note: For large files, we might need a streaming approach or chunked reading, 
+  // but for a web panel, paging or max size limit is common for text editing.
+  rpc ReadFile(ReadFileRequest) returns (ReadFileResponse);
+  
+  // Write file content
+  rpc WriteFile(WriteFileRequest) returns (google.protobuf.Empty);
+  
+  // Get detailed file info
+  rpc Stat(StatRequest) returns (FileInfo);
+}
+
+message ListDirectoryRequest {
+  string node_id = 1;
+  string path = 2; // Absolute path
+}
+
+message ListDirectoryResponse {
+  repeated FileInfo files = 1; 
+  string parent_path = 2;
+  string current_path = 3;
+}
+
+message FileInfo {
+  string name = 1;
+  bool is_directory = 2;
+  int64 size = 3;
+  google.protobuf.Timestamp updated_at = 4;
+  uint32 mode = 5; // Unix permissions
+  // Optional: owner, group, etc.
+}
+
+message CreateDirectoryRequest {
+  string node_id = 1;
+  string path = 2;
+}
+
+message CreateFileRequest {
+  string node_id = 1;
+  string path = 2;
+}
+
+message DeleteRequest {
+  string node_id = 1;
+  string path = 2;
+}
+
+message MoveRequest {
+  string node_id = 1;
+  string source_path = 2;
+  string destination_path = 3;
+}
+
+message CopyRequest {
+  string node_id = 1;
+  string source_path = 2;
+  string destination_path = 3;
+}
+
+message ReadFileRequest {
+  string node_id = 1;
+  string path = 2;
+  // Optional: read offset/limit for partial reading
+  // int64 offset = 3;
+  // int64 limit = 4;
+}
+
+message ReadFileResponse {
+  bytes content = 1;
+}
+
+message WriteFileRequest {
+  string node_id = 1;
+  string path = 2;
+  bytes content = 3;
+}
+
+message StatRequest {
+  string node_id = 1;
+  string path = 2;
+}

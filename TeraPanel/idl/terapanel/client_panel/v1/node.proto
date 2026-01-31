@@ -2,25 +2,57 @@ syntax = "proto3";
 package terapanel.client_panel.v1;
 
 import "google/protobuf/empty.proto";
-import "terapanel/domain/v1/common.proto";
+import "google/protobuf/timestamp.proto";
+import "google/longrunning/operations.proto";
 import "terapanel/domain/v1/node.proto";
+// 节点
+// 添加节点到panel侧
+// 列出节点们
+
 
 service NodeService {
   rpc ListNodes(ListNodesRequest) returns (ListNodesResponse);
-  rpc GetNode(GetNodeRequest) returns (Node);
-  rpc CreateNode(CreateNodeRequest) returns (Node);
-  rpc DeleteNode(DeleteNodeRequest) returns (google.protobuf.Empty);
+  rpc GetNode(GetNodeRequest) returns (terapanel.domain.v1.Node);
+  rpc CreateNode(CreateNodeRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "Node"
+      metadata_type: "google.protobuf.Empty"
+    };
+  }
+  rpc DeleteNode(DeleteNodeRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "google.protobuf.Empty"
+    };
+  }
+
+  // 获取连接脚本
+  rpc GetConnectScript(GetConnectScriptRequest) returns (GetConnectScriptResponse);
+}
+
+message GetConnectScriptRequest {
+  string node_id = 1;
+}
+
+message GetConnectScriptResponse {
+  string script = 1;
+  // 简短的说明 or steps
+  repeated string steps = 2;
 }
 
 message ListNodesRequest {
+  optional NodeFilter filter = 1;
+}
+
+message NodeFilter {
+  // 节点名模糊搜索
   optional string search = 1;
-  repeated terapanel.domain.v1.NodeStatus statuses = 2;
-  // Filter by platforms/OS
-  repeated string platforms = 3;
+  optional NodeCard.TeradConnectStatus connectStatus = 2;
+  repeated terapanel.domain.v1.Platform platforms = 3;
 }
 
 message ListNodesResponse {
-  repeated Node nodes = 1;
+  repeated NodeCard nodes = 1;
 }
 
 message GetNodeRequest {
@@ -32,5 +64,20 @@ message DeleteNodeRequest {
 }
 
 message CreateNodeRequest {
-  NodeConfig config = 1;
+  terapanel.domain.v1.NodeConfig config = 1;
+}
+
+message NodeCard {
+  // panel和daemon之间的连接状态
+  enum TeradConnectStatus {
+    STATUS_UNSPECIFIED = 0;
+    ONLINE = 1;
+    OFFLINE = 2;
+    VERSION_INCOMPATIBLE = 3; // api 版本不兼容
+  }
+  // 用户侧为节点打上的标签，由panel侧控制
+  map<string, string> user_tags = 10;
+  TeradConnectStatus terad_status = 7;
+  // 由panel侧控制
+  google.protobuf.Timestamp last_seen = 8;
 }
