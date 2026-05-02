@@ -61,7 +61,6 @@ volo-grpc = { version = "0.12", features = ["grpc-web"] }
 motore = "0.4"
 metainfo = "0.7"
 volo-build = "0.12"
-prost = "0.12"
 
 # terapanel dependencies
 bcrypt = "0"

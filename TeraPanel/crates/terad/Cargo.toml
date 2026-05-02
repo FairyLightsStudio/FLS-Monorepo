@@ -37,7 +37,6 @@ anyhow.workspace = true
 
 # --- 生成的协议类型 ---
 shared-types = { path = "../shared-types" }
-prost.workspace = true
 ractor = "0"
 
 
