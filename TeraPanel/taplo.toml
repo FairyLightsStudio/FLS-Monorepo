@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2024 tison <wander4096@gmail.com>
+# Copyright 2025 FlightStudio
+
+include = "*.toml"
+
+[formatting]
+align_entries = true
+array_trailing_comma = true
+array_auto_expand = true
+array_auto_collapse = true
+compact_arrays = false
+compact_inline_tables = false
+indent_tables = false
+reorder_arrays = false
+reorder_keys = false
+trailing_newline = true

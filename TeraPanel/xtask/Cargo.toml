@@ -1,0 +1,13 @@
+# SPDX-License-Identifier: Apache-2.0
+# Copyright 2024 tison <wander4096@gmail.com>
+# Copyright 2025 FlightStudio
+
+[package]
+name = "xtask"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[dependencies]
+clap = { workspace = true }
+which = { workspace = true }

@@ -4,7 +4,7 @@
 			"path": "."
 		},
 		{
-			"path": "tera-webclient"
+      "path": "teraclient-web"
 		}
 	],
 	"settings": {
