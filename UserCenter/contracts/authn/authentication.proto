@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package flightstudio.usercenter.authn.v1;
+
+import "contracts/authn/common.proto";
+import "google/protobuf/empty.proto";
+
+message LoginMethod {
+  // 方法类型
+  enum MethodType {
+    LOGIN_METHOD_TYPE_UNSPECIFIED = 0;
+    LOGIN_METHOD_TYPE_IDENTIFIER = 1; // 用户标识符方法 (输入框+下一步)
+    LOGIN_METHOD_TYPE_EXTERNAL_PROVIDER = 2; // 也可以使用
+  }
+
+  MethodType method_type = 1;
+
+  string display_name = 2;
+
+  string icon_url = 3;
+
+  // 提供商标识 (如"webauthn", "google", "microsoft", "github")
+  optional string provider_id = 4;
+}
+
+message GetLoginMethodsResponse { repeated LoginMethod login_methods = 1; }
+
+service AuthenticationService {
+  // 获取登录方法 (用于初始登录页面)
+  rpc GetLoginMethods(google.protobuf.Empty) returns (GetLoginMethodsResponse) {
+  }
+
+  // 开始认证流程 (用户提交标识符或选择登录方式后调用)
+  rpc StartAuthFlow(StartAuthFlowRequest) returns (FlowResponse) {}
+
+  // 提交认证数据 (用户填写表单后调用)
+  rpc SubmitFlowData(SubmitFlowDataRequest) returns (FlowResponse) {}
+}
+
+message AuthScene {
+
+  oneof formdata { AuthPlease auth = 1; }
+
+  message AuthPlease {
+    enum AuthType {
+      AUTH_TYPE_UNSPECIFIED = 0;
+      AUTH_TYPE_VERIFY_IDENTITY = 1;   // 核实你的身份
+      AUTH_TYPE_TWO_FACTOR = 2;        // 两步验证
+      AUTH_TYPE_EXTERNAL_PROVIDER = 3; // 通过xxx确认你的身份
+    }
+
+    AuthType auth_type = 1;
+
+    repeated AuthOption auth_options = 2;
+
+    oneof metadata { ExternalProviderMetadata external_provider = 3; }
+  }
+}
+
+message StartAuthFlowRequest {
+  // 用户标识符 (邮箱/手机号等)，如果选择IDENTIFIER方法则必填
+  string identifier = 1;
+
+  // 选择的登录方法类型
+  LoginMethod.MethodType method_type = 2;
+
+}
+
+message SubmitFlowDataRequest {
+  // 选择的认证选项类型
+  AuthOption.OptionType selected_option = 2;
+
+  FlowButton user_click = 3;
+  // 提交的认证数据
+  oneof body {
+    string password = 3;                // 密码
+    OwnershipProof ownership_proof = 4; // 所有权证明 (邮箱/短信/TOTP/Passkey)
+  }
+}

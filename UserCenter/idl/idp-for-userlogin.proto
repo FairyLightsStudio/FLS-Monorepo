@@ -1,0 +1,214 @@
+syntax = "proto3";
+
+package idp.v1;
+
+service AuthenticationService {
+  // 获取登录方法 (用于初始登录页面)
+  rpc GetLoginMethods(GetLoginMethodsRequest)
+      returns (GetLoginMethodsResponse) {}
+
+  // 开始认证流程 (用户提交标识符或选择登录方式后调用)
+  rpc StartAuthFlow(StartAuthFlowRequest) returns (StartAuthFlowResponse) {}
+
+  // 提交认证数据 (用户填写表单后调用)
+  rpc SubmitAuthData(SubmitAuthDataRequest) returns (SubmitAuthDataResponse) {}
+}
+
+message GetLoginMethodsRequest {
+  // 可添加未来扩展参数
+}
+
+message GetLoginMethodsResponse {
+  // 可用的登录方法列表
+  repeated LoginMethod login_methods = 1;
+}
+
+message LoginMethod {
+  // 方法类型
+  enum MethodType {
+    IDENTIFIER = 0; // 用户标识符方法 (输入框+下一步)
+    PASSKEY = 1;    // WebAuthn/安全密钥
+    OIDC = 2;       // 第三方OpenID Connect
+    // 可扩展其他方法
+  }
+
+  MethodType method_type = 1;
+
+  // 显示名称 (如"使用Google登录")
+  string display_name = 2;
+
+  // 图标URL (可选)
+  string icon_url = 3;
+
+  // 方法特定的元数据
+  oneof method_metadata {
+    // OIDC方法使用
+    OidcMetadata oidc = 4;
+  }
+}
+
+// OIDC元数据
+message OidcMetadata {
+  // 提供商标识 (如"google", "microsoft", "github")
+  string provider_id = 1;
+}
+
+// ===== 开始认证流程 =====
+message StartAuthFlowRequest {
+  // 用户标识符 (邮箱/手机号等)，如果选择IDENTIFIER方法则必填
+  string identifier = 1;
+
+  // 选择的登录方法类型
+  LoginMethod.MethodType method_type = 2;
+
+  // 方法特定的元数据 (仅当method_type需要额外数据时)
+  oneof method_data {
+    // OIDC方法使用
+    OidcStartData oidc = 3;
+  }
+}
+
+// OIDC启动数据
+message OidcStartData {
+  // 提供商标识 (如"google")
+  string provider_id = 1;
+}
+
+message StartAuthFlowResponse {
+  // 下一步需要呈现的场景
+  Scene next_scene = 1;
+
+  // 会话ID (用于关联整个认证流程)
+  string session_id = 2;
+}
+
+// 认证场景定义
+message Scene {
+  // 场景类型 (前端根据此值决定如何渲染)
+  enum SceneType {
+    VERIFY_IDENTITY = 0;   // 核实你的身份
+    TWO_FACTOR = 1;        // 两步验证
+    EXTERNAL_PROVIDER = 2; // 通过xxx确认你的身份
+  }
+
+  SceneType scene_type = 1;
+
+  // 该场景下可用的认证选项
+  repeated AuthOption auth_options = 2;
+
+  // 场景特定的元数据
+  oneof scene_metadata {
+    // EXTERNAL_PROVIDER场景使用
+    ExternalProviderMetadata external_provider = 3;
+  }
+}
+
+// 认证选项
+message AuthOption {
+  // 选项类型
+  enum OptionType {
+    PASSWORD = 0;  // 密码输入
+    PASSKEY = 1;   // WebAuthn
+    EMAIL_OTP = 2; // 邮箱验证码
+    SMS_OTP = 3;   // 短信验证码
+    TOTP = 4;      // 验证器应用
+  }
+
+  OptionType option_type = 1;
+
+  // 选项特定的元数据
+  oneof option_metadata {
+    // PASSKEY选项使用
+    WebAuthnMetadata webauthn = 2;
+  }
+}
+
+// WebAuthn元数据
+message WebAuthnMetadata {
+  // WebAuthn挑战值 (Base64编码)
+  string challenge = 1;
+
+  // 允许的认证器列表
+  repeated string allowed_credentials = 2;
+}
+
+// 外部提供商元数据
+message ExternalProviderMetadata {
+  // 提供商类型 (如"google", "microsoft")
+  string provider_id = 1;
+
+  // 提供商显示名称 (如"Google")
+  string provider_name = 2;
+
+  // 授权URL (用于OIDC重定向)
+  string authorization_url = 3;
+}
+
+// ===== 提交认证数据 =====
+message SubmitAuthDataRequest {
+  // 会话ID (来自StartAuthFlowResponse)
+  string session_id = 1;
+
+  // 选择的认证选项类型
+  AuthOption.OptionType selected_option = 2;
+
+  // 提交的认证数据
+  oneof auth_data {
+    string password = 3;           // 密码
+    string email_otp = 4;          // 邮箱验证码
+    string sms_otp = 5;            // 短信验证码
+    string totp_code = 6;          // TOTP验证码
+    WebAuthnResponse webauthn = 7; // WebAuthn响应
+  }
+}
+
+message WebAuthnResponse {
+  // WebAuthn认证响应 (JSON字符串)
+  string credential_response = 1;
+}
+
+message SubmitAuthDataResponse {
+  oneof response {
+    // 需要继续下一步认证
+    Scene next_scene = 1;
+
+    // 认证成功
+    AuthSuccess success = 2;
+
+    // 认证失败
+    AuthFailure failure = 3;
+  }
+}
+
+// 认证成功响应
+// session_token、user_id通过http only的cookie下发
+message AuthSuccess {
+  // 会话令牌
+  // string session_token = 1;
+
+  // 用户ID
+  // string user_id = 2;
+
+  // 重定向URL (可选)
+  string redirect_uri = 3;
+}
+
+// 认证失败响应
+message AuthFailure {
+  // 失败原因
+  enum FailureReason {
+    INVALID_CREDENTIALS = 0;       // 提供的凭据无效
+    INSUFFICIENT_VERIFICATION = 1; // 提供的信息不足以验证身份
+    SESSION_EXPIRED = 2;           // 会话长时间未活动
+    RATE_LIMITED = 3;              // 操作过于频繁
+    INTERNAL_ERROR = 4;            // 服务器内部错误
+  }
+
+  FailureReason reason = 1;
+
+  // 可选的用户友好错误消息 (可用于前端显示)
+  string error_message = 2;
+
+  // 是否允许重试
+  bool can_retry = 3;
+}

@@ -1,0 +1,23 @@
+version: v2
+plugins:
+  # 生成消息类型（buffa）
+  - local: protoc-gen-buffa
+    out: src/generated/buffa
+    opt:
+      - views=true
+      - json=true
+  # 为 buffa 输出组装 mod.rs
+  - local: protoc-gen-buffa-packaging
+    out: src/generated/buffa
+    strategy: all
+  # 生成 connect-rpc 服务桩
+  - local: protoc-gen-connect-rust
+    out: src/generated/connect
+    opt:
+      - buffa_module=crate::proto # 告诉插件 buffa 消息类型所在的模块路径
+  # 为 connect 输出组装 mod.rs（仅包含有服务的文件）
+  - local: protoc-gen-buffa-packaging
+    out: src/generated/connect
+    strategy: all
+    opt:
+      - filter=services
