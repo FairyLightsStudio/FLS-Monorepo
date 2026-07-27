@@ -1,0 +1,5 @@
+extra_srcs = [
+    "src/options/doc.md",
+    "src/types/bigdecimal-range.md",
+    "src/types/rust_decimal-range.md",
+]

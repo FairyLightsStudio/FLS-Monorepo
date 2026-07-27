@@ -1,0 +1,11 @@
+extra_srcs = [
+    "src/examples/_0_world_imports.rs",
+    "src/examples/_1_interface_imports.rs",
+    "src/examples/_2_imported_resources.rs",
+    "src/examples/_3_world_exports.rs",
+    "src/examples/_4_exported_resources.rs",
+    "src/examples/_5_import_directory.rs",
+]
+
+[buildscript]
+run = true

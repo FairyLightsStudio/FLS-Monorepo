@@ -1,0 +1,4 @@
+extra_srcs = [
+    "Cargo.toml",
+    "README.md",
+]

@@ -1,0 +1,4 @@
+extra_srcs = []
+
+[buildscript]
+run = true

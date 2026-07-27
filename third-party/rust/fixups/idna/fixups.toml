@@ -1,0 +1,5 @@
+extra_srcs = [
+    "tests/IdnaTestV2.txt",
+    "tests/bad_punycode_tests.json",
+    "tests/punycode_tests.json",
+]

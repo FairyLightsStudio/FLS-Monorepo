@@ -1,0 +1,7 @@
+extra_srcs = [
+    "tests/artifacts/dictionary-rust",
+    "tests/artifacts/dictionary-rust-other",
+    "tests/artifacts/lib.rs",
+    "tests/artifacts/lib.rs.zst",
+    "tests/artifacts/long-window-size-lib.rs.zst",
+]

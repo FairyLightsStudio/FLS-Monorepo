@@ -1,0 +1,5 @@
+extra_srcs = [
+    "README.md",
+    "tests/examples/pkcs8-public-key.der",
+    "tests/examples/pkcs8-public-key.pem",
+]

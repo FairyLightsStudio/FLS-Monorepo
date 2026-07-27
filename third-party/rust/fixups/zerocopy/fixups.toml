@@ -1,0 +1,6 @@
+extra_srcs = [
+    "tests/include.rs",
+]
+
+[buildscript]
+run = true

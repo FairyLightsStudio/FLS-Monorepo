@@ -1,0 +1,21 @@
+extra_srcs = [
+    "test/aia_test_cert.pem",
+    "test/alt_name_cert.pem",
+    "test/authority_key_identifier.pem",
+    "test/cert.pem",
+    "test/certv3.pem",
+    "test/cms.p12",
+    "test/cms_pubkey.der",
+    "test/identity.p12",
+    "test/intermediate-ca.pem",
+    "test/key.pem",
+    "test/keystore-empty-chain.p12",
+    "test/nid_test_cert.pem",
+    "test/nid_uid_test_cert.pem",
+    "test/root-ca.pem",
+    "test/rsa.pem",
+    "test/rsa.pem.pub",
+]
+
+[buildscript]
+run = true

@@ -1,0 +1,9 @@
+extra_srcs = [
+    "README.md",
+    "tests/examples/ed25519-pub.der",
+    "tests/examples/ed25519-pub.pem",
+    "tests/examples/p256-pub.der",
+    "tests/examples/p256-pub.pem",
+    "tests/examples/rsa2048-pub.der",
+    "tests/examples/rsa2048-pub.pem",
+]

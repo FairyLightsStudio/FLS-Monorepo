@@ -1,0 +1,5 @@
+extra_srcs = [
+    "tests/expected_failures.txt",
+    "tests/setters_tests.json",
+    "tests/urltestdata.json",
+]

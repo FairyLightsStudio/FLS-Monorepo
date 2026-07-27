@@ -1,0 +1,9 @@
+extra_srcs = [
+    "README.md",
+    "docs/avx2-notes.md",
+    "docs/ifma-notes.md",
+    "docs/parallel-formulas.md",
+]
+
+[buildscript]
+run = true

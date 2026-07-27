@@ -1,0 +1,7 @@
+extra_srcs = [
+    "README.md",
+    "tests/certs/chain.pem",
+    "tests/certs/end.key",
+    "tests/certs/root.pem",
+    "tests/utils.rs",
+]

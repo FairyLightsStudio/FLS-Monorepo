@@ -1,0 +1,5 @@
+extra_srcs = [
+    "README.md",
+    "tests/preserve_sequence_ex1.ron",
+    "tests/preserve_sequence_ex2.ron",
+]

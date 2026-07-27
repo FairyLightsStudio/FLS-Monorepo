@@ -1,0 +1,18 @@
+extra_srcs = [
+    "README.md",
+    "tests/examples/ed25519-encpriv-aes128-pbkdf2-sha1.der",
+    "tests/examples/ed25519-encpriv-aes256-pbkdf2-sha256.der",
+    "tests/examples/ed25519-encpriv-aes256-pbkdf2-sha256.pem",
+    "tests/examples/ed25519-encpriv-aes256-scrypt.der",
+    "tests/examples/ed25519-encpriv-des-pbkdf2-sha256.der",
+    "tests/examples/ed25519-encpriv-des3-pbkdf2-sha256.der",
+    "tests/examples/ed25519-priv-pkcs8v1.der",
+    "tests/examples/ed25519-priv-pkcs8v1.pem",
+    "tests/examples/ed25519-priv-pkcs8v2.der",
+    "tests/examples/p256-priv.der",
+    "tests/examples/p256-priv.pem",
+    "tests/examples/rsa2048-priv.der",
+    "tests/examples/rsa2048-priv.pem",
+    "tests/examples/x25519-priv.der",
+    "tests/examples/x25519-priv.pem",
+]

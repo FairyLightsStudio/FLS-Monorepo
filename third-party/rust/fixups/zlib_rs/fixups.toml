@@ -1,0 +1,4 @@
+extra_srcs = [
+    "README.md",
+    "src/deflate/test-data/paper-100k.pdf",
+]

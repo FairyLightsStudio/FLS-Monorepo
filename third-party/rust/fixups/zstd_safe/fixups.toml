@@ -1,0 +1,9 @@
+extra_srcs = [
+    "src/constants.rs",
+    "src/constants_experimental.rs",
+    "src/constants_seekable.rs",
+    "src/lib.rs",
+]
+
+[buildscript]
+run = true

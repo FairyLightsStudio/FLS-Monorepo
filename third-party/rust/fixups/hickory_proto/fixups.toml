@@ -1,0 +1,9 @@
+extra_srcs = [
+    "src/dnssec/roots/20326.rsa",
+    "src/dnssec/roots/38696.rsa",
+    "tests/test-data/rfc4034-2.3.key",
+    "tests/test-data/rfc4034-2.3.rdata",
+    "tests/test-data/rfc4034-5.4.key",
+    "tests/test-data/rfc4034-5.4.rdata",
+    "tests/test-data/root.key",
+]

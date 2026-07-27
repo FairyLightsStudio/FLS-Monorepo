@@ -1,0 +1,6 @@
+[submodule "TeraPanel"]
+	path = TeraPanel
+	url = git@github.com:FairyLightsStudio/BlackPanel.git
+[submodule "PoWCAPTCHA"]
+	path = PoWCAPTCHA
+	url = git@github.com:FairyLightsStudio/FairyCAPTCHA.git

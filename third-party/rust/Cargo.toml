@@ -1,0 +1,69 @@
+[workspace]
+
+[package]
+# Pseudo-package whose dependencies are imported and buckified
+name = "rust-third-party"
+version = "0.0.0"
+edition = "2021"
+publish = false
+
+# Dummy target to keep Cargo happy
+[[bin]]
+name = "top"
+path = "top/main.rs"
+
+# List of packages to be imported
+[dependencies]
+anyhow = "1"
+async-nats = "0.45"
+async-trait = "0.1"
+axum = "0.8"
+bcrypt = "0"
+bollard = "0.19"
+buffa = { version = "0.6", features = ["json"] }
+buffa-03 = { package = "buffa", version = "0.3", features = ["json"] }
+buffa-types = { version = "0.6", features = ["json"] }
+buffa-types-03 = { package = "buffa-types", version = "0.3", features = ["json"] }
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4.5", features = ["derive"] }
+config = "0.15"
+connectrpc = { version = "0.6", features = ["axum", "client", "tls"] }
+connectrpc-03 = { package = "connectrpc", version = "0.3", features = ["axum"] }
+futures = "0.3"
+hex = "0.4"
+http = "1"
+http-body = "1"
+humantime = "2"
+jsonwebtoken = { version = "10", features = ["rust_crypto"] }
+metainfo = "0.7"
+pilota = "0.12"
+portable-pty = "0.9"
+prost = "0.13"
+prost-types = "0.13"
+ractor = "0.14"
+rand = "0.10"
+rand-08 = { package = "rand", version = "0.8" }
+regex = "1"
+rig-core = "0.9"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+sqlx = { version = "0.8", features = [
+    "runtime-tokio", "postgres", "chrono", "time", "json", "uuid"
+] }
+sysinfo = "0.37"
+thiserror = "2"
+thiserror-1 = { package = "thiserror", version = "1" }
+time = "0.3"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.6", features = ["cors"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+uuid = { version = "1", features = ["v4", "v7", "serde"] }
+volo = "0.11"
+volo-grpc = "0.11"
+volo-macros = "0.11"
+which = "7"
+zbus = "5"
+
+[patch.crates-io]

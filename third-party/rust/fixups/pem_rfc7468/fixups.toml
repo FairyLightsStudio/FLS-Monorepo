@@ -1,0 +1,13 @@
+extra_srcs = [
+    "README.md",
+    "tests/examples/chosen_header.pem",
+    "tests/examples/ed25519_id.pem",
+    "tests/examples/pkcs1.der",
+    "tests/examples/pkcs1.pem",
+    "tests/examples/pkcs1_with_preceeding_junk.pem",
+    "tests/examples/pkcs8-enc.der",
+    "tests/examples/pkcs8-enc.pem",
+    "tests/examples/pkcs8.der",
+    "tests/examples/pkcs8.pem",
+    "tests/examples/ssh_rsa_pem_password.pem",
+]

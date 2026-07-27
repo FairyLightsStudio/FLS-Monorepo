@@ -1,0 +1,9 @@
+extra_srcs = [
+    "src/imp/atomic128/macros.rs",
+    "src/imp/atomic64/macros.rs",
+    "src/imp/detect/common.rs",
+    "src/imp/fallback/seq_lock_common.rs",
+]
+
+[buildscript]
+run = true

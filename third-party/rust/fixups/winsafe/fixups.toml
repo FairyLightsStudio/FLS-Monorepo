@@ -1,0 +1,4 @@
+extra_srcs = [
+    "src/lib.md",
+    "src/msg.md",
+]

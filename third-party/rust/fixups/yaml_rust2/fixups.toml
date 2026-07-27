@@ -1,0 +1,4 @@
+extra_srcs = [
+    "tests/spec_test.rs.inc",
+    "tests/specexamples.rs.inc",
+]

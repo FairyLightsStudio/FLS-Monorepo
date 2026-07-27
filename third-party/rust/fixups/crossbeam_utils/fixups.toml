@@ -1,0 +1,7 @@
+extra_srcs = [
+    "build-common.rs",
+    "no_atomic.rs",
+]
+
+[buildscript]
+run = true

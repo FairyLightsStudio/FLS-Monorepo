@@ -1,0 +1,4 @@
+extra_srcs = [
+    "tests/fst/xid_continue.fst",
+    "tests/fst/xid_start.fst",
+]

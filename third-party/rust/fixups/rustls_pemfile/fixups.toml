@@ -1,0 +1,13 @@
+extra_srcs = [
+    "tests/data/certificate.chain.pem",
+    "tests/data/crl.pem",
+    "tests/data/csr.pem",
+    "tests/data/gunk.pem",
+    "tests/data/mixed-line-endings.crt",
+    "tests/data/nistp256key.pem",
+    "tests/data/nistp256key.pkcs8.pem",
+    "tests/data/spki.pem",
+    "tests/data/whitespace-prefix.crt",
+    "tests/data/zen.pem",
+    "tests/data/zen2.pem",
+]

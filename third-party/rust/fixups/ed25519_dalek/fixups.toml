@@ -1,0 +1,5 @@
+extra_srcs = [
+    "tests/examples/pkcs8-v1.der",
+    "tests/examples/pkcs8-v2.der",
+    "tests/examples/pubkey.der",
+]

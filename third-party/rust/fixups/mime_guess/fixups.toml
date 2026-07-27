@@ -1,0 +1,6 @@
+extra_srcs = [
+    "src/mime_types.rs",
+]
+
+[buildscript]
+run = true
