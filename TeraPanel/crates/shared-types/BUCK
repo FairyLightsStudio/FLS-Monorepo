@@ -1,0 +1,13 @@
+rust_library(
+    name = "shared-types",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/lib.rs",
+    visibility = ["PUBLIC"],
+    deps = [
+        "root//third-party/rust:buffa-03",
+        "root//third-party/rust:buffa-types-03",
+        "root//third-party/rust:connectrpc-03",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:serde_json",
+    ],
+)
