@@ -4,3 +4,4 @@
 [submodule "PoWCAPTCHA"]
 	path = PoWCAPTCHA
 	url = git@github.com:FairyLightsStudio/FairyCAPTCHA.git
+	branch = dev
