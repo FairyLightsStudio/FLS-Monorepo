@@ -1,0 +1,22 @@
+rust_binary(
+    name = "ChatHistoryCat",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/main.rs",
+    deps = [
+        "root//third-party/rust:anyhow",
+        "root//third-party/rust:async-nats",
+        "root//third-party/rust:chrono",
+        "root//third-party/rust:futures",
+        "root//third-party/rust:prost",
+        "root//third-party/rust:prost-types",
+        "root//third-party/rust:ractor",
+        "root//third-party/rust:rig-core",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:serde_json",
+        "root//third-party/rust:sqlx",
+        "root//third-party/rust:thiserror",
+        "root//third-party/rust:tokio",
+        "root//third-party/rust:tracing",
+        "root//third-party/rust:tracing-subscriber",
+    ],
+)
