@@ -1,0 +1,54 @@
+syntax = "proto3";
+
+package flightstudio.authn.v1;
+
+import "sm_info.proto";
+
+message LoginMethod {
+  // 方法类型
+  enum LoginMethodType {
+    LOGIN_METHOD_TYPE_UNSPECIFIED = 0;
+    LOGIN_METHOD_TYPE_IDENTIFIER = 1; // 用户标识符方法 (输入框+下一步)
+    LOGIN_METHOD_TYPE_EXTERNAL_PROVIDER = 2; // 也可以使用
+  }
+
+  LoginMethodType method_type = 1;
+  string display_name = 2;
+
+  string icon_url = 3;
+
+  // 登录方法标识 (如"webauthn", "google", "microsoft", "github")
+  string method_id = 4;
+}
+
+message AuthStatus {
+  oneof status {
+    SMInfo next_scene = 1;
+
+    AuthSuccess success = 2;
+
+    AuthFailure failure = 3;
+  }
+}
+
+message AuthSuccess {
+  // 重定向URL (可选)
+  string redirect_uri = 1;
+}
+
+message AuthFailure {
+  enum FailureReason {
+    FAILURE_REASON_UNSPECIFIED = 0;
+    FAILURE_REASON_INVALID_CREDENTIALS = 1; // 提供的凭据无效
+    FAILURE_REASON_INSUFFICIENT_VERIFICATION = 2; // 提供的信息不足以验证身份
+    FAILURE_REASON_SESSION_EXPIRED = 3; // 会话长时间未活动
+    FAILURE_REASON_RATE_LIMITED = 4; // 操作过于频繁
+    FAILURE_REASON_INTERNAL_ERROR = 5; // 服务器内部错误
+  }
+
+  FailureReason reason = 1;
+
+  string error_message = 2;
+
+  bool can_retry = 3;
+}

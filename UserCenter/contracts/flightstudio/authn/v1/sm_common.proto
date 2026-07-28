@@ -1,0 +1,55 @@
+syntax = "proto3";
+package flightstudio.authn.v1;
+
+// SM不是那个sm，是State Machine，登录逻辑的实现用到了状态机思想
+enum SMActions {
+  SM_ACTIONS_UNSPECIFIED = 0;
+  SM_ACTIONS_TRY_OTHER_WAY = 1; // 尝试其他认证方式
+  SM_ACTIONS_NEXT_STEP = 2; // 下一步
+  SM_ACTIONS_GIVE_UP = 3; // 放弃当前流程
+}
+
+message AuthOption {
+  enum OptionType {
+    OPTION_TYPE_UNSPECIFIED = 0;
+    OPTION_TYPE_PASSWORD = 1;
+    OPTION_TYPE_OWNERSHIP_PROOF = 2; // 所有权证明 (包括Passkey, OTP等)
+  }
+
+  OptionType option_type = 1;
+
+  // 选项特定的元数据
+  oneof option_metadata {
+    // OWNERSHIP_PROOF选项使用
+    OwnershipProofOptionMetadata ownership_proof = 2;
+  }
+}
+
+message OwnershipProofOptionMetadata {
+  // 所有权证明的类型
+  enum ProofMethodType {
+    PROOF_METHOD_TYPE_UNSPECIFIED = 0;
+    PROOF_METHOD_TYPE_EMAIL_OTP = 1;
+    PROOF_METHOD_TYPE_SMS_OTP = 2;
+    PROOF_METHOD_TYPE_TOTP = 3;
+    PROOF_METHOD_TYPE_PASSKEY = 4;
+  }
+
+  ProofMethodType proof_method_type = 1;
+
+  // 用于描述要求证明的对象，设计用于UI显示
+  // 例如: "yo***@example.com" 或 "+86123****5435"
+  string display_text = 2;
+
+  // 当 proof_method_type 为 PASSKEY 时，需要提供此元数据
+  oneof method_specific_metadata {
+    WebAuthnMetadata webauthn_metadata = 3;
+  }
+  message WebAuthnMetadata {
+    // WebAuthn挑战值 (Base64编码)
+    string challenge = 1;
+
+    // 允许的认证器列表
+    repeated string allowed_credentials = 2;
+  }
+}

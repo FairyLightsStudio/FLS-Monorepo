@@ -1,0 +1,43 @@
+syntax = "proto3";
+package flightstudio.authn.v1;
+
+import "sm_common.proto";
+
+// 客户端发给服务端的输入字母表
+message SMInput {
+  SMActions action = 1;
+  oneof action_data {
+    // 对 AuthChallenge 的响应
+    AuthCredential credential = 2;
+
+    // 对 AuthOptionSelection 的响应
+    AuthOptionChoice auth_option_choice = 3;
+  }
+}
+
+// 证明所有权的凭证 (包括OTP, Passkey等)
+message OwnershipProof {
+  message WebAuthnResponse {
+    string credential_response = 1;
+  }
+  oneof proof {
+    string email_otp = 1; // 邮箱一次性密码
+    string sms_otp = 2; // 短信一次性密码
+    string totp_code = 3; // 基于时间的一次性密码
+    WebAuthnResponse webauthn = 4; // Passkey (WebAuthn) 响应
+  }
+}
+
+// 认证凭证
+message AuthCredential {
+  oneof credential {
+    string password = 1; // 密码
+    OwnershipProof ownership_proof = 2; // 所有权证明
+  }
+}
+
+// 认证方式选择
+message AuthOptionChoice {
+  // 选择的认证方式类型
+  AuthOption selected_option = 1;
+}
