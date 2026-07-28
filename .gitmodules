@@ -14,9 +14,6 @@
 [submodule "DesignAssets"]
 	path = DesignAssets
 	url = https://github.com/FairyLightsStudio/DesignAssets.git
-[submodule "PoWCAPTCHA-web3.0"]
-	path = PoWCAPTCHA-web3.0
-	url = git@github.com:FairyLightsStudio/PoWCAPTCHA-web3.0.git
 [submodule "AngularM3EComponents"]
 	path = AngularM3EComponents
 	url = git@tangled.org:did:plc:ldzwhpohsh4m2t77jnxm7mhm
@@ -32,3 +29,12 @@
 [submodule "LiLi_converter"]
 	path = LiLi_converter
 	url = git@github.com:FairyLightsStudio/LiLi_converter.git
+[submodule "OurScratch"]
+	path = OurScratch
+	url = git@github.com:FairyLightsStudio/OurScratch.git
+[submodule "MilkyMayServiceHall"]
+	path = MilkyMayServiceHall
+	url = git@github.com:FairyLightsStudio/MilkyMayServiceHall.git
+[submodule "SeekAstro"]
+	path = SeekAstro
+	url = git@github.com:FairyLightsStudio/SeekAstro.git
