@@ -5,3 +5,9 @@
 	path = PoWCAPTCHA
 	url = git@github.com:FairyLightsStudio/FairyCAPTCHA.git
 	branch = dev
+[submodule "ChatHistoryCat"]
+	path = ChatHistoryCat
+	url = git@github.com:FairyLightsStudio/ChatHistoryCat.git
+[submodule "UserCenter"]
+	path = UserCenter
+	url = git@github.com:FairyLightsStudio/UserCenter.git
