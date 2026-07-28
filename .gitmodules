@@ -11,3 +11,24 @@
 [submodule "UserCenter"]
 	path = UserCenter
 	url = git@github.com:FairyLightsStudio/UserCenter.git
+[submodule "DesignAssets"]
+	path = DesignAssets
+	url = https://github.com/FairyLightsStudio/DesignAssets.git
+[submodule "PoWCAPTCHA-web3.0"]
+	path = PoWCAPTCHA-web3.0
+	url = git@github.com:FairyLightsStudio/PoWCAPTCHA-web3.0.git
+[submodule "AngularM3EComponents"]
+	path = AngularM3EComponents
+	url = git@tangled.org:did:plc:ldzwhpohsh4m2t77jnxm7mhm
+[submodule "BetterInternet"]
+	path = BetterInternet
+	url = ssh://git@codeberg.org/FairyLightsStudio/BetterInternet.git
+[submodule "AboutUs"]
+	path = AboutUs
+	url = git@github.com:FairyLightsStudio/AboutUs.git
+[submodule "TeraPanelDocsSite"]
+	path = TeraPanelDocsSite
+	url = git@github.com:FairyLightsStudio/TeraPanelDocsSite.git
+[submodule "LiLi_converter"]
+	path = LiLi_converter
+	url = git@github.com:FairyLightsStudio/LiLi_converter.git
