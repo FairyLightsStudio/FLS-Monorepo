@@ -147,7 +147,4 @@ echo "  运行以下命令试试你的第一个 Buck2 构建："
 echo
 echo -e "    ${CYAN}buck2 build //third-party/rust:tokio${NC}"
 echo
-echo "  以后加新依赖的流程："
-echo "    1. 编辑 $THIRD_PARTY_DIR/Cargo.toml"
-echo "    2. 运行 ./onboarding.sh"
 echo

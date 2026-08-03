@@ -1,6 +1,8 @@
 extra_srcs = [
     "src/data/alg-rsa-encryption.der",
-    "src/rsa/signature_rsa_example_private_key.der",
+    "src/ec/curve25519/ed25519/ed25519_pkcs8_v2_template.der",
+    "src/ec/suite_b/ecdsa/ecPublicKey_p256_pkcs8_v1_template.der",
+    "src/ec/suite_b/ecdsa/ecPublicKey_p384_pkcs8_v1_template.der",
     "tests/ecdsa_test_private_key_p256.p8",
     "tests/ecdsa_test_public_key_p256.der",
     "tests/ecdsa_test_public_key_p256_debug.txt",
@@ -9,6 +11,5 @@ extra_srcs = [
     "tests/ed25519_test_public_key.bin",
     "tests/ed25519_test_public_key.der",
 ]
-
 [buildscript]
 run = true

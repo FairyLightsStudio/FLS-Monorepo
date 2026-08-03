@@ -1,5 +1,0 @@
-extra_srcs = [
-    "README.md",
-    "tests/examples/p256-priv.der",
-    "tests/examples/p256-priv.pem",
-]

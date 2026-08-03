@@ -1,9 +1,0 @@
-extra_srcs = [
-    "README.md",
-    "md_doc/is_supported.md",
-    "md_doc/pid.md",
-    "md_doc/minimum_cpu_update_interval.md",
-    "md_doc/serde.md",
-    "md_doc/sid.md",
-    "md_doc/supported_signals.md",
-]
