@@ -1,0 +1,78 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+
+service InstanceService {
+  rpc ListInstances(ListInstancesRequest) returns (ListInstancesResponse);
+  rpc GetInstance(GetInstanceRequest) returns (Instance);
+  rpc CreateInstance(CreateInstanceRequest) returns (Instance);
+  rpc DeleteInstance(DeleteInstanceRequest) returns (google.protobuf.Empty);
+  
+  rpc StartInstance(InstanceActionRequest) returns (google.protobuf.Empty);
+  rpc StopInstance(InstanceActionRequest) returns (google.protobuf.Empty);
+  rpc RestartInstance(InstanceActionRequest) returns (google.protobuf.Empty);
+}
+
+message Instance {
+  string id = 1;
+  string node_id = 2;
+  string name = 3;
+  InstanceType type = 4;
+  InstanceStatus status = 5;
+  // Configuration specific to the type
+  oneof config {
+      ProcessConfig process = 10;
+      // DockerConfig container = 11;
+      // SystemdConfig systemd = 12;
+  }
+}
+
+enum InstanceType {
+  INSTANCE_TYPE_UNSPECIFIED = 0;
+  PROCESS = 1;
+  DOCKER = 2;
+  SYSTEMD = 3;
+}
+
+enum InstanceStatus {
+  INSTANCE_STATUS_UNSPECIFIED = 0;
+  RUNNING = 1;
+  STOPPED = 2;
+  ERROR = 3;
+}
+
+message ProcessConfig {
+    string command = 1;
+    string cwd = 2;
+    map<string, string> env = 3;
+}
+
+message ListInstancesRequest {
+    string node_id = 1; // Filter by node
+}
+
+message ListInstancesResponse {
+    repeated Instance instances = 1;
+}
+
+message GetInstanceRequest {
+    string id = 1;
+}
+
+message CreateInstanceRequest {
+    string node_id = 1;
+    string name = 2;
+    InstanceType type = 3;
+    oneof config {
+      ProcessConfig process = 10;
+    }
+}
+
+message DeleteInstanceRequest {
+    string id = 1;
+}
+
+message InstanceActionRequest {
+    string id = 1;
+}

@@ -1,0 +1,76 @@
+[workspace]
+members = ["crates/terapanel", "crates/terad", "crates/shared-types", "xtask"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["FlightStudio"]
+license = "Apache-2.0"
+homepage = "https://github.com/flightstudio/terapanel"
+repository = "https://github.com/flightstudio/terapanel"
+readme = "README.md"
+
+[workspace.lints.rust]
+unknown_lints = "deny"
+unsafe_code = "deny"
+unused_must_use = "deny"
+
+[workspace.lints.clippy]
+dbg_macro = "deny"
+field_reassign_with_default = "allow"
+manual_range_contains = "allow"
+new_without_default = "allow"
+
+[profile.release]
+debug = true
+lto = "thin"
+
+[profile.dist]
+codegen-units = 1
+debug = true
+inherits = "release"
+lto = "fat"
+
+[profile.dev.package]
+insta.opt-level = 3
+similar.opt-level = 3
+
+[workspace.metadata.release]
+pre-release-commit-message = "chore: release v{{version}}"
+shared-version = true
+sign-tag = true
+tag-name = "v{{version}}"
+
+[workspace.dependencies]
+# base
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+config = "0.15"
+exn = "0.3"
+
+async-nats = "0.45"
+
+futures = "0.3"
+connectrpc = { version = "0.8", features = ["axum"] }
+buffa = { version = "0.9", features = ["json"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# terapanel dependencies
+bcrypt = "0"
+jsonwebtoken = { version = "10", features = ["rust_crypto"] }
+uuid = { version = "1", features = ["v4", "v7", "serde"] }
+
+# terad dependencies
+sysinfo = "0.37"
+portable-pty = "0.9"
+bollard = "0.19"
+zbus = "5"
+ractor = "0"
+
+# xtask dependencies
+clap = { version = "4.5", features = ["derive"] }
+which = { version = "7.0" }
+

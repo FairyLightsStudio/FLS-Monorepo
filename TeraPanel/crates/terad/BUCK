@@ -1,0 +1,21 @@
+rust_binary(
+    name = "terad",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/main.rs",
+    deps = [
+        "root//TeraPanel/crates/shared-types:shared-types",
+        "root//third-party/rust:anyhow",
+        "root//third-party/rust:async-nats",
+        "root//third-party/rust:bollard",
+        "root//third-party/rust:config",
+        "root//third-party/rust:futures",
+        "root//third-party/rust:portable-pty",
+        "root//third-party/rust:ractor",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:serde_json",
+        "root//third-party/rust:sysinfo",
+        "root//third-party/rust:tokio",
+        "root//third-party/rust:tracing",
+        "root//third-party/rust:zbus",
+    ],
+)

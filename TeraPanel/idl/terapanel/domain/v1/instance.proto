@@ -1,0 +1,37 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+import "google/protobuf/timestamp.proto";
+import "terapanel/domain/v1/intranet.proto";
+import "terapanel/domain/v1/runtime.proto";
+
+enum InstanceStatus {
+  INSTANCE_STATUS_UNSPECIFIED = 0;
+  INSTANCE_CREATED = 1;
+  INSTANCE_RUNNING = 2;
+  INSTANCE_STOPPED = 3;
+  INSTANCE_ERROR = 4;
+}
+
+message Instance {
+  string id = 1;
+  string node_id = 2;
+  string name = 3;
+  RuntimeType runtime_type = 4;
+  InstanceStatus status = 5;
+  oneof runtime_config {
+    SystemdRuntimeConfig systemd_config = 6;
+    ContainerRuntimeConfig container_config = 7;
+    ProcessRuntimeConfig process_config = 8;
+    NginxRuntimeConfig nginx_config = 9;
+  }
+  repeated Sidecar sidecars = 13;
+  repeated PortMapping exposed_ports = 10;
+  google.protobuf.Timestamp created_at = 11;
+  google.protobuf.Timestamp updated_at = 12;
+}
+
+message Sidecar {
+  string name = 1;
+  string config = 2;
+}

@@ -1,0 +1,17 @@
+version: v2
+modules:
+  - path: idl
+lint:
+  use:
+    - STANDARD
+    - UNARY_RPC
+  except:
+    # 禁用具体的警告规则ID
+    #- ENUM_ZERO_VALUE_SUFFIX
+    #- PACKAGE_DEFINED
+    #- RPC_NO_SERVER_STREAMING
+    #- RPC_NO_CLIENT_STREAMING
+    - RPC_RESPONSE_STANDARD_NAME
+    - ENUM_VALUE_PREFIX
+    - RPC_REQUEST_RESPONSE_UNIQUE
+    - RPC_REQUEST_STANDARD_NAME

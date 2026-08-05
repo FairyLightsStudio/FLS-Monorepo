@@ -1,0 +1,39 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+
+service IntranetPenetrationService {
+    rpc ListTunnels(ListTunnelsRequest) returns (ListTunnelsResponse);
+    rpc CreateTunnel(CreateTunnelRequest) returns (Tunnel);
+    rpc DeleteTunnel(DeleteTunnelRequest) returns (google.protobuf.Empty);
+}
+
+message Tunnel {
+    string id = 1;
+    string name = 2;
+    // The node that needs access (client)
+    string client_node_id = 3;
+    string client_local_addr = 4; // e.g., "127.0.0.1:8080"
+    
+    // The node with public IP (server)
+    string server_node_id = 5;
+    int32 server_remote_port = 6; // e.g., 8080
+}
+
+message ListTunnelsRequest {}
+message ListTunnelsResponse {
+    repeated Tunnel tunnels = 1;
+}
+
+message CreateTunnelRequest {
+    string name = 1;
+    string client_node_id = 2;
+    string client_local_addr = 3;
+    string server_node_id = 4;
+    int32 server_remote_port = 5;
+}
+
+message DeleteTunnelRequest {
+    string id = 1;
+}

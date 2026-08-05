@@ -1,0 +1,37 @@
+syntax = "proto3";
+package terapanel.panel_daemon.v1;
+
+import "terapanel/domain/v1/intranet.proto";
+
+// Messages for public node to configure forwarding
+message CreateForwardingRuleRequest {
+  terapanel.domain.v1.PortMapping rule = 1;
+}
+
+message CreateForwardingRuleResponse {
+  bool success = 1;
+  string error = 2;
+}
+
+message DeleteForwardingRuleRequest {
+  string rule_id = 1;
+}
+
+message DeleteForwardingRuleResponse {
+  bool success = 1;
+}
+
+message ListForwardingRulesRequest {}
+
+message ListForwardingRulesResponse {
+  repeated terapanel.domain.v1.PortMapping rules = 1;
+}
+
+message UpdateForwardingRuleRequest {
+  string rule_id = 1;
+  terapanel.domain.v1.PortMapping.RuleStatus status = 2;
+}
+
+message UpdateForwardingRuleResponse {
+  bool success = 1;
+}

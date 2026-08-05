@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package terapanel.domain.v1;
+
+message User {
+  string id = 1;
+  string nickname = 2;
+
+  enum UserType {
+    USER_TYPE_UNSPECIFIED = 0;
+    ADMIN = 1;
+    // REGULAR_USER = 2;
+    // FLS_SSO_USER = 10;
+  }
+  UserType type = 4;
+}

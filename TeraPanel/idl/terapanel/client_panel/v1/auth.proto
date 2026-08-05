@@ -1,0 +1,114 @@
+syntax = "proto3";
+
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+import "terapanel/domain/v1/panel_user.proto";
+
+// 用户登录
+
+service AuthnService {
+  // 获取支持的登录方式
+  rpc GetLoginMethods(GetLoginMethodsRequest) returns (GetLoginMethodsResponse);
+
+  // 1. 发起认证流程
+  // 在整个认证流程中，客户端必须正确处理服务端的 Set-Cookie 指示。
+  rpc StartAuthFlow(StartAuthFlowRequest) returns (AuthFlowResponse);
+
+  // 2. 提交认证
+  // 客户端须将 auth_flow_token 放入 HTTP 请求头 (Metadata) 中。
+  // Header Key 建议: "x-terapanel-auth-flow-token"
+  rpc SubmitAuthData(SubmitAuthDataRequest) returns (AuthFlowResponse);
+
+  // 3. 终止会话 (Logout)
+  // 当前 Session Token 即刻失效。面板侧对应的 用户会话 将被异步销毁。
+  rpc TerminateSession(TerminateSessionRequest) returns (google.protobuf.Empty);
+
+  // 4. 获取当前 Session 信息
+  rpc GetSessionInfo(GetSessionInfoRequest) returns (GetSessionInfoResponse);
+
+  // 5. 刷新 Session
+  // 旧 Session Token 即刻失效，新 Token 通过 Set-Cookie 下发
+  rpc RefreshSession(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
+
+// ----------------------------------------------------------------------------
+// Messages: Auth Flow (State Machine)
+// ----------------------------------------------------------------------------
+
+enum LoginMethod {
+  LOGIN_METHOD_UNSPECIFIED = 0;
+
+  ADMIN_LOGIN_BY_PASSWORD = 1;
+  // ADMIN_LOGIN_BY_OTP = 2;
+
+  // ADMIN_LOGIN_BY_OPEN_ID = 3;
+
+  // USER_LOGIN_BY_OIDC_SSO = 2;
+  // // fairy light studio UserCenter
+  // USER_LOGIN_BY_FLS_SSO = 10;
+}
+
+message GetLoginMethodsRequest {}
+
+message GetLoginMethodsResponse {
+  repeated LoginMethod methods = 1;
+}
+
+message StartAuthFlowRequest {
+  string identifier = 1; // 账号标识符，选填：账号/邮箱/手机号
+  LoginMethod method = 2;
+}
+
+// 统一的认证响应
+message AuthFlowResponse {
+  // 下一步的场景类型 (UI 应该渲染什么界面)
+  enum SceneType {
+    SCENE_TYPE_UNSPECIFIED = 0;
+    SCENE_INPUT_PASSWORD = 1; // 输入密码
+    // SCENE_INPUT_MFA = 2; // 输入验证码
+    SCENE_ACCEPT_EULA = 3; // 同意用户协议
+    // SCENE_CHANGE_PASSWORD = 4; // 强制修改密码（首次登录等）
+    SCENE_FINISHED = 10; // 结束，登录成功
+    SCENE_FAILED = 11; // 结束，登录失败
+  }
+  SceneType next_scene = 2;
+
+  // 根据 next_scene 的不同，这里可能包含渲染该场景所需的额外数据
+  oneof scene_payload {
+    EulaPayload eula_payload = 3;
+    AuthSuccessPayload success_payload = 4;
+    // PasswordPayload 通常为空，除非需要提示密码规则
+  }
+}
+
+message EulaPayload {
+  string content_url = 1;
+  string version = 2;
+}
+
+message AuthSuccessPayload {
+  terapanel.domain.v1.User user = 1;
+  // string redirect_url = 2; // 比如跳回点击登录前的页面
+}
+
+message SubmitAuthDataRequest {
+  oneof auth_input {
+    string password = 1; // 对应 SCENE_INPUT_PASSWORD
+    // string mfa_code = 2; // 对应 SCENE_INPUT_MFA
+    bool eula_accepted = 3; // 对应 SCENE_ACCEPT_EULA
+    // string new_password = 4; // 对应 SCENE_CHANGE_PASSWORD
+  }
+}
+
+// ----------------------------------------------------------------------------
+// Messages: Session & User
+// ----------------------------------------------------------------------------
+
+message TerminateSessionRequest {}
+
+message GetSessionInfoRequest {}
+message GetSessionInfoResponse {
+  // 如果未登录，服务端返回 gRPC error (UNAUTHENTICATED)，或者 Ghost User（如果未来允许匿名访问）
+  terapanel.domain.v1.User user = 1;
+}

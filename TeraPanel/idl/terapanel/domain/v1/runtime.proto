@@ -1,0 +1,36 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+enum RuntimeType {
+  RUNTIME_TYPE_UNKNOWN = 0;
+  RUNTIME_TYPE_SYSTEMD = 1;
+  RUNTIME_TYPE_CONTAINER = 2;
+  RUNTIME_TYPE_PROCESS = 3;
+  RUNTIME_TYPE_NGINX = 4;
+}
+
+message SystemdRuntimeConfig {
+  string unit_name = 1;
+  // TODO: 沙盒模式运行
+}
+
+message ContainerRuntimeConfig {
+  // 实例运行时使用的容器镜像
+  string image = 1;
+  string command = 2;
+  map<string, string> env = 3;
+  map<string, string> volumes = 4;
+  repeated string ports = 5;
+}
+
+message ProcessRuntimeConfig {
+  string command = 1;
+  repeated string args = 2;
+  string working_dir = 3;
+  map<string, string> env = 4;
+  bool auto_restart = 5;
+}
+
+message NginxRuntimeConfig {
+  string config_path = 1;
+}

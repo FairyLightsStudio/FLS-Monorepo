@@ -1,0 +1,46 @@
+syntax = "proto3";
+package terapanel.client_panel.v1.node_admin;
+
+service ObservabilityService {
+    // Get real-time status snapshot of the node
+    rpc GetNodeStatus(GetNodeStatusRequest) returns (NodeStatusSnapshot);
+}
+
+message GetNodeStatusRequest {
+    string node_id = 1;
+}
+
+message NodeStatusSnapshot {
+    double cpu_usage_percent = 1;
+    
+    uint64 memory_total = 2;
+    uint64 memory_used = 3;
+    
+    // Optional: Disk usage info
+    repeated DiskUsage disks = 4;
+    
+    // Optional: Network stats
+    NetworkStats network = 5;
+
+    // Uptime in seconds
+    uint64 uptime = 6;
+    
+    // Load average (linux only usually)
+    double load_avg_1 = 7;
+    double load_avg_5 = 8;
+    double load_avg_15 = 9;
+}
+
+message DiskUsage {
+    string mount_point = 1;
+    uint64 total = 2;
+    uint64 used = 3;
+}
+
+message NetworkStats {
+    uint64 rx_bytes = 1;
+    uint64 tx_bytes = 2;
+    // Current rate
+    uint64 rx_bytes_per_sec = 3;
+    uint64 tx_bytes_per_sec = 4;
+}

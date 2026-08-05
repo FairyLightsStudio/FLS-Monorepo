@@ -1,0 +1,118 @@
+syntax = "proto3";
+package terapanel.client_panel.v1;
+
+import "google/protobuf/empty.proto";
+import "google/longrunning/operations.proto";
+import "terapanel/domain/v1/file.proto";
+
+service FileManagerService {
+  rpc ListDirectory(ListDirectoryRequest) returns (ListDirectoryResponse);
+  
+  rpc CreateDirectory(CreateDirectoryRequest) returns (google.protobuf.Empty);
+  rpc CreateFile(CreateFileRequest) returns (google.protobuf.Empty);
+  
+  // Delete files/directories. Can be long running for large directories.
+  // Supports moving to trash bin or permanent deletion.
+  rpc Delete(DeleteRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "google.protobuf.Empty"
+      metadata_type: "FileOperationMetadata"
+    };
+  }
+
+  // Rename a file or directory (Simple rename, use Cut+Paste for Move)
+  rpc Rename(RenameRequest) returns (google.protobuf.Empty);
+  
+  rpc ReadFile(ReadFileRequest) returns (ReadFileResponse);
+  rpc WriteFile(WriteFileRequest) returns (google.protobuf.Empty);
+  
+  // Get detailed file info
+  rpc Stat(StatRequest) returns (terapanel.domain.v1.FileInfo);
+
+  // --- Stateful Operations ---
+
+  // Register files to the server-side session clipboard
+  // This overwrites the current clipboard content.
+  rpc AddToClipboard(AddToClipboardRequest) returns (google.protobuf.Empty);
+
+  // Execute Paste operation using the current clipboard content to the target directory.
+  // This is a Long Running Operation.
+  rpc Paste(PasteRequest) returns (google.longrunning.Operation) {
+    option (google.longrunning.operation_info) = {
+      response_type: "PasteResponse"
+      metadata_type: "FileOperationMetadata"
+    };
+  }
+}
+
+// Global File Location used in requests is defined in domain.
+
+message ListDirectoryRequest {
+  terapanel.domain.v1.FileLocation location = 1;
+}
+
+message ListDirectoryResponse {
+  repeated terapanel.domain.v1.FileInfo files = 1; 
+}
+
+message CreateDirectoryRequest {
+  terapanel.domain.v1.FileLocation location = 1;
+}
+
+message CreateFileRequest {
+  terapanel.domain.v1.FileLocation location = 1;
+}
+
+message DeleteRequest {
+  repeated terapanel.domain.v1.FileLocation locations = 1;
+  // If true, attempt to move to the system trash/recycle bin.
+  // If false, permanently delete.
+  bool move_to_trash = 2;
+}
+
+message RenameRequest {
+  terapanel.domain.v1.FileLocation source = 1;
+  string new_name = 2;
+}
+
+message ReadFileRequest {
+  terapanel.domain.v1.FileLocation location = 1;
+  // Optional: Read chunking support could be added here
+}
+
+message ReadFileResponse {
+  bytes content = 1;
+}
+
+message WriteFileRequest {
+  terapanel.domain.v1.FileLocation location = 1;
+  bytes content = 2;
+}
+
+message StatRequest {
+  terapanel.domain.v1.FileLocation location = 1;
+}
+
+message AddToClipboardRequest {
+  repeated terapanel.domain.v1.FileLocation sources = 1;
+  terapanel.domain.v1.ClipboardAction action = 2; 
+}
+
+message PasteRequest {
+  // Destination directory
+  terapanel.domain.v1.FileLocation destination_dir = 1;
+}
+
+message PasteResponse {
+  int32 items_processed = 1;
+  repeated string errors = 2;
+}
+
+message FileOperationMetadata {
+  string current_item = 1;
+  int64 items_total = 2;
+  int64 items_processed = 3;
+  // For byte-level progress
+  int64 bytes_total = 4;
+  int64 bytes_processed = 5;
+}

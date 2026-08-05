@@ -1,0 +1,35 @@
+syntax = "proto3";
+package terapanel.client_panel.v1.node_admin;
+
+service TerminalService {
+  // Bidirectional streaming for terminal session
+  rpc Shell(stream ShellRequest) returns (stream ShellResponse);
+}
+
+message ShellRequest {
+  oneof input {
+    // First message to initiate session
+    ShellInit init = 1;
+    // Standard input to the terminal
+    bytes data = 2;
+    // Resize the terminal window
+    TerminalResize resize = 3;
+  }
+}
+
+message ShellInit {
+  string node_id = 1; 
+  // Optional: rows, cols, env vars, etc.
+  uint32 rows = 2;
+  uint32 cols = 3;
+}
+
+message TerminalResize {
+  uint32 rows = 1;
+  uint32 cols = 2;
+}
+
+message ShellResponse {
+  // Output from the terminal (stdout/stderr combined usually)
+  bytes data = 1;
+}

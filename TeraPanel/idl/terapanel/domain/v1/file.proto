@@ -1,0 +1,36 @@
+syntax = "proto3";
+package terapanel.domain.v1;
+
+import "google/protobuf/timestamp.proto";
+
+// Representation of a file or directory
+message FileInfo {
+  string name = 1;
+  // Full path or relative path depending on context
+  string path = 2;
+  bool is_dir = 3;
+  uint64 size = 4;
+  // Unix permission mode (e.g. 0755)
+  uint32 mode = 5;
+  google.protobuf.Timestamp mod_time = 6;
+  string owner = 7;
+  string group = 8;
+  
+  // Symbolic link target if applicable
+  string link_target = 9;
+}
+
+// A generic pointer to a location in the file system across the infrastructure
+message FileLocation {
+  oneof target {
+    string node_id = 1;
+    string instance_id = 2;
+  }
+  string path = 3;
+}
+
+enum ClipboardAction {
+    CLIPBOARD_ACTION_UNSPECIFIED = 0;
+    COPY = 1;
+    CUT = 2;
+}
