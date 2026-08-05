@@ -1,0 +1,42 @@
+syntax = "v1"
+
+info (
+	title:   "LLConverter-api"
+	desc:    "LiLi音视频格式转换服务API"
+	version: "v1"
+)
+
+import "model.api"
+
+type SourceFormat {
+	SourceFormat string `json:"sourceFormat"`
+}
+
+type addTaskResp {
+	TaskAccessToken string `json:"taskAccessToken"`
+	Task            Task   `json:"task"`
+}
+
+@server (
+	prefix: /v1
+)
+service front-api {
+	@handler getSupportTargetFormats
+	get /rpc/getSupportTargetFormatsSourceFormat returns ([]Conversion)
+
+	@handler addTask
+	post /tasksConversion returns (addTaskResp)
+}
+
+@server (
+	prefix:     /v1
+	middleware: AuthByTaskToken
+)
+service front-api {
+	@handler getTask
+	get /tasks/:taskId returns (Task)
+
+	@handler getFile
+	get /files/:fileId returns (File)
+}
+

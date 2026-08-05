@@ -1,0 +1,18 @@
+// 基本数据结构
+type (
+	Task {
+		Id             string `json:"id"`
+		Status         string `json:"status"`
+		SelectedWorker string `json:"selectedWorker"`
+		Context        string `json:"context"`
+	}
+	Conversion {
+		Id           string `json:"id"`
+		SourceFormat string `json:"sourceFormat"`
+		TargetFormat string `json:"targetFormat"`
+	}
+	File {
+		Id  string `json:"id"`
+		URL string `json:"url"`
+	}
+)
