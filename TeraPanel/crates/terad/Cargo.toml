@@ -1,44 +1,26 @@
 [package]
 name = "terad"
-version = "0.1.0"
+version.workspace = true
 edition.workspace = true
 
-[[bin]]
-name = "terad"
-path = "src/main.rs"
-
 [dependencies]
-tokio = { workspace = true, features = ["full"] }
-
-async-nats.workspace = true
-
-# --- NodeAdmin: Observability ---
-# 用于获取 CPU/内存/磁盘/进程信息
-sysinfo = "0.37"
-
-# --- NodeAdmin: Terminal ---
-# 用于创建异步伪终端 (PTY)
-portable-pty = "0.9"
-futures = "0.3"      # 用于处理 PTY 的 Stream
-
-# --- ServiceController: Container ---
-# bollard 是一个强大的异步 Docker/Podman API 客户端
-bollard = "0.19"
-
-# --- ServiceController: Systemd ---
-# zbus 是一个纯 Rust 的异步 D-Bus 库，用于与 systemd 通信
-# 注意：作为替代方案，也可以直接使用 tokio::process::Command 来调用 `systemctl`
-zbus = "5"
-
-config.workspace = true
-tracing.workspace = true
-tracing-subscriber = { workspace = true, features = ["env-filter"] }
-anyhow.workspace = true
-
-# --- 生成的协议类型 ---
+tokio = { workspace = true }
+async-nats = { workspace = true }
+sysinfo = { workspace = true }
+portable-pty = { workspace = true }
+futures = { workspace = true }
+bollard = { workspace = true }
+zbus = { workspace = true }
+config = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+exn = "0.3"
 shared-types = { path = "../shared-types" }
-ractor = "0"
-
+ractor = { workspace = true }
+connectrpc = { workspace = true }
+buffa = { workspace = true }
+buffa-types = { workspace = true }
+serde = { workspace = true }
 
 [build-dependencies]
-volo-build.workspace = true
+connectrpc-build = { workspace = true }

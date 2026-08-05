@@ -7,8 +7,25 @@ use std::sync::Arc;
 use tracing::{info, error};
 use volo_http::Router;
 
+#[derive(Debug)]
+struct AppError(Box<dyn core::error::Error + Send + Sync + 'static>);
+
+impl core::fmt::Display for AppError {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}", self.0)
+    }
+}
+
+impl core::error::Error for AppError {
+    fn source(&self) -> Option<&(dyn core::error::Error + 'static)> {
+        Some(&*self.0)
+    }
+}
+
 #[tokio::main]
-async fn main() -> anyhow::Result<()> {
+async fn main() -> exn::Result<(), AppError> {
+    use exn::ResultExt;
+
     // ====================================================
     // 1. 初始化日志 (Observability)
     // ====================================================
@@ -54,14 +71,26 @@ async fn main() -> anyhow::Result<()> {
         // .layer(...) // 如果需要注入 state，可以使用中间件机制
 
     let addr: SocketAddr = format!("{}:{}", settings.server.host, settings.server.port)
-        .parse()?;
+        .parse()
+        .or_raise(|| AppError(Box::new(
+            std::io::Error::new(
+                std::io::ErrorKind::InvalidInput,
+                format!("Invalid address: {}:{}", settings.server.host, settings.server.port),
+            )
+        )))?;
 
     info!("✅ TeraPanel 启动成功! http://{}", addr);
 
     // 启动 Volo-HTTP 服务
     volo_http::Server::new(app)
         .run(addr)
-        .await?;
+        .await
+        .or_raise(|| AppError(Box::new(
+            std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "Server failed to start",
+            )
+        )))?;
 
     Ok(())
 }

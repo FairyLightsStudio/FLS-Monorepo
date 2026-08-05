@@ -1,14 +1,15 @@
 [package]
 name = "shared-types"
-version = "0.1.0"
-publish = false
+version.workspace = true
 edition.workspace = true
-build = "build.rs"
-
-[build-dependencies]
-pilota-build.workspace = true
-# env_logger = "0.11" # 添加这个
-# log = "0"
 
 [dependencies]
-pilota.workspace = true
+buffa = { version = "0.9", features = ["json"] }
+buffa-types = { version = "0.9", features = ["json"] }
+connectrpc = "0.8"
+serde = { version = "1", features = ["derive"] }
+http-body = "1"
+futures = "0.3"
+
+[build-dependencies]
+connectrpc-build = "0.8"

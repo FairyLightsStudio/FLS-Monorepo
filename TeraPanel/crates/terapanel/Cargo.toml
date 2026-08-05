@@ -1,40 +1,25 @@
 [package]
 name = "terapanel"
-version = "0.1.0"
+version.workspace = true
 edition.workspace = true
 
-[[bin]]
-name = "terapanel"
-path = "src/main.rs"
-
 [dependencies]
-# --- 核心异步运行时 ---
 tokio = { workspace = true }
-
-# --- Web 服务器 (WebPanelApi) ---
-config.workspace = true
-volo.workspace = true
-volo-grpc.workspace = true
-pilota.workspace = true
-anyhow.workspace = true
-tracing.workspace = true
-tracing-subscriber = { workspace = true, features = ["env-filter"] }
-
-# --- 生成的协议类型 ---
+config = { workspace = true }
+exn = "0.3"
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
 shared-types = { path = "../shared-types" }
-
-# --- NATS 客户端 (ServiceProvider) ---
-# 用于连接 NATS、发送命令、接收心跳
-async-nats.workspace = true
-
-# --- 数据库 (DataBase) ---
-# SQLx 是 Rust 中最流行的异步数据库驱动
-sqlx = { version = "0", features = ["runtime-tokio", "postgres", "sqlite"] }
-
-# --- 业务逻辑 ---
-bcrypt = "0"                                               # 用于密码哈希
-jsonwebtoken = { version = "10", features = ["rust_crypto"] } # 用于生成和验证 JWT
-uuid = { version = "1", features = ["v4", "v7", "serde"] }
+async-nats = { workspace = true }
+sqlx = { workspace = true }
+bcrypt = { workspace = true }
+jsonwebtoken = { workspace = true }
+uuid = { workspace = true }
+connectrpc = { workspace = true }
+buffa = { workspace = true }
+buffa-types = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
 
 [build-dependencies]
-volo-build.workspace = true
+connectrpc-build = { workspace = true }
