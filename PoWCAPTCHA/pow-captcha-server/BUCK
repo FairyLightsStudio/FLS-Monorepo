@@ -1,0 +1,23 @@
+rust_binary(
+    name = "pow-captcha-server",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/bin/server.rs",
+    deps = [
+        "root//PoWCAPTCHA/pow-captcha-core:pow-captcha-core",
+        "root//third-party/rust:anyhow",
+        "root//third-party/rust:async-trait",
+        "root//third-party/rust:axum",
+        "root//third-party/rust:buffa",
+        "root//third-party/rust:buffa-types",
+        "root//third-party/rust:config",
+        "root//third-party/rust:connectrpc",
+        "root//third-party/rust:hex",
+        "root//third-party/rust:rand-08",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:sqlx",
+        "root//third-party/rust:thiserror-1",
+        "root//third-party/rust:time",
+        "root//third-party/rust:tokio",
+        "root//third-party/rust:uuid",
+    ],
+)

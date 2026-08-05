@@ -1,0 +1,24 @@
+[package]
+name = "pow_captcha_server"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+pow-captcha-core = { path = "../pow-captcha-core" }
+rand.workspace = true
+uuid.workspace = true
+hex = "0.4.3"
+time = "0.3.36"
+thiserror = "1.0"
+async-trait = "0.1"
+exn.workspace = true
+tokio = { version = "1", features = ["full"] }
+sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring", "postgres", "chrono", "uuid"] }
+config = { version = "0.15.14", default-features = false, features = ["toml"] }
+serde = { version = "1", features = ["derive"] }
+axum = "0.8"
+
+connectrpc = { version = "0.8", features = ["axum"] }
+buffa = { version = "0.9", features = ["json"] }
+
+[build-dependencies]
