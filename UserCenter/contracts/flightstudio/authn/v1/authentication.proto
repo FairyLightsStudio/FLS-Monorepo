@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package flightstudio.authn.v1;
+
+import "common.proto";
+import "sm_info.proto";
+// import "sm_input.proto";
+import "sm_input.proto";
+
+message GetLoginMethodsResponse {
+  repeated LoginMethod login_methods = 1;
+}
+message GetLoginMethodsRequest {}
+
+service AuthenticationService {
+  // 获取登录方法 (用于初始登录页面)
+  rpc GetLoginMethods(GetLoginMethodsRequest) returns (GetLoginMethodsResponse) {}
+  // 开始认证流程 (用户选择登录方式(并提交标识符)后调用)
+  rpc StartAuthFlow(StartAuthFlowRequest) returns (StartAuthFlowResponse) {}
+
+  // 提交认证数据 (用户填写表单后调用)
+  rpc SubmitAuthFlowData(SubmitAuthFlowDataRequest) returns (SubmitAuthFlowDataResponse) {}
+}
+message StartAuthFlowResponse {
+  SMInfo challenge_info = 1;
+}
+message SubmitAuthFlowDataResponse {}
+
+message StartAuthFlowRequest {
+  // 用户标识符 (邮箱/手机号等)，如果选择IDENTIFIER方法则必填
+  string identifier = 1;
+
+  // 选择的登录方法
+  string method_id = 2;
+}
+
+message SubmitAuthFlowDataRequest {
+  SMInput client_action = 1;
+}

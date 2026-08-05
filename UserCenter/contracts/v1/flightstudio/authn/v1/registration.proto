@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package flightstudio.authn.v1;
+
+import "sm_info.proto";
+import "sm_input.proto";
+
+service RegistrationService {
+  rpc StartRegFlow(StartRegFlowRequest) returns (StartRegFlowResponse) {}
+
+  rpc SubmitRegFlowData(SubmitRegFlowDataRequest) returns (SubmitRegFlowDataResponse) {}
+}
+
+message StartRegFlowRequest {
+  // 用户标识符 (邮箱/手机号)
+  string identifier = 1;
+}
+
+message SubmitRegFlowDataRequest {
+  oneof data {
+    string password = 2;
+    OwnershipProof ownership_proof = 3;
+  }
+}
+
+message StartRegFlowResponse {
+  SMInfo challenge_info = 1;
+}
+
+message SubmitRegFlowDataResponse {
+  SMInfo next_scene = 1;
+}

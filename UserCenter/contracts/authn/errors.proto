@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package flightstudio.usercenter.common.auth;
+
+// 认证失败响应
+message AuthFailure {
+  // 失败原因
+  enum FailureReason {
+    FAILURE_REASON_UNSPECIFIED = 0;
+    FAILURE_REASON_INVALID_CREDENTIALS = 1;       // 提供的凭据无效
+    FAILURE_REASON_INSUFFICIENT_VERIFICATION = 2; // 提供的信息不足以验证身份
+    FAILURE_REASON_SESSION_EXPIRED = 3;           // 会话长时间未活动
+    FAILURE_REASON_RATE_LIMITED = 4;              // 操作过于频繁
+    FAILURE_REASON_INTERNAL_ERROR = 5;            // 服务器内部错误
+  }
+
+  FailureReason reason = 1;
+
+  // 可选的用户友好错误消息 (可用于前端显示)
+  string error_message = 2;
+
+  // 是否允许重试
+  bool can_retry = 3;
+}

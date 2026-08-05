@@ -1,0 +1,141 @@
+syntax = "proto3";
+
+package flightstudio.usercenter.authn.v1;
+import "google/protobuf/any.proto";
+
+enum AvailableTranslation {
+  UNSPECIFIED = 0;
+  TRY_OTHER_WAY = 1; // 尝试其他认证方式
+  NEXT_STEP = 2;     // 下一步
+  GIVE_UP = 3;     // 放弃当前流程
+}
+
+message Scene {
+  google.protobuf.Any current_state = 1;
+  
+  oneof formdata { AuthPlease auth = 1; }
+
+  repeated AvailableTranslation available_translations = 3;
+
+  message AuthPlease {
+    enum AuthType {
+      AUTH_TYPE_UNSPECIFIED = 0;
+      AUTH_TYPE_VERIFY_IDENTITY = 1;   // 核实你的身份
+      AUTH_TYPE_TWO_FACTOR = 2;        // 两步验证
+      AUTH_TYPE_EXTERNAL_PROVIDER = 3; // 通过xxx确认你的身份
+    }
+
+    AuthType auth_type = 1;
+
+    repeated AuthOption auth_options = 2;
+
+    oneof metadata {
+      ExternalProviderMetadata external_provider = 3;
+    }
+  }
+}
+
+message FlowResponse {
+  oneof response {
+    Scene next_scene = 1;
+
+    AuthSuccess success = 2;
+
+    AuthFailure failure = 3;
+  }
+}
+
+message FlowRequest {
+
+} 
+message AuthOption {
+  // 选项类型
+  enum OptionType {
+    AUTH_OPTION_TYPE_UNSPECIFIED = 0;
+    AUTH_OPTION_TYPE_PASSWORD = 1;
+    AUTH_OPTION_TYPE_OWNERSHIP_PROOF = 2; // 所有权证明 (包括Passkey, OTP等)
+  }
+
+  OptionType option_type = 1;
+
+  // 选项特定的元数据
+  oneof option_metadata {
+    // OWNERSHIP_PROOF选项使用
+    OwnershipProofOptionMetadata ownership_proof = 2;
+  }
+}
+
+// 所有权证明选项的元数据 
+message OwnershipProofOptionMetadata {
+  // 所有权证明的类型
+  enum ProofMethodType {
+    PROOF_METHOD_TYPE_UNSPECIFIED = 0;
+    PROOF_METHOD_TYPE_EMAIL_OTP = 1;
+    PROOF_METHOD_TYPE_SMS_OTP = 2;
+    PROOF_METHOD_TYPE_TOTP = 3;
+    PROOF_METHOD_TYPE_PASSKEY = 4;
+  }
+
+  ProofMethodType proof_method_type = 1;
+
+  // 用于UI显示的描述性文本
+  // 例如: "向 yo***@example.com 发送验证码" 或 "使用您的通行密钥"
+  string display_text = 2;
+
+  // 当 proof_method_type 为 PASSKEY 时，需要提供此元数据
+  oneof method_specific_metadata { WebAuthnMetadata webauthn_metadata = 3; }
+}
+
+// WebAuthn元数据
+message WebAuthnMetadata {
+  // WebAuthn挑战值 (Base64编码)
+  string challenge = 1;
+
+  // 允许的认证器列表
+  repeated string allowed_credentials = 2;
+}
+
+// 外部提供商元数据
+message ExternalProviderMetadata {
+  // 提供商类型 (如"google", "microsoft")
+  string provider_id = 1;
+
+  // 提供商显示名称 (如"Google")
+  string provider_name = 2;
+
+  // 授权URL (用于OIDC重定向)
+  string authorization_url = 3;
+}
+
+// 证明所有权的凭证 (包括OTP, Passkey等)
+message OwnershipProof {
+  message WebAuthnResponse { string credential_response = 1; }
+  oneof proof {
+    string email_otp = 1;          // 邮箱一次性密码
+    string sms_otp = 2;            // 短信一次性密码
+    string totp_code = 3;          // 基于时间的一次性密码
+    WebAuthnResponse webauthn = 4; // Passkey (WebAuthn) 响应
+  }
+}
+
+message AuthSuccess {
+  // 重定向URL (可选)
+  string redirect_uri = 1;
+}
+
+message AuthFailure {
+  enum FailureReason {
+    FAILURE_REASON_UNSPECIFIED = 0;
+    FAILURE_REASON_INVALID_CREDENTIALS = 1;       // 提供的凭据无效
+    FAILURE_REASON_INSUFFICIENT_VERIFICATION = 2; // 提供的信息不足以验证身份
+    FAILURE_REASON_SESSION_EXPIRED = 3;           // 会话长时间未活动
+    FAILURE_REASON_RATE_LIMITED = 4;              // 操作过于频繁
+    FAILURE_REASON_INTERNAL_ERROR = 5;            // 服务器内部错误
+  }
+
+  FailureReason reason = 1;
+
+  string error_message = 2;
+
+  bool can_retry = 3;
+}

@@ -1,0 +1,7 @@
+version: v2
+deps:
+  - buf.build/googleapis/googleapis:main
+modules:
+  - path: .
+    includes:
+      - testproto # 只包含这个目录下的文件

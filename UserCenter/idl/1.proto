@@ -1,0 +1,201 @@
+/*
+版权归 Kubernetes 作者所有。
+
+根据 Apache 许可证 2.0 版本（"许可证"）授权；
+除非符合许可证要求，否则不得使用此文件。
+您可以在以下网址获取许可证副本：
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+除非适用法律要求或书面同意，本软件按"原样"分发，
+无任何明示或暗示的担保或条件。
+详见许可证中规定的特定语言权限和限制。
+*/
+
+// 本文件由 go-to-protobuf 自动生成，请勿手动编辑！
+
+syntax = "proto2";
+
+package k8s.io.api.authentication.v1;
+
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "k8s.io/apimachinery/pkg/runtime/generated.proto";
+import "k8s.io/apimachinery/pkg/runtime/schema/generated.proto";
+
+// 来自生成器"generated"的包范围变量。
+option go_package = "k8s.io/api/authentication/v1";
+
+// BoundObjectReference 是令牌所绑定对象的引用。
+message BoundObjectReference {
+  // 引用对象的种类。有效值为'Pod'和'Secret'。
+  // +optional
+  optional string kind = 1;
+
+  // 引用对象的API版本。
+  // +optional
+  optional string apiVersion = 2;
+
+  // 引用对象的名称。
+  // +optional
+  optional string name = 3;
+
+  // 引用对象的UID。
+  // +optional
+  optional string uID = 4;
+}
+
+// ExtraValue 对值进行封装以便 protobuf 生成
+// +protobuf.nullable=true
+// +protobuf.options.(gogoproto.goproto_stringer)=false
+message ExtraValue {
+  // 如果 items 为空，将生成空切片
+
+  repeated string items = 1;
+}
+
+// SelfSubjectReview 包含 kube-apiserver 掌握的关于发起此请求的用户信息。
+// 当使用身份模拟时，用户将获得被模拟用户的用户信息。如果使用身份模拟或
+// 请求头认证，任何额外键都将被忽略并以小写形式返回。
+message SelfSubjectReview {
+  // 标准对象的元数据。
+  // 更多信息：https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+  // +optional
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // Status 由服务器填充用户属性。
+  optional SelfSubjectReviewStatus status = 2;
+}
+
+// SelfSubjectReviewStatus 由 kube-apiserver 填充并返回给用户。
+message SelfSubjectReviewStatus {
+  // 发起此请求的用户属性。
+  // +optional
+  optional UserInfo userInfo = 1;
+}
+
+// TokenRequest 为指定的服务账户请求令牌。
+message TokenRequest {
+  // 标准对象的元数据。
+  // 更多信息：https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+  // +optional
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // Spec 保存待评估请求的信息
+  optional TokenRequestSpec spec = 2;
+
+  // Status 由服务器填充，表示令牌是否可以被认证。
+  // +optional
+  optional TokenRequestStatus status = 3;
+}
+
+// TokenRequestSpec 包含客户端提供的令牌请求参数。
+message TokenRequestSpec {
+  // Audiences 是令牌的目标受众。令牌接收者必须使用
+  // 令牌受众列表中的标识符来表明身份，否则应拒绝该令牌。
+  // 为多个受众颁发的令牌可用于对其中任一受众进行认证，
+  // 但意味着目标受众之间存在高度信任。
+  // +listType=atomic
+  repeated string audiences = 1;
+
+  // ExpirationSeconds 是请求的有效期时长。
+  // 令牌颁发者可能返回具有不同有效期时长的令牌，
+  // 因此客户端需要检查响应中的'expiration'字段。
+  // +optional
+  optional int64 expirationSeconds = 4;
+
+  // BoundObjectRef 是令牌将绑定到的对象的引用。
+  // 令牌仅在绑定对象存在期间有效。
+  // 注意：API服务器的TokenReview端点会验证BoundObjectRef，
+  // 但其他受众可能不会。如果需要立即撤销，请将ExpirationSeconds设小。
+  // +optional
+  optional BoundObjectReference boundObjectRef = 3;
+}
+
+// TokenRequestStatus 是令牌请求的结果。
+message TokenRequestStatus {
+  // Token 是不透明的持有者令牌。
+  optional string token = 1;
+
+  // ExpirationTimestamp 是返回令牌的过期时间。
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.Time expirationTimestamp = 2;
+}
+
+// TokenReview 尝试将令牌认证为已知用户。
+// 注意：TokenReview 请求可能会被 kube-apiserver 中的
+// webhook 令牌认证插件缓存。
+message TokenReview {
+  // 标准对象的元数据。
+  // 更多信息：https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+  // +optional
+  optional .k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+
+  // Spec 保存待评估请求的信息
+  optional TokenReviewSpec spec = 2;
+
+  // Status 由服务器填充，表示请求是否可以被认证。
+  // +optional
+  optional TokenReviewStatus status = 3;
+}
+
+// TokenReviewSpec 是令牌认证请求的描述。
+message TokenReviewSpec {
+  // Token 是不透明的持有者令牌。
+  // +optional
+  optional string token = 1;
+
+  // Audiences 是资源服务器提供的标识符列表，
+  // 令牌通过这些标识符进行标识。支持受众感知的令牌认证器将
+  // 验证令牌是否至少针对此列表中的一个受众。如果未提供受众，
+  // 则默认为 Kubernetes apiserver 的受众。
+  // +optional
+  // +listType=atomic
+  repeated string audiences = 2;
+}
+
+// TokenReviewStatus 是令牌认证请求的结果。
+message TokenReviewStatus {
+  // Authenticated 表示令牌与已知用户关联。
+  // +optional
+  optional bool authenticated = 1;
+
+  // User 是与提供令牌关联的 UserInfo。
+  // +optional
+  optional UserInfo user = 2;
+
+  // Audiences 是认证器选择的受众标识符，
+  // 与 TokenReview 和令牌都兼容。标识符是
+  // TokenReviewSpec 受众和令牌受众的交集中的任何标识符。
+  // 设置 spec.audiences 字段的 TokenReview API 客户端应验证
+  // status.audiences 字段中返回了兼容的受众标识符，
+  // 以确保 TokenReview 服务器具有受众感知能力。如果 TokenReview
+  // 返回空的 status.audience 字段且 status.authenticated 为"true"，
+  // 则令牌对 Kubernetes API 服务器的受众有效。
+  // +optional
+  // +listType=atomic
+  repeated string audiences = 4;
+
+  // Error 表示无法检查令牌
+  // +optional
+  optional string error = 3;
+}
+
+// UserInfo 保存实现 user.Info 接口所需的用户信息。
+message UserInfo {
+  // 在所有活跃用户中唯一标识此用户的名称。
+  // +optional
+  optional string username = 1;
+
+  // 跨时间唯一标识此用户的值。如果此用户被删除，
+  // 并添加了同名用户，他们将具有不同的UID。
+  // +optional
+  optional string uid = 2;
+
+  // 此用户所属的组名列表。
+  // +optional
+  // +listType=atomic
+  repeated string groups = 3;
+
+  // 认证器提供的任何额外信息。
+  // +optional
+  map<string, ExtraValue> extra = 4;
+}

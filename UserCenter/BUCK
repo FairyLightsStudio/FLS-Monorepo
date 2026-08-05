@@ -1,0 +1,32 @@
+rust_library(
+    name = "UserCenter-lib",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/lib.rs",
+    visibility = ["PUBLIC"],
+    deps = [
+        "root//third-party/rust:axum",
+        "root//third-party/rust:buffa",
+        "root//third-party/rust:buffa-types",
+        "root//third-party/rust:clap",
+        "root//third-party/rust:connectrpc",
+        "root//third-party/rust:futures",
+        "root//third-party/rust:http",
+        "root//third-party/rust:http-body",
+        "root//third-party/rust:humantime",
+        "root//third-party/rust:rand",
+        "root//third-party/rust:regex",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:serde_json",
+        "root//third-party/rust:tokio",
+        "root//third-party/rust:tower-http",
+        "root//third-party/rust:tracing",
+        "root//third-party/rust:tracing-subscriber",
+    ],
+)
+
+rust_binary(
+    name = "UserCenter",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/main.rs",
+    deps = [":UserCenter-lib"],
+)

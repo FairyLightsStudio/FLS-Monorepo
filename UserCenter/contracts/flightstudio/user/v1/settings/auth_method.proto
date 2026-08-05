@@ -1,0 +1,9 @@
+syntax = "proto3";
+
+package flightstudio.user.v1.settings;
+
+message AuthMethod {
+  string id = 1;
+  string name = 2;
+  bool enabled = 3;
+}

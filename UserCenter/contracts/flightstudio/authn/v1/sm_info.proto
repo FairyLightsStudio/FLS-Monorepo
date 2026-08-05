@@ -1,0 +1,49 @@
+// 服务端向客户端呈现的当前状态
+syntax = "proto3";
+package flightstudio.authn.v1;
+
+import "sm_common.proto";
+
+message SMInfo {
+  oneof scene {
+    // 登录/注册共享场景
+    AuthChallenge auth_challenge = 2;
+    AuthChallengeExternalProvider auth_challenge_external_provider = 7;
+
+    // 注册特有场景
+    // RegistrationForm registration_form = 9;
+
+    // 登录特有场景
+    //AccountRecovery recovery = 11;     // 账户恢复
+    AuthOptionSelection auth_option_selection = 12;
+  }
+
+  repeated SMActions available_actions = 3;
+
+  // 当前正在登录的账户名，例 "voyage200@example.com"
+  optional string context_identifier = 4;
+}
+
+// 通过xxx确认你的身份
+message AuthChallengeExternalProvider {
+  // 授权URL (用于OIDC重定向)
+  string authorization_url = 3;
+}
+
+message AuthChallenge {
+  enum AuthType {
+    AUTH_TYPE_UNSPECIFIED = 0;
+    AUTH_TYPE_VERIFY_IDENTITY = 1; // 核实你的身份
+    AUTH_TYPE_TWO_FACTOR = 2; // 两步验证
+  }
+
+  AuthType auth_type = 1;
+
+  AuthOption auth_options = 2;
+}
+
+// 选择登录方式场景
+message AuthOptionSelection {
+  // 可用的认证选项列表
+  repeated AuthOption available_options = 1;
+}
