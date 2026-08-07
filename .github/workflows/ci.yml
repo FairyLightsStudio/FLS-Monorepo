@@ -23,6 +23,9 @@ jobs:
           version: 2026.7.17
           install_args: "buck2 rust"
 
+      - name: 安装 rustfmt
+        run: rustup component add --toolchain 1.97.1 rustfmt
+
       - name: 检查 Rust 格式
         run: cargo fmt --manifest-path tools/fls/Cargo.toml -- --check
 
