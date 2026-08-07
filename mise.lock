@@ -104,6 +104,59 @@ url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-windows-
 checksum = "sha256:538f9c846355d9e847b2671bc00c47da4229a0befb24df3282b739770f3b475f"
 url = "https://github.com/oven-sh/bun/releases/download/bun-v1.3.14/bun-windows-x64-baseline.zip"
 
+[[tools.fls]]
+version = "0.1.0"
+backend = "github:FairyLightsStudio/FLS-Monorepo"
+
+[tools.fls.options]
+matching_regex = '^fls-.*\.(tar\.gz|zip)$'
+version_prefix = "fls-v"
+
+[tools.fls."platforms.linux-arm64"]
+checksum = "sha256:2cc0f3d52370f49eac317193e0285ff70b996cf46143be83e22bcc56b14d93fa"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-aarch64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535267"
+
+[tools.fls."platforms.linux-arm64-musl"]
+checksum = "sha256:113517c59655018236c88cb89b79f294f1defb9921755c2b5a49d3e9404b5f7b"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-aarch64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535268"
+
+[tools.fls."platforms.linux-riscv64"]
+checksum = "sha256:5c59793e54e6074d149f9d667ede15db95ee4d0bbf30babe640379b44e48d366"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-riscv64gc-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535279"
+
+[tools.fls."platforms.linux-x64"]
+checksum = "sha256:cde584ab70a61a39d427f7055726113a1c141d12549d1271c7661ed42b1bd7b1"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-x86_64-unknown-linux-gnu.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535283"
+
+[tools.fls."platforms.linux-x64-musl"]
+checksum = "sha256:4594320f317bdc26af51e68c818e6b8fb3fd60ceafa999dee99c4dd9b1e45917"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-x86_64-unknown-linux-musl.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535284"
+
+[tools.fls."platforms.macos-arm64"]
+checksum = "sha256:a91f2a5cd7059c462ab3feb8e5c55dc786191acc0fd938a7dddc30e23af59e40"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-aarch64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535266"
+
+[tools.fls."platforms.macos-x64"]
+checksum = "sha256:4bd782f95d98f250ef1877980f4986f1e2a5ff399af08d4eedf30fa2bdabaa86"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-x86_64-apple-darwin.tar.gz"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535281"
+
+[tools.fls."platforms.windows-arm64"]
+checksum = "sha256:126cb65eb5da13ce31ff68103889bb5f0eaa52468f6a043be3a61d98a6bfb1f6"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-aarch64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535270"
+
+[tools.fls."platforms.windows-x64"]
+checksum = "sha256:986b15a155cd57acd14fe6831fe4a7084bdd147cd0e451347dc9532fb675a147"
+url = "https://github.com/FairyLightsStudio/FLS-Monorepo/releases/download/fls-v0.1.0/fls-x86_64-pc-windows-msvc.zip"
+url_api = "https://api.github.com/repos/FairyLightsStudio/FLS-Monorepo/releases/assets/504535285"
+
 [[tools.node]]
 version = "24.18.0"
 backend = "core:node"
