@@ -1,3 +1,5 @@
+load("//build_defs:fls_project.bzl", "fls_project")
+
 rust_library(
     name = "UserCenter-lib",
     srcs = glob(["src/**/*.rs"]),
@@ -12,9 +14,7 @@ rust_library(
         "root//third-party/rust:futures",
         "root//third-party/rust:http",
         "root//third-party/rust:http-body",
-        "root//third-party/rust:humantime",
         "root//third-party/rust:rand",
-        "root//third-party/rust:regex",
         "root//third-party/rust:serde",
         "root//third-party/rust:serde_json",
         "root//third-party/rust:tokio",
@@ -29,4 +29,9 @@ rust_binary(
     srcs = glob(["src/**/*.rs"]),
     crate_root = "src/main.rs",
     deps = [":UserCenter-lib"],
+)
+
+fls_project(
+    name = "workspace",
+    visibility = ["PUBLIC"],
 )

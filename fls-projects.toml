@@ -1,0 +1,62 @@
+schema-version = 1
+
+[workspace]
+control-paths = [
+  ".github",
+  "build_defs",
+  "third-party",
+  "toolchains",
+  "tools",
+]
+
+[projects.AboutUs]
+path = "AboutUs"
+description = "FairyLightsStudio 官方网站"
+
+[projects.AngularM3EComponents]
+path = "AngularM3EComponents"
+description = "Angular Material 3 扩展组件工作区"
+
+[projects.BetterInternet]
+path = "BetterInternet"
+description = "BetterInternet 架构与产品设计资料"
+
+[projects.ChatHistoryCat]
+path = "ChatHistoryCat"
+description = "聊天记录管理工具"
+
+[projects.DesignAssets]
+path = "DesignAssets"
+description = "FairyLightsStudio 设计资产"
+
+[projects.LiLi_converter]
+path = "LiLi_converter"
+description = "LiLi 文件转换服务"
+
+[projects.MilkyMayServiceHall]
+path = "MilkyMayServiceHall"
+description = "MilkyMay 服务大厅"
+
+[projects.OurScratch]
+path = "OurScratch"
+description = "OurScratch 项目"
+
+[projects.PoWCAPTCHA]
+path = "PoWCAPTCHA"
+description = "工作量证明 CAPTCHA"
+
+[projects.SeekAstro]
+path = "SeekAstro"
+description = "SeekAstro 项目"
+
+[projects.TeraPanel]
+path = "TeraPanel"
+description = "分布式服务器管理面板"
+
+[projects.TeraPanelDocsSite]
+path = "TeraPanelDocsSite"
+description = "TeraPanel 文档站"
+
+[projects.UserCenter]
+path = "UserCenter"
+description = "FairyLightsStudio 认证与用户中心"

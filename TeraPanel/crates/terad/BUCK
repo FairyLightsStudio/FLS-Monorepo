@@ -4,7 +4,6 @@ rust_binary(
     crate_root = "src/main.rs",
     deps = [
         "root//TeraPanel/crates/shared-types:shared-types",
-        "root//third-party/rust:anyhow",
         "root//third-party/rust:async-nats",
         "root//third-party/rust:bollard",
         "root//third-party/rust:config",

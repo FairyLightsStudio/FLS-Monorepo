@@ -86,7 +86,7 @@ You are an expert in TypeScript, Angular, and scalable web application developme
 
 现阶段，为快速开发，不需要AI修改后 自己编译/build，修改完毕后直接告诉用户修改完了就好了，用户会快速查验你的更改。
 
-⚠️ IMPORTANT: 本项目使用jj代替git。当用户要求你推送，添加commit等等时，务必阅读 .agents/skills/jujutsu/SKILL.md，并使用jj cli操作，必须要用到git时要先告知用户征询意见。
+版本控制由 FairyLightsStudio 单仓库根目录统一管理，不要把本目录重新初始化成独立 Git/Jujutsu 仓库。提交、变基和推送应在仓库根目录按照根级说明执行，并把跨项目变更保留在同一个原子提交中。
 
 <!-- nx configuration start-->
 <!-- Leave the start & end comments to automatically receive updates. -->

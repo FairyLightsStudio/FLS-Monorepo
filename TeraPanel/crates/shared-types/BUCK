@@ -4,9 +4,9 @@ rust_library(
     crate_root = "src/lib.rs",
     visibility = ["PUBLIC"],
     deps = [
-        "root//third-party/rust:buffa-03",
-        "root//third-party/rust:buffa-types-03",
-        "root//third-party/rust:connectrpc-03",
+        "root//third-party/rust:buffa",
+        "root//third-party/rust:buffa-types",
+        "root//third-party/rust:connectrpc",
         "root//third-party/rust:serde",
         "root//third-party/rust:serde_json",
     ],

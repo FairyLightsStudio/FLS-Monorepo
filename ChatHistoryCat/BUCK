@@ -1,6 +1,13 @@
+load("//build_defs:fls_project.bzl", "fls_project")
+
 rust_binary(
     name = "ChatHistoryCat",
     srcs = glob(["src/**/*.rs"]),
     crate_root = "src/main.rs",
     deps = [],
+)
+
+fls_project(
+    name = "workspace",
+    visibility = ["PUBLIC"],
 )

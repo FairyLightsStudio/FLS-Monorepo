@@ -11,6 +11,7 @@ name = "top"
 path = "top/main.rs"
 
 [dependencies]
+atomic-write-file = "0.3"
 exn = "0.3"
 async-nats = "0.50"
 axum = "0.8"
@@ -22,6 +23,7 @@ clap = { version = "4", features = ["derive"] }
 config = "0.15"
 connectrpc = { version = "0.8", features = ["axum", "client", "tls"] }
 connectrpc-build = "0.8"
+metainfo="0.7"
 futures = "0.3"
 hex = "0.4"
 http = "1"
@@ -43,6 +45,7 @@ thiserror = "2"
 thiserror-1 = { package = "thiserror", version = "1" }
 time = "0.3"
 tokio = { version = "1", features = ["full"] }
+toml = "1"
 tower-http = { version = "0.7", features = ["cors"] }
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }

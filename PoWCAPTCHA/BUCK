@@ -1,0 +1,6 @@
+load("//build_defs:fls_project.bzl", "fls_project")
+
+fls_project(
+    name = "workspace",
+    visibility = ["PUBLIC"],
+)

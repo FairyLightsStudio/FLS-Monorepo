@@ -1,0 +1,152 @@
+name: 发布 fls
+
+on:
+  push:
+    tags:
+      - "fls-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  validate:
+    name: Buck2 验证
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v6
+      - uses: jdx/mise-action@v4
+        with:
+          version: 2026.7.17
+          install_args: "buck2 rust"
+      - run: buck2 test //tools/fls:fls-test --console=simple
+      - name: 验证 tag 与 crate 版本一致
+        shell: bash
+        run: |
+          expected="fls-v$(sed -n 's/^version = "\([^"]*\)"/\1/p' tools/fls/Cargo.toml | head -1)"
+          test "${GITHUB_REF_NAME}" = "${expected}"
+
+  linux:
+    name: ${{ matrix.target }}
+    needs: validate
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - aarch64-unknown-linux-gnu
+          - aarch64-unknown-linux-musl
+          - x86_64-unknown-linux-gnu
+          - x86_64-unknown-linux-musl
+          - riscv64gc-unknown-linux-gnu
+    steps:
+      - uses: actions/checkout@v6
+      - name: 安装 Rust 与 cross
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          cargo +1.97.1 install cross --locked --version 0.2.5
+      - name: 交叉编译
+        run: >-
+          cross +1.97.1 build
+          --manifest-path tools/fls/Cargo.toml
+          --release
+          --locked
+          --target ${{ matrix.target }}
+      - name: 打包
+        run: |
+          archive="fls-${{ matrix.target }}.tar.gz"
+          mkdir package
+          cp "tools/fls/target/${{ matrix.target }}/release/fls" package/fls
+          cp tools/fls/LICENSE package/LICENSE
+          tar -C package -czf "${archive}" fls LICENSE
+      - uses: actions/upload-artifact@v7
+        with:
+          name: fls-${{ matrix.target }}
+          path: fls-${{ matrix.target }}.tar.gz
+          if-no-files-found: error
+
+  native:
+    name: ${{ matrix.target }}
+    needs: validate
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: aarch64-apple-darwin
+            runner: macos-15
+            extension: ""
+            archive: tar.gz
+          - target: x86_64-apple-darwin
+            runner: macos-15
+            extension: ""
+            archive: tar.gz
+          - target: aarch64-pc-windows-msvc
+            runner: windows-2025
+            extension: .exe
+            archive: zip
+          - target: x86_64-pc-windows-msvc
+            runner: windows-2025
+            extension: .exe
+            archive: zip
+    steps:
+      - uses: actions/checkout@v6
+      - name: 安装 Rust target
+        shell: bash
+        run: rustup toolchain install 1.97.1 --profile minimal --target "${{ matrix.target }}"
+      - name: 编译
+        shell: bash
+        run: >-
+          cargo +1.97.1 build
+          --manifest-path tools/fls/Cargo.toml
+          --release
+          --locked
+          --target "${{ matrix.target }}"
+      - name: 打包 Unix 资产
+        if: matrix.archive == 'tar.gz'
+        shell: bash
+        run: |
+          archive="fls-${{ matrix.target }}.tar.gz"
+          mkdir package
+          cp "tools/fls/target/${{ matrix.target }}/release/fls" package/fls
+          cp tools/fls/LICENSE package/LICENSE
+          tar -C package -czf "${archive}" fls LICENSE
+      - name: 打包 Windows 资产
+        if: matrix.archive == 'zip'
+        shell: pwsh
+        run: |
+          Compress-Archive `
+            -Path "tools/fls/target/${{ matrix.target }}/release/fls.exe", "tools/fls/LICENSE" `
+            -DestinationPath "fls-${{ matrix.target }}.zip"
+      - uses: actions/upload-artifact@v7
+        with:
+          name: fls-${{ matrix.target }}
+          path: fls-${{ matrix.target }}.${{ matrix.archive }}
+          if-no-files-found: error
+
+  publish:
+    name: 创建 GitHub Release
+    needs:
+      - linux
+      - native
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+      - name: 生成校验和
+        working-directory: dist
+        run: sha256sum fls-* > SHA256SUMS
+      - name: 创建或更新 Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "${GITHUB_REF_NAME}" --repo "${GITHUB_REPOSITORY}" >/dev/null 2>&1; then
+            gh release upload "${GITHUB_REF_NAME}" dist/* --clobber --repo "${GITHUB_REPOSITORY}"
+          else
+            gh release create "${GITHUB_REF_NAME}" dist/* \
+              --repo "${GITHUB_REPOSITORY}" \
+              --verify-tag \
+              --title "fls ${GITHUB_REF_NAME#fls-v}" \
+              --generate-notes
+          fi

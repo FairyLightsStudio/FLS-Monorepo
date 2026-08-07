@@ -2,11 +2,22 @@ load("@prelude//tests:test_toolchain.bzl", "noop_test_toolchain")
 load("@prelude//toolchains:cxx.bzl", "system_cxx_toolchain")
 load("@prelude//toolchains:genrule.bzl", "system_genrule_toolchain")
 load("@prelude//toolchains:python.bzl", "system_python_bootstrap_toolchain", "system_python_toolchain")
+load("@prelude//toolchains:remote_test_execution.bzl", "remote_test_execution_toolchain")
 load("@prelude//toolchains:rust.bzl", "system_rust_toolchain")
-load("@prelude//toolchains:zip_file.bzl", "zip_file_toolchain")
 
 system_cxx_toolchain(
     name = "cxx",
+    visibility = ["PUBLIC"],
+)
+
+# The Prelude's C/C++ toolchain attribute has a deliberately unreachable
+# select() branch that points at this label. Unconfigured graph queries still
+# traverse every branch, so the label must exist even though configured builds
+# resolve to :cxx. The system toolchain does not define default dependencies,
+# therefore forwarding to :cxx preserves the intended semantics.
+toolchain_alias(
+    name = "cxx_no_default_deps",
+    actual = ":cxx",
     visibility = ["PUBLIC"],
 )
 
@@ -28,6 +39,9 @@ system_python_bootstrap_toolchain(
 system_rust_toolchain(
     name = "rust",
     default_edition = "2024",
+    # FLS uses the stable Rust channel. Keep this explicit because the Prelude
+    # default has changed between Buck2 releases.
+    nightly_features = False,
     rustc_flags = [
         "-Copt-level=0",
         "-Cdebuginfo=2",
@@ -40,7 +54,7 @@ noop_test_toolchain(
     visibility = ["PUBLIC"],
 )
 
-zip_file_toolchain(
-    name = "zip_file",
+remote_test_execution_toolchain(
+    name = "remote_test_execution",
     visibility = ["PUBLIC"],
 )

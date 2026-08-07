@@ -1,0 +1,41 @@
+rust_library(
+    name = "fls-lib",
+    srcs = glob(["src/**/*.rs"], exclude = ["src/main.rs"]),
+    crate = "fls",
+    crate_root = "src/lib.rs",
+    visibility = [":fls", ":fls-test"],
+    deps = [
+        "root//third-party/rust:atomic-write-file",
+        "root//third-party/rust:clap",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:serde_json",
+        "root//third-party/rust:thiserror",
+        "root//third-party/rust:toml",
+    ],
+)
+
+rust_binary(
+    name = "fls",
+    srcs = ["src/main.rs"],
+    crate_root = "src/main.rs",
+    visibility = ["PUBLIC"],
+    deps = [
+        ":fls-lib",
+        "root//third-party/rust:clap",
+    ],
+)
+
+rust_test(
+    name = "fls-test",
+    srcs = glob(["src/**/*.rs"], exclude = ["src/main.rs"]),
+    crate = "fls",
+    crate_root = "src/lib.rs",
+    deps = [
+        "root//third-party/rust:atomic-write-file",
+        "root//third-party/rust:clap",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:serde_json",
+        "root//third-party/rust:thiserror",
+        "root//third-party/rust:toml",
+    ],
+)

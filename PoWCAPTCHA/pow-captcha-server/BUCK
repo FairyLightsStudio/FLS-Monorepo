@@ -4,8 +4,6 @@ rust_binary(
     crate_root = "src/bin/server.rs",
     deps = [
         "root//PoWCAPTCHA/pow-captcha-core:pow-captcha-core",
-        "root//third-party/rust:anyhow",
-        "root//third-party/rust:async-trait",
         "root//third-party/rust:axum",
         "root//third-party/rust:buffa",
         "root//third-party/rust:buffa-types",
