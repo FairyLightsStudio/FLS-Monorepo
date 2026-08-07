@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.lib.json",
+  "compilerOptions": {
+    "declarationMap": false,
+    "paths": {
+      "@fairylights-studio/ngx-m3-navigation-common": ["../navigation-common/dist"],
+      "@fairylights-studio/ngx-m3-navigation-bar": ["../navigation-bar/dist"],
+      "@fairylights-studio/ngx-m3-navigation-rail": ["../navigation-rail/dist"]
+    }
+  },
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
+}

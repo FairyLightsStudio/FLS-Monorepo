@@ -1,0 +1,28 @@
+{
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "name": "@fairylights-studio/ngx-m3-navigation-rail",
+  "projectType": "library",
+  "sourceRoot": "components/navigation/navigation-rail/src",
+  "prefix": "lib",
+  "targets": {
+    "build": {
+      "executor": "@angular/build:ng-packagr",
+      "configurations": {
+        "production": {
+          "tsConfig": "components/navigation/navigation-rail/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "components/navigation/navigation-rail/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "nx-release-publish": {
+      "executor": "@nx/js:release-publish",
+      "options": {
+        "packageRoot": "{projectRoot}"
+      },
+      "dependsOn": ["^nx-release-publish"]
+    }
+  }
+}

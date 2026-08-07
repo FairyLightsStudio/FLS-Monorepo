@@ -1,0 +1,106 @@
+import {
+  Meta,
+  Canvas,
+  ArgTypes,
+  Stories,
+  Source,
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Controls,
+} from '@storybook/addon-docs/blocks';
+import * as FabStories from './extended-fab-collapsed.directive.stories';
+
+<Meta of={FabStories} />
+
+<Title />
+<Subtitle />
+<Description />
+
+[![npm version](https://img.shields.io/npm/v/@fairylights-studio/ngx-m3-button)](https://www.npmjs.com/package/@fairylights-studio/ngx-m3-button)
+
+<Primary />
+<Controls />
+
+> **Warning**
+>
+> This directive is a hook-style compatibility implementation. It relies on Angular Material's
+> current FAB host classes and internal CSS structure to apply the collapsed extended-FAB state.
+> If Angular Material changes its FAB DOM or class names, this directive and its stylesheet may
+> need to be updated. Once [angular/components#33041 feat(button): add expanded state to extended FAB for smooth collapse/expand transitions
+> ](https://github.com/angular/components/issues/33041)
+> is resolved, this module will be deprecated.
+
+## Getting Started
+
+### 1. Configure Angular Material
+
+Configure Angular Material in your application styles.
+
+### 2. Import the directive and styles
+
+<Source
+  language="ts"
+  code={`import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExtendedFabCollapsedDirective } from '@fairylights-studio/ngx-m3-button';`}
+/>
+
+Include the package stylesheet once after Angular Material styles:
+
+<Source language="scss" code={`@use '@fairylights-studio/ngx-m3-button/styles';`} />
+
+### 3. HTML — template
+
+<Source
+  language="html"
+  code={`<button matFab extended [collapsed]="isFabCollapsed" aria-label="Compose message">
+  <mat-icon aria-hidden="true">edit</mat-icon>
+  Compose
+</button>`}
+/>
+
+### 4. TypeScript — component class
+
+<Source
+  language="ts"
+  code={`import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatExtendedFabCollapsedDirective } from '@fairylights-studio/ngx-m3-button';
+
+@Component({
+selector: 'app-my-page',
+imports: [MatButtonModule, MatIconModule, MatExtendedFabCollapsedDirective],
+templateUrl: './my-page.component.html',
+})
+export class MyPageComponent {
+isFabCollapsed = false;
+}`}
+/>
+
+## API
+
+### `MatExtendedFabCollapsedDirective`
+
+| Input       | Type      | Default | Description                                                              |
+| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
+| `collapsed` | `boolean` | `false` | Whether the extended FAB is visually collapsed into a regular FAB shape. |
+
+The directive must be placed on a `<button matFab extended>` or `<a matFab extended>` element. It injects the host `MatFabButton` from Angular Material and toggles the `.mat-mdc-extended-fab-collapsed` CSS class based on the `collapsed` input.
+
+## Runtime CSS Variables
+
+`--flight-*` variables are public customization hooks owned by this library. Color, typography, and motion come from Angular Material `--mat-sys-*` variables.
+
+| CSS variable                                  | Default                                                      | Used for                                                    |
+| --------------------------------------------- | ------------------------------------------------------------ | ----------------------------------------------------------- |
+| `--flight-button-fab-motion-duration-medium1` | `var(--mat-sys-duration-medium1, 250ms)`                     | Padding, margin, border-radius, and icon margin transitions |
+| `--flight-button-fab-motion-duration-short3`  | `var(--mat-sys-duration-short3, 150ms)`                      | Label opacity transition delay                              |
+| `--flight-button-fab-motion-duration-short2`  | `var(--mat-sys-duration-short2, 100ms)`                      | Collapsed label opacity transition                          |
+| `--flight-button-fab-motion-easing-standard`  | `var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1))` | Standard easing curve for all FAB transitions               |
+
+---
+
+<Stories title="Use Cases" />

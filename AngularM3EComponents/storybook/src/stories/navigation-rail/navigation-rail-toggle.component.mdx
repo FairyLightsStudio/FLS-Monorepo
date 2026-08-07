@@ -1,0 +1,66 @@
+import {
+  Meta,
+  Canvas,
+  ArgTypes,
+  Stories,
+  Source,
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Controls,
+} from '@storybook/addon-docs/blocks';
+import * as ToggleStories from './navigation-rail-toggle.component.stories';
+
+<Meta of={ToggleStories} />
+
+<Title />
+<Subtitle />
+<Description />
+
+[![npm version](https://img.shields.io/npm/v/@fairylights-studio/ngx-m3-navigation-rail)](https://www.npmjs.com/package/@fairylights-studio/ngx-m3-navigation-rail)
+
+<Primary />
+<Controls />
+
+## Getting Started
+
+### 1. Import the module
+
+<Source
+  language="ts"
+  code={`import { MatNavigationRailToggleComponent } from '@fairylights-studio/ngx-m3-navigation-rail';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';`}
+/>
+
+### 2. TypeScript — component class
+
+<Source
+  language="ts"
+  code={`import { Component } from '@angular/core';
+import { MatNavigationRailToggleComponent } from '@fairylights-studio/ngx-m3-navigation-rail';
+
+@Component({
+selector: 'app-my-page',
+imports: [MatNavigationRailToggleComponent],
+templateUrl: './my-page.component.html',
+})
+export class MyPageComponent {
+expanded = false;
+}`}
+/>
+
+### 3. HTML — template
+
+<Source
+  language="html"
+  code={`<mat-navigation-rail-toggle
+  [expanded]="expanded"
+  (click)="expanded = !expanded"
+></mat-navigation-rail-toggle>`}
+/>
+
+---
+
+<Stories title="Use Cases" />

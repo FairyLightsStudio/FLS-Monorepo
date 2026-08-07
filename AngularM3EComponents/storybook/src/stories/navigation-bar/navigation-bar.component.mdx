@@ -1,0 +1,162 @@
+import {
+  Meta,
+  Canvas,
+  ArgTypes,
+  Stories,
+  Source,
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Controls,
+} from '@storybook/addon-docs/blocks';
+import * as NavBarStories from './navigation-bar.component.stories';
+
+<Meta of={NavBarStories} />
+
+<Title />
+<Subtitle />
+<Description />
+
+[![npm version](https://img.shields.io/npm/v/@fairylights-studio/ngx-m3-navigation-bar)](https://www.npmjs.com/package/@fairylights-studio/ngx-m3-navigation-bar)
+
+<Primary />
+<Controls />
+
+## Getting Started
+
+### 1. Configure Angular Material
+
+Configure Angular Material in your application styles. Navigation bar consumes the generated `--mat-sys-*` runtime variables and does not provide a Sass theme mixin.
+
+### 2. Import the module
+
+<Source
+  language="ts"
+  code={`import { MAT_NAVIGATION_BAR_MODULES } from '@fairylights-studio/ngx-m3-navigation-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';`}
+/>
+
+### 3. TypeScript — component class
+
+<Source
+  language="ts"
+  code={`import { Component } from '@angular/core';
+import { MAT_NAVIGATION_BAR_MODULES } from '@fairylights-studio/ngx-m3-navigation-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+
+@Component({
+selector: 'app-my-page',
+imports: [MAT_NAVIGATION_BAR_MODULES, MatIconModule, MatBadgeModule],
+templateUrl: './my-page.component.html',
+styleUrl: './my-page.component.scss',
+})
+export class MyPageComponent {
+selectedIndex = 0;
+}`}
+/>
+
+### 4. HTML — template
+
+<Source
+  language="html"
+  code={`<mat-navigation-bar aria-label="Primary navigation">
+  <mat-navigation-bar-item
+    [active]="selectedIndex === 0"
+    [alwaysShowLabel]="true"
+    [layout]="'vertical'"
+    (click)="selectedIndex = 0"
+  >
+    <mat-icon *matNavigationIcon>home</mat-icon>
+    <ng-template matNavigationLabel>Home</ng-template>
+  </mat-navigation-bar-item>
+
+<mat-navigation-bar-item
+[active]="selectedIndex === 1"
+[alwaysShowLabel]="true"
+(click)="selectedIndex = 1"
+
+>
+
+    <mat-icon *matNavigationIcon>search</mat-icon>
+    <ng-template matNavigationLabel>Search</ng-template>
+
+  </mat-navigation-bar-item>
+
+<mat-navigation-bar-item
+[active]="selectedIndex === 2"
+(click)="selectedIndex = 2"
+
+>
+
+    <mat-icon
+      *matNavigationIcon
+      matBadge="3"
+      matBadgeDescription="3 unread notifications"
+    >notifications</mat-icon>
+    <ng-template matNavigationLabel>Alerts</ng-template>
+
+  </mat-navigation-bar-item>
+
+<mat-navigation-bar-item
+[active]="selectedIndex === 3"
+(click)="selectedIndex = 3"
+
+>
+
+    <mat-icon *matNavigationIcon>person</mat-icon>
+    <ng-template matNavigationLabel>Profile</ng-template>
+
+  </mat-navigation-bar-item>
+</mat-navigation-bar>`}
+/>
+
+### 5. CSS — custom styles
+
+<Source
+  language="css"
+  code={`/* my-page.component.scss */
+
+mat-navigation-bar {
+--flight-nav-bar-container-height: 84px;
+--flight-nav-bar-item-label-max-width: 180px;
+}`}
+/>
+
+## Runtime CSS Variables
+
+`--flight-*` variables are public customization hooks owned by this library. Color, typography, and motion come from Angular Material `--mat-sys-*` variables.
+
+| CSS variable                                   | Default | Used for                    |
+| ---------------------------------------------- | ------- | --------------------------- |
+| `--flight-nav-bar-container-height`            | `80px`  | Vertical bottom bar height  |
+| `--flight-nav-bar-container-horizontal-height` | `64px`  | Horizontal bar height       |
+| `--flight-nav-bar-container-z-index`           | `100`   | Bar host stacking           |
+| `--flight-nav-bar-item-min-width`              | `88px`  | Vertical item minimum width |
+| `--flight-nav-bar-item-horizontal-width`       | `168px` | Horizontal item width       |
+| `--flight-nav-bar-item-label-max-width`        | `150px` | Horizontal label max width  |
+
+---
+
+<Stories title="Use Cases" />
+
+---
+
+## Content Projection Directives
+
+These structural directives control what gets projected into each `mat-navigation-bar-item`.
+
+| Directive                  | Selector                    | Purpose                               |
+| -------------------------- | --------------------------- | ------------------------------------- |
+| `*matNavigationIcon`       | `[MatNavigationIcon]`       | Primary icon displayed in the item.   |
+| `*matNavigationActiveIcon` | `[MatNavigationActiveIcon]` | Alternative icon shown when `active`. |
+| `matNavigationLabel`       | `[MatNavigationLabel]`      | Label text for the item.              |
+
+---
+
+## IoC & Framework Integration
+
+`MatNavigationBarComponent` implements the `MatNavigationWidget` interface and registers itself via the `MAT_NAVIGATION_WIDGET` injection token. This architecture allows parent layouts (such as `mat-navigation-suite-scaffold`) to automatically detect the bar, query its physical height (`size()`), and place it responsively.
+

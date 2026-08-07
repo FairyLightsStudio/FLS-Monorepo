@@ -1,0 +1,64 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "targetDefaults": {
+    "build": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "test": {
+      "cache": true,
+      "inputs": ["default", "^production"]
+    },
+    "build-storybook": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "^production",
+        "{projectRoot}/.storybook/**/*",
+        "{projectRoot}/tsconfig.storybook.json"
+      ]
+    }
+  },
+  "namedInputs": {
+    "sharedGlobals": [],
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/tsconfig.storybook.json"
+    ]
+  },
+  "analytics": true,
+  "release": {
+    "projects": ["components/button", "components/navigation/*"],
+    "projectsRelationship": "independent",
+    "version": {
+      "conventionalCommits": true,
+      "fallbackCurrentVersionResolver": "disk"
+    },
+    "conventionalCommits": {
+      "useCommitScope": false
+    },
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github",
+        "automaticFromRef": true
+      }
+    },
+    "git": {
+      "commit": true,
+      "tag": true
+    }
+  },
+  "generators": {
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "none"
+    },
+    "@nx/angular:component": {
+      "style": "css"
+    }
+  }
+}

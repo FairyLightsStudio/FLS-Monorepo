@@ -1,0 +1,201 @@
+@use '@angular/cdk' as cdk;
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.mat-nav-rail-item-button {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: var(--flight-nav-rail-item-button-collapsed-height, 72px);
+  padding: var(--flight-nav-rail-item-button-collapsed-padding, 12px 12px 0 12px);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--mat-sys-on-surface-variant, #49454f);
+  transition:
+    height var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    padding var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-item-button {
+  height: var(--flight-nav-rail-item-button-expanded-height, 56px);
+  padding: var(--flight-nav-rail-item-button-expanded-padding, 0 12px);
+}
+
+.mat-nav-rail-indicator {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--flight-nav-rail-indicator-height, 32px);
+  width: var(--flight-nav-rail-indicator-width, 56px);
+  border-radius: var(--flight-nav-rail-indicator-shape, 16px);
+  background-color: transparent;
+  transition:
+    width var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    height var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    border-radius var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    background-color var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  z-index: 1;
+}
+
+.mat-nav-rail-indicator.indicator-hug {
+  box-sizing: border-box;
+  width: max-content;
+  padding-inline-end: 16px;
+}
+
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-indicator {
+  height: var(--flight-nav-rail-indicator-expanded-height, 56px);
+  border-radius: var(--flight-nav-rail-indicator-expanded-shape, 28px);
+}
+
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-indicator.indicator-hug {
+  width: max-content;
+  min-width: var(--flight-nav-rail-indicator-width, 56px);
+  padding-inline-end: 16px;
+}
+
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-indicator.indicator-fill {
+  width: 100%;
+}
+
+.mat-nav-rail-indicator.indicator-fill {
+  width: 100%;
+}
+
+.mat-nav-rail-ripple {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  z-index: -1;
+}
+
+.mat-nav-rail-icon-box {
+  position: relative;
+  width: var(--flight-nav-rail-icon-box-size, 24px);
+  height: var(--flight-nav-rail-icon-box-size, 24px);
+  margin-inline-start: var(--flight-nav-rail-icon-box-margin-start, 16px);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mat-nav-rail-label-side {
+  display: grid;
+  grid-template-columns: 0fr;
+  font-family: var(--mat-sys-label-large-font, Roboto, sans-serif);
+  font-size: var(--mat-sys-label-large-size, 0.875rem);
+  font-weight: var(--mat-sys-label-large-weight, 500);
+  line-height: var(--mat-sys-label-large-line-height, 1.25rem);
+  letter-spacing: var(--mat-sys-label-large-tracking, 0.006rem);
+  pointer-events: none;
+  padding-inline-start: 0;
+  opacity: 0;
+  transition:
+    grid-template-columns var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    padding-inline-start var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    opacity var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+.mat-nav-rail-label-inner {
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-label-side {
+  grid-template-columns: 1fr;
+  padding-inline-start: var(--flight-nav-rail-label-side-padding-start, 12px);
+  opacity: 1;
+}
+
+.mat-nav-rail-item-button[dir='rtl'] .mat-nav-rail-label-side {
+  transform: translateX(8px);
+}
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-item-button[dir='rtl'] .mat-nav-rail-label-side {
+  transform: translateX(0);
+}
+
+.mat-nav-rail-label-bottom {
+  position: absolute;
+  top: var(--flight-nav-rail-label-bottom-top, 48px);
+  left: var(--flight-nav-rail-label-bottom-left, 40px);
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: var(--flight-nav-rail-label-bottom-max-width, 76px);
+  display: grid;
+  grid-template-rows: 1fr;
+  opacity: 1;
+  transition:
+    grid-template-rows var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    opacity var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+.mat-nav-rail-label-bottom-inner {
+  min-height: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: center;
+  font-family: var(--mat-sys-label-medium-font, Roboto, sans-serif);
+  font-size: var(--mat-sys-label-medium-size, 0.75rem);
+  font-weight: var(--mat-sys-label-medium-weight, 500);
+  line-height: var(--mat-sys-label-medium-line-height, 1rem);
+  letter-spacing: var(--mat-sys-label-medium-tracking, 0.031rem);
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+:host(.mat-nav-rail-item-expanded) .mat-nav-rail-label-bottom {
+  grid-template-rows: 0fr;
+  opacity: 0;
+}
+
+.mat-nav-rail-item-button[dir='rtl'] .mat-nav-rail-label-bottom {
+  left: auto;
+  right: var(--flight-nav-rail-label-bottom-left, 40px);
+  transform: translateX(50%);
+}
+
+.mat-nav-rail-item-button.active {
+  color: var(--mat-sys-on-secondary-container, #1d192b);
+  .mat-nav-rail-indicator {
+    background-color: var(--mat-sys-secondary-container, #e8def8);
+  }
+}
+
+.mat-nav-rail-item-button:focus-visible {
+  outline: 2px solid var(--mat-sys-primary, #6750a4);
+  outline-offset: 2px;
+}
+
+:host:focus-visible {
+  outline: none;
+}
+
+@include cdk.high-contrast {
+  .mat-nav-rail-item-button {
+    outline: solid 1px currentColor;
+
+    &.active {
+      outline: solid 2px currentColor;
+    }
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host, :host * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+

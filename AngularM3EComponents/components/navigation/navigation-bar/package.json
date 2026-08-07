@@ -1,0 +1,51 @@
+{
+  "name": "@fairylights-studio/ngx-m3-navigation-bar",
+  "version": "0.4.0",
+  "description": "Material 3 bottom navigation bar for Angular Material",
+  "license": "MIT",
+  "author": "FairyLights Studio",
+  "keywords": [
+    "angular",
+    "material",
+    "material-3",
+    "material-design",
+    "navigation",
+    "bar"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://tangled.org/fairylights.org/AngularM3EComponents.git",
+    "directory": "components/navigation/navigation-bar"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "catalog:",
+    "@angular/common": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/material": "catalog:",
+    "@fairylights-studio/ngx-m3-navigation-common": "0.3.2"
+  },
+  "dependencies": {
+    "tslib": "catalog:"
+  },
+  "sideEffects": false,
+  "module": "dist/fesm2022/fairylights-studio-ngx-m3-navigation-bar.mjs",
+  "typings": "dist/types/fairylights-studio-ngx-m3-navigation-bar.d.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./dist/types/fairylights-studio-ngx-m3-navigation-bar.d.ts",
+      "default": "./dist/fesm2022/fairylights-studio-ngx-m3-navigation-bar.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ]
+}

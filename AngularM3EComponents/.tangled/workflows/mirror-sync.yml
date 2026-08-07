@@ -1,0 +1,44 @@
+when:
+  - event: ['push', 'manual']
+    branch: ['main']
+
+engine: 'nixery'
+
+clone:
+  depth: 0
+
+dependencies:
+  nixpkgs:
+    - git
+    - openssh
+
+steps:
+  - name: 'Fix container user environment'
+    command: |
+      getent passwd root 2>/dev/null || echo 'root:x:0:0::/tmp:/bin/sh' >> /etc/passwd
+      export HOME=/tmp
+      mkdir -p /tmp/.ssh
+
+  - name: 'Setup SSH for GitHub mirror'
+    command: |
+      export HOME=/tmp
+      mkdir -p /tmp/.ssh
+      echo "$DEPLOY_2_GITHUB_SSH_KEY" > /tmp/.ssh/id_ed25519
+      chmod 600 /tmp/.ssh/id_ed25519
+      ssh-keyscan -H github.com >> /tmp/.ssh/known_hosts 2>/dev/null
+
+  - name: 'Fetch all refs from origin'
+    command: |
+      git fetch --unshallow origin || git fetch origin '+refs/heads/*:refs/heads/*' '+refs/tags/*:refs/tags/*'
+      # Force local main to track origin/main
+      git branch -f main origin/main
+      git checkout main
+
+  - name: 'Force push mirror to GitHub'
+    command: |
+      export HOME=/tmp
+      export GIT_SSH_COMMAND='ssh -i /tmp/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new'
+      git remote set-url mirror git@github.com:FairyLightsStudio/AngularM3EComponents 2>/dev/null \
+        || git remote add mirror git@github.com:FairyLightsStudio/AngularM3EComponents
+      git push --force mirror --all
+      git push --force mirror --tags

@@ -1,0 +1,76 @@
+when:
+  - event: ['push', 'manual']
+    branch: ['main']
+
+engine: 'nixery'
+
+clone:
+  depth: 0 # full git history for conventional commits analysis
+
+dependencies:
+  nixpkgs:
+    - bun
+    - git
+    - nodejs
+    - openssh
+
+steps:
+  - name: 'Debug: check secret env vars'
+    command: |
+      echo "DEPLOY_SSH_KEY     present=$( [ -n "$DEPLOY_SSH_KEY" ] && echo yes || echo NO ) first4=${DEPLOY_SSH_KEY:0:4}"
+      echo "NPM_TOKEN          present=$( [ -n "$NPM_TOKEN" ] && echo yes || echo NO ) first4=${NPM_TOKEN:0:4}"
+      echo "CLOUDFLARE_API_TOKEN  present=$( [ -n "$CLOUDFLARE_API_TOKEN" ] && echo yes || echo NO ) first4=${CLOUDFLARE_API_TOKEN:0:4}"
+      echo "CLOUDFLARE_ACCOUNT_ID present=$( [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && echo yes || echo NO ) first4=${CLOUDFLARE_ACCOUNT_ID:0:4}"
+
+  - name: 'Install dependencies'
+    command: 'bun install --frozen-lockfile'
+
+  - name: 'Configure git identity'
+    command: |
+      git config user.name "tangled-spindle[bot]"
+      git config user.email "spindle@fairylights.org"
+
+  - name: 'Setup SSH for git push'
+    command: |
+      mkdir -p ~/.ssh
+      echo "$DEPLOY_SSH_KEY" > ~/.ssh/id_ed25519
+      chmod 600 ~/.ssh/id_ed25519
+      ssh-keyscan -H knot-chinamainland.fairylights.org >> ~/.ssh/known_hosts 2>/dev/null || echo "ssh-keyscan failed (DNS not reachable from CI container), continuing"
+      git remote set-url origin git@knot-chinamainland.fairylights.org:fairylights.org/AngularM3EComponents
+
+  - name: 'Build all packages'
+    command: 'bun nx run-many --target=build --all'
+
+  # - name: 'Release (version bump, changelog, git tag)'
+  #   command: 'bun nx release --skip-publish'
+
+  - name: 'Publish to npm'
+    command: |
+      set +e
+      PUBLISH_FAILURES=0
+      for pkg in components/button components/navigation/navigation-common \
+        components/navigation/navigation-bar components/navigation/navigation-rail \
+        components/navigation/navigation-suite; do
+        cd "$pkg" || { echo "ERROR: cannot enter $pkg"; exit 1; }
+        VERSION=$(node -e "console.log(require('./package.json').version)")
+        PKG=$(node -e "console.log(require('./package.json').name)")
+        if npm view "$PKG@$VERSION" version &>/dev/null; then
+          echo "$PKG@$VERSION already published, skipping."
+          cd -
+          continue
+        fi
+        bun pm pack
+        echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
+        if npm publish ./*.tgz --access public; then
+          echo "$PKG@$VERSION published successfully."
+        else
+          echo "ERROR: failed to publish $PKG@$VERSION (exit code $?)"
+          PUBLISH_FAILURES=$((PUBLISH_FAILURES + 1))
+        fi
+        cd -
+      done
+      if [ "$PUBLISH_FAILURES" -gt 0 ]; then
+        echo "ERROR: $PUBLISH_FAILURES package(s) failed to publish."
+        exit 1
+      fi
+      echo "All packages published successfully."

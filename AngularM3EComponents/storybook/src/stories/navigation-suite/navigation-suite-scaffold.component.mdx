@@ -1,0 +1,181 @@
+import {
+  Meta,
+  Canvas,
+  ArgTypes,
+  Stories,
+  Source,
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Controls,
+} from '@storybook/addon-docs/blocks';
+import * as SuiteStories from './navigation-suite-scaffold.component.stories';
+
+<Meta of={SuiteStories} />
+
+<Title />
+<Subtitle />
+<Description />
+
+[![npm version](https://img.shields.io/npm/v/@fairylights-studio/ngx-m3-navigation-suite)](https://www.npmjs.com/package/@fairylights-studio/ngx-m3-navigation-suite)
+
+<Controls />
+
+## Getting Started
+
+### 1. Configure Angular Material
+
+Configure Angular Material in your application styles. Navigation suite consumes the generated `--mat-sys-*` runtime variables and does not provide a Sass theme mixin.
+
+### 2. Import the module
+
+<Source
+  language="ts"
+  code={`import { MAT_NAVIGATION_SUITE_MODULES } from '@fairylights-studio/ngx-m3-navigation-suite';
+import { MatExtendedFabCollapsedDirective } from '@fairylights-studio/ngx-m3-button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';`}
+/>
+
+### 3. TypeScript — component class
+
+<Source
+  language="ts"
+  code={`import { Component } from '@angular/core';
+import { MAT_NAVIGATION_SUITE_MODULES, MatNavigationSuiteScaffoldState } from '@fairylights-studio/ngx-m3-navigation-suite';
+import { MatExtendedFabCollapsedDirective } from '@fairylights-studio/ngx-m3-button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+@Component({
+selector: 'app-my-page',
+imports: [MAT_NAVIGATION_SUITE_MODULES, MatExtendedFabCollapsedDirective, MatIconModule, MatButtonModule],
+templateUrl: './my-page.component.html',
+styleUrl: './my-page.component.scss',
+})
+export class MyPageComponent {
+selectedIndex = 0;
+scaffoldState = new MatNavigationSuiteScaffoldState();
+}`}
+/>
+
+### 4. HTML — template
+
+<Source
+  language="html"
+  code={`<mat-navigation-suite-scaffold
+  [navSuiteType]="'Auto'"
+  [state]="scaffoldState"
+  [primaryActionAlignment]="'end'"
+>
+  <ng-template matNavigationSuitePrimaryAction let-collapsed="collapsed">
+    <button
+      matFab
+      extended
+      [collapsed]="collapsed"
+      aria-label="Create document"
+    >
+      <mat-icon aria-hidden="true">edit</mat-icon>
+      Compose
+    </button>
+  </ng-template>
+
+<mat-navigation-suite
+[alwaysShowItemLabel]="true"
+ariaLabel="Workspace"
+
+>
+
+    <mat-navigation-suite-item
+      [selected]="selectedIndex === 0"
+      [icon]="'dashboard'"
+      [label]="'Dashboard'"
+      (click)="selectedIndex = 0"
+    />
+    <mat-navigation-suite-item
+      [selected]="selectedIndex === 1"
+      [icon]="'task_alt'"
+      [label]="'Tasks'"
+      (click)="selectedIndex = 1"
+    />
+    <mat-navigation-suite-item
+      [selected]="selectedIndex === 2"
+      [icon]="'analytics'"
+      [label]="'Reports'"
+      (click)="selectedIndex = 2"
+    />
+    <mat-navigation-suite-item
+      [selected]="selectedIndex === 3"
+      [icon]="'admin_panel_settings'"
+      [label]="'Admin'"
+      (click)="selectedIndex = 3"
+    />
+
+  </mat-navigation-suite>
+
+  <section style="padding: 32px">
+    <h2>Workspace</h2>
+    <p>The scaffold switches between rail and bar layouts.</p>
+  </section>
+</mat-navigation-suite-scaffold>`}
+/>
+
+### 5. CSS — custom styles
+
+<Source
+  language="css"
+  code={`/* my-page.component.scss */
+
+mat-navigation-suite-scaffold {
+display: block;
+height: 100vh;
+--flight-nav-suite-scaffold-bar-compact-height: 84px;
+}`}
+/>
+
+## Visibility State
+
+Create a `MatNavigationSuiteScaffoldState` when the page needs to show or hide the navigation chrome from code. `show()`, `hide()`, `toggle()`, and `snapTo()` return a `Promise<void>` that resolves when the scaffold reaches its settled state.
+
+<Source
+  language="ts"
+  code={`scaffoldState = new MatNavigationSuiteScaffoldState('hidden');
+
+async revealNavigation() {
+await this.scaffoldState.show();
+}
+
+async hideNavigation() {
+await this.scaffoldState.hide();
+}`}
+/>
+
+When a bar layout is hidden, the primary action remains visible and moves to the bottom safe area. When a rail layout is hidden, the primary action is part of the rail header and hides with the rail. Rail hide/show follows Angular Material sidenav: the rail surface keeps its own width and slides with `translate3d()`, while the content area expands or reserves space separately.
+
+## Runtime CSS Variables
+
+`--flight-*` variables are public customization hooks owned by this library. Color, typography, and motion come from Angular Material `--mat-sys-*` variables. The suite also forwards bar and rail components, so their runtime variables can be set on the scaffold host.
+
+| CSS variable                                      | Default                                                   | Used for                                                                   | Override example                                                                            |
+| ------------------------------------------------- | --------------------------------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| `--flight-nav-suite-scaffold-container-color`     | `var(--mat-sys-surface, #fffbfe)`                         | Scaffold content background; also set by `containerColor`                  | `.shell { --flight-nav-suite-scaffold-container-color: var(--mat-sys-surface-container); }` |
+| `--flight-nav-suite-scaffold-bar-compact-height`  | `var(--flight-nav-bar-container-height, 80px)`            | Compact bottom navigation row height                                       | `.shell { --flight-nav-suite-scaffold-bar-compact-height: 84px; }`                          |
+| `--flight-nav-suite-scaffold-bar-medium-height`   | `var(--flight-nav-bar-container-horizontal-height, 64px)` | Medium bottom navigation row height                                        | `.shell { --flight-nav-suite-scaffold-bar-medium-height: 72px; }`                           |
+| `--flight-nav-suite-scaffold-rail-expanded-width` | `max-content`                                             | Expanded rail surface width; length overrides also seed the content offset | `.shell { --flight-nav-suite-scaffold-rail-expanded-width: 256px; }`                        |
+| `--flight-nav-suite-scaffold-primary-action-gap`  | `16px`                                                    | Gap between bar/FAB, or hidden bar bottom/FAB                              | `.shell { --flight-nav-suite-scaffold-primary-action-gap: 20px; }`                          |
+
+---
+
+<Stories title="Use Cases" />
+
+---
+
+## IoC & Width Synchronization
+
+`MatNavigationSuiteScaffoldComponent` queries its responsive navigation layout child (the rail or bar component) using the `MAT_NAVIGATION_WIDGET` injection token. 
+
+Because of this IoC decoupling:
+* The scaffold does not need to know whether it has a direct `<mat-navigation-rail>` child or a `<mat-navigation-suite>` wrapper. It simply queries the active widget's size signal.
+* When the rail transitions or collapses, the scaffold dynamically receives the size updates to animate the main content's layout column grid with zero layout jumps.
+

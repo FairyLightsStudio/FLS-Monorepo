@@ -1,0 +1,42 @@
+when:
+  - event: ['push', 'manual']
+    branch: ['main']
+
+engine: 'nixery'
+
+clone:
+  depth: 2 # need HEAD~1 for path diff check
+
+dependencies:
+  nixpkgs:
+    - bun
+    - git
+    - nodejs
+  nixpkgs/nixpkgs-unstable:
+    - wrangler
+
+steps:
+  - name: 'Debug: check secret env vars'
+    command: |
+      echo "DEPLOY_SSH_KEY     present=$( [ -n "$DEPLOY_SSH_KEY" ] && echo yes || echo NO ) first4=${DEPLOY_SSH_KEY:0:4}"
+      echo "NPM_TOKEN          present=$( [ -n "$NPM_TOKEN" ] && echo yes || echo NO ) first4=${NPM_TOKEN:0:4}"
+      echo "CLOUDFLARE_API_TOKEN  present=$( [ -n "$CLOUDFLARE_API_TOKEN" ] && echo yes || echo NO ) first4=${CLOUDFLARE_API_TOKEN:0:4}"
+      echo "CLOUDFLARE_ACCOUNT_ID present=$( [ -n "$CLOUDFLARE_ACCOUNT_ID" ] && echo yes || echo NO ) first4=${CLOUDFLARE_ACCOUNT_ID:0:4}"
+
+  - name: 'Check for storybook changes'
+    command: |
+      if git diff --name-only HEAD~1 | grep -qE '^(storybook/|components/|\.storybook/)'; then
+        echo "Storybook files changed, proceeding."
+      else
+        echo "No storybook changes, skipping."
+        exit 0
+      fi
+
+  - name: 'Install dependencies'
+    command: 'bun install --frozen-lockfile'
+
+  - name: 'Build Storybook'
+    command: 'bun run build-storybook'
+
+  - name: 'Deploy to Cloudflare Pages'
+    command: 'npx wrangler pages deploy dist/storybook/storybook --project-name some-angular-m3e-components --branch main'

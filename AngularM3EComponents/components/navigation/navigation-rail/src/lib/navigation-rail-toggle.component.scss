@@ -1,0 +1,52 @@
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* 容器采用 inline-grid 完美叠加内容，不脱离正常的文档流 */
+.icon-container {
+  display: inline-grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+}
+
+mat-icon {
+  /* 让所有 icon 在 grid 中占据同一个单元格从而完美重叠 */
+  grid-area: 1 / 1;
+  transition:
+    transform var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    opacity var(--mat-sys-duration-medium1, 200ms) var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+}
+
+.menu-icon {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.menu-open-icon {
+  opacity: 0;
+  /* 初始时倒过来，这样一转就正了 */
+  transform: rotate(-180deg);
+}
+
+/* 按钮展开时的翻转与透明度交替 */
+button.expanded .menu-icon {
+  opacity: 0;
+  transform: rotate(180deg);
+}
+
+button.expanded .menu-open-icon {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host, :host * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+

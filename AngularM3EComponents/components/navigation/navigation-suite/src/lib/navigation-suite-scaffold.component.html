@@ -1,0 +1,46 @@
+<div
+  #layout
+  class="mat-navigation-suite-scaffold__layout"
+  [style.--flight-nav-suite-scaffold-container-color]="containerColorValue()"
+  [style.--flight-nav-suite-scaffold-navigation-size]="navigationSizeValue()"
+  [style.--flight-nav-suite-scaffold-navigation-surface-size]="navigationSurfaceSizeValue()"
+  (transitionend)="handleLayoutTransitionEnd($event)"
+  (transitioncancel)="handleLayoutTransitionCancel($event)"
+>
+  <aside
+    #navigation
+    class="mat-navigation-suite-scaffold__navigation"
+    [attr.aria-hidden]="currentState().targetValue() === 'hidden' ? 'true' : null"
+    [attr.inert]="currentState().targetValue() === 'hidden' ? '' : null"
+  >
+    <div class="mat-navigation-suite-scaffold__suite">
+      <ng-content select="mat-navigation-suite"></ng-content>
+    </div>
+  </aside>
+
+  @if (isBar()) {
+    @if (primaryActionTemplate(); as primaryAction) {
+      <div
+        class="mat-navigation-suite-scaffold__primary-action"
+        [class.mat-navigation-suite-scaffold__primary-action--align-start]="
+          primaryActionAlignment() === 'start'
+        "
+        [class.mat-navigation-suite-scaffold__primary-action--align-center]="
+          primaryActionAlignment() === 'center'
+        "
+        [class.mat-navigation-suite-scaffold__primary-action--align-end]="
+          primaryActionAlignment() === 'end'
+        "
+      >
+        <ng-container
+          [ngTemplateOutlet]="primaryAction"
+          [ngTemplateOutletContext]="primaryActionContext()"
+        ></ng-container>
+      </div>
+    }
+  }
+
+  <main class="mat-navigation-suite-scaffold__content">
+    <ng-content></ng-content>
+  </main>
+</div>

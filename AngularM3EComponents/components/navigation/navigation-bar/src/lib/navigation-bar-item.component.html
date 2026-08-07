@@ -1,0 +1,46 @@
+<button
+  type="button"
+  class="mat-navigation-bar-item-container"
+  [class.mat-navigation-bar-item-selected]="active()"
+  [attr.role]="role()"
+  [attr.aria-selected]="active()"
+  [attr.aria-current]="active() ? 'page' : null"
+  #buttonEl
+>
+  <div
+    class="mat-navigation-bar-item-icon-wrapper"
+    matRipple
+    [matRippleTrigger]="buttonEl"
+    matRippleColor="rgba(128, 128, 128, 0.1)"
+  >
+    <div class="mat-navigation-bar-item-active-indicator"></div>
+    <div class="mat-navigation-bar-item-icon-content">
+      @if (active() && activeIcon) {
+        <ng-container *ngTemplateOutlet="activeIcon?.templateRef || null"></ng-container>
+      } @else {
+        <ng-container *ngTemplateOutlet="icon?.templateRef || null"></ng-container>
+      }
+    </div>
+
+    @if (layout() === 'horizontal') {
+      <div class="mat-navigation-bar-item-label-content-horizontal">
+        @if (label) {
+          <ng-container *ngTemplateOutlet="label.templateRef || null"></ng-container>
+        }
+      </div>
+    }
+  </div>
+
+  @if (layout() === 'vertical') {
+    <div
+      class="mat-navigation-bar-item-label-container"
+      [class.mat-navigation-bar-item-label-hidden]="!active() && !alwaysShowLabel()"
+    >
+      <div class="mat-navigation-bar-item-label-content">
+        @if (label) {
+          <ng-container *ngTemplateOutlet="label.templateRef || null"></ng-container>
+        }
+      </div>
+    </div>
+  }
+</button>

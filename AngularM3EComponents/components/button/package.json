@@ -1,0 +1,56 @@
+{
+  "name": "@fairylights-studio/ngx-m3-button",
+  "version": "0.4.0",
+  "description": "Material 3 extended FAB with collapsed input for Angular Material",
+  "license": "MIT",
+  "author": "FairyLights Studio",
+  "keywords": [
+    "angular",
+    "material",
+    "material-3",
+    "material-design",
+    "button",
+    "fab"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://tangled.org/fairylights.org/AngularM3EComponents.git",
+    "directory": "components/button"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "catalog:",
+    "@angular/common": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/material": "catalog:"
+  },
+  "dependencies": {
+    "tslib": "catalog:"
+  },
+  "sideEffects": [
+    "./styles.scss"
+  ],
+  "module": "dist/fesm2022/fairylights-studio-ngx-m3-button.mjs",
+  "typings": "dist/types/fairylights-studio-ngx-m3-button.d.ts",
+  "type": "module",
+  "exports": {
+    "./styles.scss": {
+      "default": "./styles.scss"
+    },
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./dist/types/fairylights-studio-ngx-m3-button.d.ts",
+      "default": "./dist/fesm2022/fairylights-studio-ngx-m3-button.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md",
+    "styles.scss"
+  ]
+}

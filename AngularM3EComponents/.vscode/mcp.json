@@ -1,0 +1,22 @@
+{
+	"servers": {
+		"angular-cli": {
+			"command": "bunx",
+			"args": [
+        "ng",
+				"mcp"
+			],
+			"type": "stdio"
+		},
+		// "browser-dev-tool": {
+		// 	"type": "stdio",
+		// 	"command": "bunx",
+		// 	"args": [
+		// 		"-y",
+		// 		"chrome-devtools-mcp@latest",
+		// 		"--no-usage-statistics"
+		// 	]
+		// }
+	},
+	"inputs": []
+}

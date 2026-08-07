@@ -1,0 +1,50 @@
+{
+  "name": "@fairylights-studio/ngx-m3-navigation-common",
+  "version": "0.3.2",
+  "description": "Shared base classes and directives for Angular Material 3 navigation components",
+  "license": "MIT",
+  "author": "FairyLights Studio",
+  "keywords": [
+    "angular",
+    "material",
+    "material-3",
+    "material-design",
+    "navigation",
+    "shared"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://tangled.org/fairylights.org/AngularM3EComponents.git",
+    "directory": "components/navigation/navigation-common"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@angular/cdk": "catalog:",
+    "@angular/common": "catalog:",
+    "@angular/core": "catalog:",
+    "@angular/material": "catalog:"
+  },
+  "dependencies": {
+    "tslib": "catalog:"
+  },
+  "sideEffects": false,
+  "module": "dist/fesm2022/fairylights-studio-ngx-m3-navigation-common.mjs",
+  "typings": "dist/types/fairylights-studio-ngx-m3-navigation-common.d.ts",
+  "type": "module",
+  "exports": {
+    "./package.json": {
+      "default": "./package.json"
+    },
+    ".": {
+      "types": "./dist/types/fairylights-studio-ngx-m3-navigation-common.d.ts",
+      "default": "./dist/fesm2022/fairylights-studio-ngx-m3-navigation-common.mjs"
+    }
+  },
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "README.md"
+  ]
+}

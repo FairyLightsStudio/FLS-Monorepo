@@ -1,0 +1,11 @@
+{
+  "name": "@fairylights-studio/ngx-m3-storybook",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "@storybook/addon-docs": "10.4.0",
+    "@storybook/angular": "10.4.0",
+    "remark-gfm": "^4.0.1",
+    "storybook": "10.4.0"
+  }
+}

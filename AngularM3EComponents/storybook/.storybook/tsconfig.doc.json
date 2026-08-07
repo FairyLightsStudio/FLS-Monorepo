@@ -1,0 +1,13 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "emitDecoratorMetadata": true
+  },
+  "exclude": [
+    "../../components/button/**/*.spec.ts",
+    "../../components/button/**/*.stories.ts",
+    "../../components/navigation/**/*.spec.ts",
+    "../../components/navigation/**/*.stories.ts"
+  ],
+  "include": ["../../components/button/**/*.ts", "../../components/navigation/**/*.ts"]
+}

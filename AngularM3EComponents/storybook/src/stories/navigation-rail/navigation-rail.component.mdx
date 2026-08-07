@@ -1,0 +1,196 @@
+import {
+  Meta,
+  Canvas,
+  ArgTypes,
+  Stories,
+  Source,
+  Title,
+  Subtitle,
+  Description,
+  Primary,
+  Controls,
+} from '@storybook/addon-docs/blocks';
+import * as RailStories from './navigation-rail.component.stories';
+
+<Meta of={RailStories} />
+
+<Title />
+<Subtitle />
+<Description />
+
+[![npm version](https://img.shields.io/npm/v/@fairylights-studio/ngx-m3-navigation-rail)](https://www.npmjs.com/package/@fairylights-studio/ngx-m3-navigation-rail)
+
+<Primary />
+<Controls />
+
+## Getting Started
+
+### 1. Configure Angular Material
+
+Configure Angular Material in your application styles. Navigation rail consumes the generated `--mat-sys-*` runtime variables and does not provide a Sass theme mixin.
+
+### 2. Import the module
+
+<Source
+  language="ts"
+  code={`import { MAT_NAVIGATION_RAIL_MODULES } from '@fairylights-studio/ngx-m3-navigation-rail';
+import { MatExtendedFabCollapsedDirective } from '@fairylights-studio/ngx-m3-button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';`}
+/>
+
+### 3. TypeScript — component class
+
+<Source
+  language="ts"
+  code={`import { Component } from '@angular/core';
+import { MAT_NAVIGATION_RAIL_MODULES } from '@fairylights-studio/ngx-m3-navigation-rail';
+import { MatExtendedFabCollapsedDirective } from '@fairylights-studio/ngx-m3-button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+
+@Component({
+selector: 'app-my-page',
+imports: [MAT_NAVIGATION_RAIL_MODULES, MatExtendedFabCollapsedDirective, MatIconModule, MatButtonModule],
+templateUrl: './my-page.component.html',
+styleUrl: './my-page.component.scss',
+})
+export class MyPageComponent {
+selectedIndex = 0;
+expanded = false;
+}`}
+/>
+
+### 4. HTML — template
+
+<Source
+  language="html"
+  code={`<mat-navigation-rail
+  [expanded]="expanded"
+  [indicatorShape]="'hug'"
+  [showDivider]="true"
+  [verticalArrangement]="'top'"
+  aria-label="Primary navigation"
+>
+  <mat-navigation-rail-header>
+    <mat-navigation-rail-toggle
+      [expanded]="expanded"
+      (click)="expanded = !expanded"
+    ></mat-navigation-rail-toggle>
+    <button matFab extended [collapsed]="!expanded" aria-label="Create item">
+      <mat-icon aria-hidden="true">add</mat-icon>
+      Create
+    </button>
+  </mat-navigation-rail-header>
+
+<mat-navigation-rail-item
+[active]="selectedIndex === 0"
+(click)="selectedIndex = 0"
+
+>
+
+    <mat-icon *matNavigationIcon>inbox</mat-icon>
+    <ng-template matNavigationLabel>Inbox</ng-template>
+
+  </mat-navigation-rail-item>
+
+<mat-navigation-rail-item
+[active]="selectedIndex === 1"
+(click)="selectedIndex = 1"
+
+>
+
+    <mat-icon *matNavigationIcon matBadge="8">chat_bubble</mat-icon>
+    <ng-template matNavigationLabel>Messages</ng-template>
+
+  </mat-navigation-rail-item>
+
+<mat-navigation-rail-item
+[active]="selectedIndex === 2"
+(click)="selectedIndex = 2"
+
+>
+
+    <mat-icon *matNavigationIcon>calendar_month</mat-icon>
+    <ng-template matNavigationLabel>Calendar</ng-template>
+
+  </mat-navigation-rail-item>
+
+<mat-navigation-rail-item
+[active]="selectedIndex === 3"
+(click)="selectedIndex = 3"
+
+>
+
+    <mat-icon *matNavigationIcon>settings</mat-icon>
+    <ng-template matNavigationLabel>Settings</ng-template>
+
+  </mat-navigation-rail-item>
+</mat-navigation-rail>`}
+/>
+
+### 5. CSS — custom styles
+
+<Source
+  language="css"
+  code={`/* my-page.component.scss */
+
+mat-navigation-rail {
+height: 100%;
+--flight-nav-rail-container-collapsed-width: 88px;
+--flight-nav-rail-item-button-collapsed-height: 76px;
+}`}
+/>
+
+## Runtime CSS Variables
+
+`--flight-*` variables are public customization hooks owned by this library. Color, typography, and motion come from Angular Material `--mat-sys-*` variables.
+
+| CSS variable                                      | Default            | Used for                              | Override example                                                           |
+| ------------------------------------------------- | ------------------ | ------------------------------------- | -------------------------------------------------------------------------- |
+| `--flight-nav-rail-container-collapsed-width`     | `80px`             | Collapsed rail width                  | `.shell { --flight-nav-rail-container-collapsed-width: 88px; }`            |
+| `--flight-nav-rail-container-expanded-max-width`  | `360px`            | Expanded rail max width               | `.shell { --flight-nav-rail-container-expanded-max-width: 400px; }`        |
+| `--flight-nav-rail-container-fill-expanded-width` | `256px`            | Fill indicator expanded width         | `.shell { --flight-nav-rail-container-fill-expanded-width: 280px; }`       |
+| `--flight-nav-rail-container-z-index`             | `100`              | Rail host stacking                    | `.shell { --flight-nav-rail-container-z-index: 10; }`                      |
+| `--flight-nav-rail-item-button-collapsed-height`  | `72px`             | Collapsed item height                 | `.shell { --flight-nav-rail-item-button-collapsed-height: 76px; }`         |
+| `--flight-nav-rail-item-button-collapsed-padding` | `12px 12px 0 12px` | Collapsed item padding                | `.shell { --flight-nav-rail-item-button-collapsed-padding: 14px 12px 0; }` |
+| `--flight-nav-rail-item-button-expanded-height`   | `56px`             | Expanded item height                  | `.shell { --flight-nav-rail-item-button-expanded-height: 64px; }`          |
+| `--flight-nav-rail-item-button-expanded-padding`  | `0 12px`           | Expanded item padding                 | `.shell { --flight-nav-rail-item-button-expanded-padding: 0 16px; }`       |
+| `--flight-nav-rail-indicator-width`               | `56px`             | Indicator width and minimum hug width | `.shell { --flight-nav-rail-indicator-width: 64px; }`                      |
+| `--flight-nav-rail-indicator-height`              | `32px`             | Collapsed indicator height            | `.shell { --flight-nav-rail-indicator-height: 36px; }`                     |
+| `--flight-nav-rail-indicator-shape`               | `16px`             | Collapsed indicator radius            | `.shell { --flight-nav-rail-indicator-shape: 18px; }`                      |
+| `--flight-nav-rail-indicator-expanded-height`     | `56px`             | Expanded indicator height             | `.shell { --flight-nav-rail-indicator-expanded-height: 64px; }`            |
+| `--flight-nav-rail-indicator-expanded-shape`      | `28px`             | Expanded indicator radius             | `.shell { --flight-nav-rail-indicator-expanded-shape: 32px; }`             |
+| `--flight-nav-rail-icon-box-size`                 | `24px`             | Icon box size                         | `.shell { --flight-nav-rail-icon-box-size: 28px; }`                        |
+| `--flight-nav-rail-icon-box-margin-start`         | `16px`             | Icon start offset                     | `.shell { --flight-nav-rail-icon-box-margin-start: 20px; }`                |
+| `--flight-nav-rail-label-side-padding-start`      | `12px`             | Expanded side label spacing           | `.shell { --flight-nav-rail-label-side-padding-start: 16px; }`             |
+| `--flight-nav-rail-label-bottom-top`              | `48px`             | Collapsed bottom label top offset     | `.shell { --flight-nav-rail-label-bottom-top: 52px; }`                     |
+| `--flight-nav-rail-label-bottom-left`             | `40px`             | Collapsed bottom label inline center  | `.shell { --flight-nav-rail-label-bottom-left: 44px; }`                    |
+| `--flight-nav-rail-label-bottom-max-width`        | `76px`             | Collapsed bottom label max width      | `.shell { --flight-nav-rail-label-bottom-max-width: 88px; }`               |
+
+---
+
+<Stories title="Use Cases" />
+
+---
+
+## Content Projection Directives
+
+These structural directives control what gets projected into each `mat-navigation-rail-item`.
+
+| Directive                  | Selector                    | Purpose                               |
+| -------------------------- | --------------------------- | ------------------------------------- |
+| `*matNavigationIcon`       | `[MatNavigationIcon]`       | Primary icon displayed in the item.   |
+| `*matNavigationActiveIcon` | `[MatNavigationActiveIcon]` | Alternative icon shown when `active`. |
+| `matNavigationLabel`       | `[MatNavigationLabel]`      | Label text for the item.              |
+
+---
+
+## IoC & Framework Integration
+
+`MatNavigationRailComponent` implements the `MatNavigationWidget` interface and registers itself via the `MAT_NAVIGATION_WIDGET` injection token. 
+
+### Ideal Width Auto-Measurement
+Upon startup, the component dynamically measures its ideal expanded layout width under a temporary, transition-blocked sandbox environment, caching the result to prevent layout jumps or text-wrapping during collapsible transitions. This ideal size signal is fully queryable by parent responsive containers.
+

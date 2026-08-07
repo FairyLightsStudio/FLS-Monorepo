@@ -1,0 +1,85 @@
+@if (isBar()) {
+  <mat-navigation-bar class="mat-navigation-suite__bar" [ariaLabel]="ariaLabel()">
+    @for (item of projectedItems(); track item) {
+      <mat-navigation-bar-item
+        [active]="item.selected()"
+        [alwaysShowLabel]="currentAlwaysShowItemLabel()"
+        [layout]="barLayout()"
+        (click)="emitProjectedItemClick(item, $event)"
+      >
+        <ng-template matNavigationIcon>
+          @if (asTemplateRef(item.icon()); as iconTemplate) {
+            <ng-container [ngTemplateOutlet]="iconTemplate"></ng-container>
+          } @else {
+            <mat-icon>{{ asText(item.icon()) }}</mat-icon>
+          }
+        </ng-template>
+        @if (item.activeIcon()) {
+          <ng-template matNavigationActiveIcon>
+            @if (asTemplateRef(item.activeIcon()); as activeIconTemplate) {
+              <ng-container [ngTemplateOutlet]="activeIconTemplate"></ng-container>
+            } @else {
+              <mat-icon>{{ asText(item.activeIcon()) }}</mat-icon>
+            }
+          </ng-template>
+        }
+        <ng-template matNavigationLabel>
+          @if (asTemplateRef(item.label()); as labelTemplate) {
+            <ng-container [ngTemplateOutlet]="labelTemplate"></ng-container>
+          } @else {
+            {{ asText(item.label()) }}
+          }
+        </ng-template>
+      </mat-navigation-bar-item>
+    }
+  </mat-navigation-bar>
+} @else {
+  <mat-navigation-rail
+    class="mat-navigation-suite__rail"
+    [expanded]="isRailExpanded()"
+    [verticalArrangement]="currentVerticalArrangement()"
+    [ariaLabel]="ariaLabel()"
+  >
+    <mat-navigation-rail-header>
+      @if (railShowToggle()) {
+        <mat-navigation-rail-toggle [expanded]="isRailExpanded()" (click)="toggleRailExpanded()" />
+      }
+      @if (primaryActionTemplate(); as primaryAction) {
+        <ng-container
+          [ngTemplateOutlet]="primaryAction"
+          [ngTemplateOutletContext]="primaryActionContext()"
+        ></ng-container>
+      }
+    </mat-navigation-rail-header>
+    @for (item of projectedItems(); track item) {
+      <mat-navigation-rail-item
+        [active]="item.selected()"
+        (click)="emitProjectedItemClick(item, $event)"
+      >
+        <ng-template matNavigationIcon>
+          @if (asTemplateRef(item.icon()); as iconTemplate) {
+            <ng-container [ngTemplateOutlet]="iconTemplate"></ng-container>
+          } @else {
+            <mat-icon>{{ asText(item.icon()) }}</mat-icon>
+          }
+        </ng-template>
+        @if (item.activeIcon()) {
+          <ng-template matNavigationActiveIcon>
+            @if (asTemplateRef(item.activeIcon()); as activeIconTemplate) {
+              <ng-container [ngTemplateOutlet]="activeIconTemplate"></ng-container>
+            } @else {
+              <mat-icon>{{ asText(item.activeIcon()) }}</mat-icon>
+            }
+          </ng-template>
+        }
+        <ng-template matNavigationLabel>
+          @if (asTemplateRef(item.label()); as labelTemplate) {
+            <ng-container [ngTemplateOutlet]="labelTemplate"></ng-container>
+          } @else {
+            {{ asText(item.label()) }}
+          }
+        </ng-template>
+      </mat-navigation-rail-item>
+    }
+  </mat-navigation-rail>
+}

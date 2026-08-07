@@ -1,0 +1,77 @@
+@use '@angular/cdk' as cdk;
+
+:host {
+  display: block;
+  height: 100vh;
+  width: max-content;
+  min-width: var(--flight-nav-rail-container-collapsed-width, 80px);
+  max-width: var(--flight-nav-rail-container-collapsed-width, 80px);
+  background-color: var(--mat-sys-surface, #fffbfe);
+  border-inline-end: 1px solid transparent;
+  transition:
+    max-width var(--mat-sys-duration-medium1, 200ms)
+      var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1)),
+    border-color var(--mat-sys-duration-medium1, 200ms)
+      var(--mat-sys-easing-standard, cubic-bezier(0.2, 0, 0, 1));
+  overflow: clip;
+  position: relative;
+  z-index: var(--flight-nav-rail-container-z-index, 100);
+  white-space: nowrap;
+}
+
+:host(.mat-nav-rail-expanded) {
+  max-width: var(--flight-nav-rail-container-expanded-max-width, 360px);
+}
+:host([data-indicator-shape='fill']) {
+  width: var(--flight-nav-rail-container-fill-expanded-width, 256px);
+}
+:host(.mat-nav-rail-has-divider) {
+  border-inline-end-color: var(--mat-sys-outline-variant, #cac4d0);
+}
+
+.mat-nav-rail-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.mat-nav-rail-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  padding-bottom: 24px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  overscroll-behavior-y: contain;
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+:host([data-vertical-arrangement='center']) .mat-nav-rail-content {
+  justify-content: safe center;
+}
+
+@include cdk.high-contrast {
+  :host {
+    outline: solid 1px currentColor;
+  }
+}
+
+:host(.mat-nav-rail-measure-sandbox) {
+  &, & *, & ::ng-deep * {
+    transition: none !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host, :host * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+

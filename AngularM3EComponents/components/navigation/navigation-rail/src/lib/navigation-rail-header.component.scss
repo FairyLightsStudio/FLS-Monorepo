@@ -1,0 +1,77 @@
+:host {
+  // Override M3 FAB shadows to match the spec
+  --mat-fab-extended-container-elevation-shadow: none;
+  --mat-fab-extended-hover-container-elevation-shadow: var(--mat-sys-level2);
+  --mat-fab-extended-focus-container-elevation-shadow: var(--mat-sys-level2);
+  --mat-fab-extended-pressed-container-elevation-shadow: var(--mat-sys-level3);
+
+  --mat-fab-container-elevation-shadow: none;
+  --mat-fab-hover-container-elevation-shadow: var(--mat-sys-level2);
+  --mat-fab-focus-container-elevation-shadow: var(--mat-sys-level2);
+  --mat-fab-pressed-container-elevation-shadow: var(--mat-sys-level3);
+
+  // Fixed rail width in collapsed state — used to compute center offset
+  --_rail-collapsed-width: var(--flight-nav-rail-container-collapsed-width, 80px);
+
+  // Known M3 FAB compact widths (icon-only sizes)
+  --_fab-compact-width: 56px;
+  --_fab-small-compact-width: 40px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px 0;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/*
+ * Each direct child is anchored with a fixed margin-inline-start.
+ * The margin does NOT change between expanded and collapsed — the rail
+ * container grows/shrinks around the child's fixed position.
+ *
+ * When collapsed (80px rail): the child is centered within the rail.
+ * When expanded (360px rail): the child stays at the same offset,
+ *   naturally appearing left-aligned in the wider container.
+ *
+ * --_measured-width:    JS-fallback measured width (px), set per-child by
+ *                       MatNavigationRailHeaderComponent. For known FAB types
+ *                       it is capped at the compact size via --_max-compact-width.
+ * --_max-compact-width: Upper bound on --_child-width (default 9999px = no cap).
+ *                       Known FAB selectors set this to their compact size so
+ *                       a "wrong" measurement (e.g. extended FAB at 136px) is
+ *                       clamped. Override via style attribute on custom elements.
+ */
+:host ::ng-deep > * {
+  --_max-compact-width: 9999px;
+  --_child-width: min(var(--_measured-width, var(--_fab-compact-width)), var(--_max-compact-width));
+  --_center-offset: calc((var(--_rail-collapsed-width) - var(--_child-width)) / 2);
+
+  margin-inline-start: var(--_center-offset);
+  margin-inline-end: var(--_center-offset);
+}
+
+/*
+ * Known FAB selectors: cap the measured width at the compact icon-only size.
+ * This prevents an incorrectly wide measurement (from an extended FAB) from
+ * displacing the element.
+ */
+
+// Standard FAB (56px compact)
+:host ::ng-deep > [mat-fab],
+:host ::ng-deep > .mat-mdc-fab {
+  --_max-compact-width: var(--_fab-compact-width);
+}
+
+// Extended FAB — compact icon-only size is the same as standard FAB (56px)
+:host ::ng-deep > [mat-extended-fab],
+:host ::ng-deep > .mat-mdc-extended-fab {
+  --_max-compact-width: var(--_fab-compact-width);
+}
+
+// Small / Mini FAB (40px compact)
+:host ::ng-deep > [mat-mini-fab],
+:host ::ng-deep > .mat-mdc-mini-fab {
+  --_max-compact-width: var(--_fab-small-compact-width);
+}
