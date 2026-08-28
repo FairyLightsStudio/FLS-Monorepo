@@ -231,6 +231,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "buffa-types"
+version = "0.8.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "22cb54bcbf6946c58e550eeaf6209047146363dbc7cbdc87e49e67089ed2ff5f"
+dependencies = [
+ "buffa",
+ "bytes",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.16",
+]
+
+[[package]]
 name = "bumpalo"
 version = "3.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1398,8 +1411,10 @@ dependencies = [
 name = "pow_captcha_server"
 version = "0.1.0"
 dependencies = [
+ "async-trait",
  "axum",
  "buffa",
+ "buffa-types",
  "config",
  "connectrpc",
  "connectrpc-build",
@@ -1837,6 +1852,7 @@ dependencies = [
  "sha2",
  "smallvec",
  "thiserror 2.0.16",
+ "time",
  "tokio",
  "tokio-stream",
  "tracing",
@@ -1922,6 +1938,7 @@ dependencies = [
  "sqlx-core",
  "stringprep",
  "thiserror 2.0.16",
+ "time",
  "tracing",
  "uuid",
  "whoami",
@@ -1961,6 +1978,7 @@ dependencies = [
  "sqlx-core",
  "stringprep",
  "thiserror 2.0.16",
+ "time",
  "tracing",
  "uuid",
  "whoami",
@@ -1987,6 +2005,7 @@ dependencies = [
  "serde_urlencoded",
  "sqlx-core",
  "thiserror 2.0.16",
+ "time",
  "tracing",
  "url",
  "uuid",
@@ -2114,10 +2133,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8a7619e19bc266e0f9c5e6686659d394bc57973859340060a69221e57dbc0c40"
 dependencies = [
  "deranged",
+ "itoa",
  "num-conv",
  "powerfmt",
  "serde",
  "time-core",
+ "time-macros",
 ]
 
 [[package]]
@@ -2125,6 +2146,16 @@ name = "time-core"
 version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c9e9a38711f559d9e3ce1cdb06dd7c5b8ea546bc90052da6d06bb76da74bb07c"
+
+[[package]]
+name = "time-macros"
+version = "0.2.22"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3526739392ec93fd8b359c8e98514cb3e8e021beb4e5f597b00a0221f8ed8a49"
+dependencies = [
+ "num-conv",
+ "time-core",
+]
 
 [[package]]
 name = "tinystr"
@@ -2360,6 +2391,7 @@ version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f33196643e165781c20a5ead5582283a7dacbb87855d867fbc2df3f81eddc1be"
 dependencies = [
+ "getrandom 0.3.3",
  "js-sys",
  "wasm-bindgen",
 ]

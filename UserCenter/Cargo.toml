@@ -3,6 +3,10 @@ name = "UserCenter"
 version = "0.1.0"
 edition = "2024"
 
+[lib]
+name = "user_center_lib"
+path = "src/lib.rs"
+
 [dependencies]
 # RPC
 connectrpc = { version = "0.8", features = ["axum", "client", "tls"] }

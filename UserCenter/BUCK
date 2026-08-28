@@ -32,6 +32,7 @@ buildscript_run(
 rust_library(
     name = "UserCenter-lib",
     srcs = glob(["src/**/*.rs"]),
+    crate = "user_center_lib",
     crate_root = "src/lib.rs",
     env = {
         "OUT_DIR": "$(location :connectrpc-codegen[out_dir])",

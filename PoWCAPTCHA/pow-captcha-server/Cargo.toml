@@ -3,6 +3,10 @@ name = "pow_captcha_server"
 version.workspace = true
 edition.workspace = true
 
+[lib]
+name = "pow_captcha"
+path = "src/lib.rs"
+
 [dependencies]
 async-trait = "0.1"
 pow-captcha-core = { path = "../pow-captcha-core" }
@@ -13,7 +17,7 @@ time = "0.3.36"
 thiserror = "1.0"
 exn.workspace = true
 tokio = { version = "1", features = ["full"] }
-sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring", "postgres", "chrono", "uuid"] }
+sqlx = { version = "0.8", features = ["runtime-tokio", "tls-rustls-ring", "postgres", "chrono", "time", "uuid"] }
 config = { version = "0.15.14", default-features = false, features = ["toml"] }
 serde = { version = "1", features = ["derive"] }
 axum = "0.8"
