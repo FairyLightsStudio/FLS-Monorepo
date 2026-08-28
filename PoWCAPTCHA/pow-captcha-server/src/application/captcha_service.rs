@@ -1,14 +1,20 @@
 use std::sync::Arc;
 use std::time::Duration;
 
-use pow_captcha_core::{generate_challenge, verify_solution, HashAlgorithm as CoreAlgorithm, Challenge as CoreChallenge, Solution as CoreSolution};
+use buffa_types::google::protobuf::Timestamp;
+use pow_captcha_core::{
+    Challenge as CoreChallenge, HashAlgorithm as CoreAlgorithm, Solution as CoreSolution,
+    generate_challenge, verify_solution,
+};
 use rand::RngCore;
 use time::OffsetDateTime;
 use uuid::Uuid;
 
 use crate::domain::{ExamSession, ExamSessionRepository, WorkProofToken, WorkProofTokenRepository};
 use crate::error::AppError;
-use crate::proto::pow_captcha::v1::{GetChallengeResponse, SubmitSolutionResponse, ValidateTokenResponse, Session, Challenge};
+use crate::proto::pow_captcha::v1::{
+    Challenge, GetChallengeResponse, Session, SubmitSolutionResponse, ValidateTokenResponse,
+};
 
 pub struct CaptchaService<ESR, WPR>
 where
@@ -62,20 +68,25 @@ where
             algorithm: "sha256".into(),
             base_data: core_challenge.puzzle.into(),
             difficulty: core_challenge.difficulty as i32,
-            timestamp: Some(prost_types::Timestamp {
+            timestamp: Some(Timestamp {
                 seconds: created_session.created_at.unix_timestamp(),
                 nanos: 0,
-            }),
-            expires_on: Some(prost_types::Timestamp {
+                ..Default::default()
+            })
+            .into(),
+            expires_on: Some(Timestamp {
                 seconds: created_session.expires_at.unix_timestamp(),
                 nanos: 0,
-            }),
+                ..Default::default()
+            })
+            .into(),
             ..Default::default()
         };
 
         Ok(GetChallengeResponse {
-            exam_session: Some(response_session),
-            challenge: Some(response_challenge),
+            exam_session: Some(response_session).into(),
+            challenge: Some(response_challenge).into(),
+            ..Default::default()
         })
     }
 
@@ -108,7 +119,9 @@ where
             difficulty: session.difficulty as usize,
         };
         let core_solution = CoreSolution {
-            nonce: solution_nonce.parse().map_err(|_| AppError::InvalidArgument("Invalid nonce format".to_string()))?,
+            nonce: solution_nonce
+                .parse()
+                .map_err(|_| AppError::InvalidArgument("Invalid nonce format".to_string()))?,
         };
 
         if !verify_solution(&core_challenge, &core_solution) {
@@ -132,6 +145,7 @@ where
 
         Ok(SubmitSolutionResponse {
             token: token_str.into(),
+            ..Default::default()
         })
     }
 
@@ -142,7 +156,7 @@ where
                 return Ok(ValidateTokenResponse {
                     valid: false,
                     ..Default::default()
-                })
+                });
             }
         };
 

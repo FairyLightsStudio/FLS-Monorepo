@@ -1,9 +1,10 @@
+use UserCenter_lib::proto::greet::v1::*;
 use connectrpc::{RequestContext, Response, Router, ServiceRequest, ServiceResult};
 use std::sync::Arc;
-use UserCenter_lib::proto::greet::v1::*;
 
 struct MyGreet;
 
+#[allow(refining_impl_trait)]
 impl GreetService for MyGreet {
     async fn greet(
         &self,

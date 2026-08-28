@@ -1176,6 +1176,12 @@ cargo.rust_library(
     visibility = [],
 )
 
+alias(
+    name = "async-trait",
+    actual = ":async-trait-0.1",
+    visibility = ["PUBLIC"],
+)
+
 http_archive(
     name = "async-trait-0.1.91.crate",
     sha256 = "ae36dc4177970ef04fde5178d3e2429882def40e57a451f919c098f72baa6cec",

@@ -3,7 +3,12 @@ use std::path::PathBuf;
 
 fn main() {
     let manifest_dir = PathBuf::from(std::env::var("CARGO_MANIFEST_DIR").unwrap());
-    let workspace_root = manifest_dir.parent().unwrap().parent().unwrap().to_path_buf();
+    let workspace_root = manifest_dir
+        .parent()
+        .unwrap()
+        .parent()
+        .unwrap()
+        .to_path_buf();
     let idl_dir = std::env::var_os("TERAPANEL_IDL_DIR")
         .map(PathBuf::from)
         .unwrap_or_else(|| workspace_root.join("idl"));

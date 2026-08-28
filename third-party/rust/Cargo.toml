@@ -12,6 +12,7 @@ path = "top/main.rs"
 
 [dependencies]
 atomic-write-file = "0.3"
+async-trait = "0.1"
 exn = "0.3"
 async-nats = "0.50"
 axum = "0.8"

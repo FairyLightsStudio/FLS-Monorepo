@@ -8,7 +8,7 @@ use pow_captcha::S;
 use serde::Deserialize;
 
 use pow_captcha::proto::pow_captcha::v1::{
-    PoWcaptchaBackendService, PoWcaptchaFrontendService,
+    PoWcaptchaBackendServiceRegisterMarker, PoWcaptchaFrontendServiceRegisterMarker,
 };
 
 #[derive(Debug)]
@@ -44,16 +44,14 @@ async fn main() -> exn::Result<(), ServerError> {
         .build()
         .or_raise(|| ServerError("Failed to build config".into()))?;
 
-    let app_config: AppConfig = settings
-        .try_deserialize()
-        .or_raise(|| ServerError("Failed to load configuration from environment variable".into()))?;
+    let app_config: AppConfig = settings.try_deserialize().or_raise(|| {
+        ServerError("Failed to load configuration from environment variable".into())
+    })?;
 
     let addr: SocketAddr = app_config
         .address
-        .parse()
-        .or_raise(|| {
-            ServerError(format!("Address {} is not valid", app_config.address))
-        })?;
+        .parse::<SocketAddr>()
+        .or_raise(|| ServerError(format!("Address {} is not valid", app_config.address)))?;
 
     let db_pool = PgPoolOptions::new()
         .connect(&app_config.database.url)
@@ -65,14 +63,15 @@ async fn main() -> exn::Result<(), ServerError> {
             ))
         })?;
 
-    let service = Arc::new(S::new(db_pool));
+    let service = S::new(db_pool);
+    let grpc_service = Arc::new(service.grpc_service);
 
-    let backend_svc = service.clone();
-    let frontend_svc = service;
+    let backend_svc = grpc_service.clone();
+    let frontend_svc = grpc_service;
 
     let router = Router::new()
-        .register(PoWcaptchaBackendService::register(backend_svc))
-        .register(PoWcaptchaFrontendService::register(frontend_svc));
+        .add_service::<_, PoWcaptchaBackendServiceRegisterMarker>(backend_svc)
+        .add_service::<_, PoWcaptchaFrontendServiceRegisterMarker>(frontend_svc);
 
     let app = router.into_axum_router();
 

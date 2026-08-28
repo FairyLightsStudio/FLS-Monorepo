@@ -4,6 +4,7 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
+async-trait = "0.1"
 pow-captcha-core = { path = "../pow-captcha-core" }
 rand.workspace = true
 uuid.workspace = true
@@ -19,6 +20,7 @@ axum = "0.8"
 
 connectrpc = { version = "0.8", features = ["axum"] }
 buffa = { version = "0.8", features = ["json"] }
+buffa-types = { version = "0.8", features = ["json"] }
 
 [build-dependencies]
 connectrpc-build = "0.8"
