@@ -17,8 +17,8 @@ async-nats = "0.50"
 axum = "0.8"
 bcrypt = "0"
 bollard = "0.21"
-buffa = { version = "0.9", features = ["json"] }
-buffa-types = { version = "0.9", features = ["json"] }
+buffa = { version = "0.8", features = ["json"] }
+buffa-types = { version = "0.8", features = ["json"] }
 clap = { version = "4", features = ["derive"] }
 config = "0.15"
 connectrpc = { version = "0.8", features = ["axum", "client", "tls"] }

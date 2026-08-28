@@ -2357,6 +2357,12 @@ cargo.rust_library(
     ],
 )
 
+alias(
+    name = "buffa",
+    actual = ":buffa-0.8",
+    visibility = ["PUBLIC"],
+)
+
 http_archive(
     name = "buffa-0.8.1.crate",
     sha256 = "33f29a40702df4b86ccd84211bfde8cee0bce6d0811450ade4a86a7d0958a23a",
@@ -2393,64 +2399,6 @@ cargo.rust_library(
         "fast-utf8",
         "json",
         "std",
-    ],
-    visibility = [],
-    deps = [
-        ":base64-0.22",
-        ":bytes-1",
-        ":foldhash-0.1",
-        ":hashbrown-0.15",
-        ":once_cell-1",
-        ":rustversion-1",
-        ":serde-1",
-        ":serde_json-1",
-        ":smoothutf8-0.1",
-        ":thiserror-2",
-    ],
-)
-
-alias(
-    name = "buffa",
-    actual = ":buffa-0.9",
-    visibility = ["PUBLIC"],
-)
-
-http_archive(
-    name = "buffa-0.9.1.crate",
-    sha256 = "cf9e6224bc4ee1f189ad257120c156fb05f95b826f5369d620b24984476c200a",
-    strip_prefix = "buffa-0.9.1",
-    urls = ["https://static.crates.io/crates/buffa/0.9.1/download"],
-    visibility = [],
-)
-
-cargo.rust_library(
-    name = "buffa-0.9",
-    srcs = [":buffa-0.9.1.crate"],
-    crate = "buffa",
-    crate_root = "buffa-0.9.1.crate/src/lib.rs",
-    edition = "2021",
-    env = {
-        "CARGO_BIN_NAME": "buffa",
-        "CARGO_CRATE_NAME": "buffa",
-        "CARGO_MANIFEST_DIR": "buffa-0.9.1.crate",
-        "CARGO_PKG_AUTHORS": "",
-        "CARGO_PKG_DESCRIPTION": "A pure Rust Protocol Buffers implementation with first-class editions support",
-        "CARGO_PKG_HOMEPAGE": "",
-        "CARGO_PKG_NAME": "buffa",
-        "CARGO_PKG_README": "README.md",
-        "CARGO_PKG_REPOSITORY": "https://github.com/anthropics/buffa",
-        "CARGO_PKG_RUST_VERSION": "1.75",
-        "CARGO_PKG_VERSION": "0.9.1",
-        "CARGO_PKG_VERSION_MAJOR": "0",
-        "CARGO_PKG_VERSION_MINOR": "9",
-        "CARGO_PKG_VERSION_PATCH": "1",
-        "CARGO_PKG_VERSION_PRE": "",
-    },
-    features = [
-        "default",
-        "fast-utf8",
-        "json",
-        "std",
         "text",
     ],
     visibility = [],
@@ -2463,7 +2411,7 @@ cargo.rust_library(
         ":rustversion-1",
         ":serde-1",
         ":serde_json-1",
-        ":smoothutf8-0.2",
+        ":smoothutf8-0.1",
         ":thiserror-2",
     ],
 )
@@ -2552,28 +2500,28 @@ cargo.rust_library(
 
 alias(
     name = "buffa-types",
-    actual = ":buffa-types-0.9",
+    actual = ":buffa-types-0.8",
     visibility = ["PUBLIC"],
 )
 
 http_archive(
-    name = "buffa-types-0.9.1.crate",
-    sha256 = "1c7d518783cc611d9f144a71cf7dbc7b5588c5d16ff96ca43e74ac105ea3cb05",
-    strip_prefix = "buffa-types-0.9.1",
-    urls = ["https://static.crates.io/crates/buffa-types/0.9.1/download"],
+    name = "buffa-types-0.8.1.crate",
+    sha256 = "22cb54bcbf6946c58e550eeaf6209047146363dbc7cbdc87e49e67089ed2ff5f",
+    strip_prefix = "buffa-types-0.8.1",
+    urls = ["https://static.crates.io/crates/buffa-types/0.8.1/download"],
     visibility = [],
 )
 
 cargo.rust_library(
-    name = "buffa-types-0.9",
-    srcs = [":buffa-types-0.9.1.crate"],
+    name = "buffa-types-0.8",
+    srcs = [":buffa-types-0.8.1.crate"],
     crate = "buffa_types",
-    crate_root = "buffa-types-0.9.1.crate/src/lib.rs",
+    crate_root = "buffa-types-0.8.1.crate/src/lib.rs",
     edition = "2021",
     env = {
         "CARGO_BIN_NAME": "buffa_types",
         "CARGO_CRATE_NAME": "buffa_types",
-        "CARGO_MANIFEST_DIR": "buffa-types-0.9.1.crate",
+        "CARGO_MANIFEST_DIR": "buffa-types-0.8.1.crate",
         "CARGO_PKG_AUTHORS": "",
         "CARGO_PKG_DESCRIPTION": "Protobuf well-known types for buffa",
         "CARGO_PKG_HOMEPAGE": "",
@@ -2581,9 +2529,9 @@ cargo.rust_library(
         "CARGO_PKG_README": "",
         "CARGO_PKG_REPOSITORY": "https://github.com/anthropics/buffa",
         "CARGO_PKG_RUST_VERSION": "1.75",
-        "CARGO_PKG_VERSION": "0.9.1",
+        "CARGO_PKG_VERSION": "0.8.1",
         "CARGO_PKG_VERSION_MAJOR": "0",
-        "CARGO_PKG_VERSION_MINOR": "9",
+        "CARGO_PKG_VERSION_MINOR": "8",
         "CARGO_PKG_VERSION_PATCH": "1",
         "CARGO_PKG_VERSION_PRE": "",
     },
@@ -2594,7 +2542,7 @@ cargo.rust_library(
     ],
     visibility = [],
     deps = [
-        ":buffa-0.9",
+        ":buffa-0.8",
         ":bytes-1",
         ":serde-1",
         ":serde_json-1",
@@ -16220,42 +16168,6 @@ cargo.rust_library(
 )
 
 http_archive(
-    name = "smoothutf8-0.2.3.crate",
-    sha256 = "6b4ec95892483d6d94284caccfddb9b77111a4dcac33ed25d624248def0fa5f1",
-    strip_prefix = "smoothutf8-0.2.3",
-    urls = ["https://static.crates.io/crates/smoothutf8/0.2.3/download"],
-    visibility = [],
-)
-
-cargo.rust_library(
-    name = "smoothutf8-0.2",
-    srcs = [":smoothutf8-0.2.3.crate"],
-    crate = "smoothutf8",
-    crate_root = "smoothutf8-0.2.3.crate/src/lib.rs",
-    edition = "2021",
-    env = {
-        "CARGO_BIN_NAME": "smoothutf8",
-        "CARGO_CRATE_NAME": "smoothutf8",
-        "CARGO_MANIFEST_DIR": "smoothutf8-0.2.3.crate",
-        "CARGO_PKG_AUTHORS": "",
-        "CARGO_PKG_DESCRIPTION": "Portable, formally verified UTF-8 validation with an optional slack-buffer fast path for zero-copy parsers",
-        "CARGO_PKG_HOMEPAGE": "",
-        "CARGO_PKG_NAME": "smoothutf8",
-        "CARGO_PKG_README": "README.md",
-        "CARGO_PKG_REPOSITORY": "https://github.com/iainmcgin/smooth-utf8",
-        "CARGO_PKG_RUST_VERSION": "1.60",
-        "CARGO_PKG_VERSION": "0.2.3",
-        "CARGO_PKG_VERSION_MAJOR": "0",
-        "CARGO_PKG_VERSION_MINOR": "2",
-        "CARGO_PKG_VERSION_PATCH": "3",
-        "CARGO_PKG_VERSION_PRE": "",
-    },
-    features = ["simdutf8"],
-    visibility = [],
-    deps = [":simdutf8-0.1"],
-)
-
-http_archive(
     name = "socket2-0.6.5.crate",
     sha256 = "c3d1e2c7f27f8d4cb10542a02c49005dbd6e93095799d6f3be745fae9f8fedd4",
     strip_prefix = "socket2-0.6.5",
@@ -21789,6 +21701,7 @@ cargo.rust_library(
     },
     features = [
         "legacy",
+        "no_asm",
         "std",
         "zdict_builder",
     ],
@@ -21821,6 +21734,7 @@ cargo.rust_binary(
     },
     features = [
         "legacy",
+        "no_asm",
         "std",
         "zdict_builder",
     ],
@@ -21847,12 +21761,16 @@ buildscript_run(
         "CARGO_PKG_VERSION_MINOR": "0",
         "CARGO_PKG_VERSION_PATCH": "16",
         "CARGO_PKG_VERSION_PRE": "",
+        "OPT_LEVEL": "3",
     },
     features = [
         "legacy",
+        "no_asm",
         "std",
         "zdict_builder",
     ],
+    rustc_link_lib = True,
+    rustc_link_search = True,
     version = "2.0.16+zstd.1.5.7",
 )
 

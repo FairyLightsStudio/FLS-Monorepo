@@ -1,5 +1,14 @@
 load("//build_defs:fls_project.bzl", "fls_project")
 
+filegroup(
+    name = "connectrpc-contracts",
+    srcs = {
+        path.removeprefix("contracts/"): path
+        for path in glob(["contracts/**/*.proto"])
+    },
+    visibility = ["PUBLIC"],
+)
+
 fls_project(
     name = "workspace",
     visibility = ["PUBLIC"],

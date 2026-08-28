@@ -8,7 +8,7 @@ edition = "2024"
 connectrpc = { version = "0.8", features = ["axum", "client", "tls"] }
 
 # Protobuf
-buffa = { version = "0.9", features = ["json"] }
+buffa = { version = "0.8", features = ["json"] }
 
 # Serialization (for generated message types)
 serde = "1.0.228"
@@ -44,6 +44,7 @@ clap = { version = "4.6.1", features = ["derive", "env"] }
 
 
 [build-dependencies]
+connectrpc-build = "0.8"
 
 [features]
 webpki-roots = ["dep:webpki-roots"]

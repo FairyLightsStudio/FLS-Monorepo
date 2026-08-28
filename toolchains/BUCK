@@ -24,6 +24,17 @@ download_zig_distribution(
     version = "0.14.0",
 )
 
+# connectrpc-build invokes protoc and needs the canonical well-known .proto
+# sources when compiling Google API annotations. Keep this archive aligned with
+# Prelude's protoc 3.25.6 executable.
+http_archive(
+    name = "protobuf-source",
+    sha256 = "ecfeb9f673e63321b4871c1cee6b5adeb0ef711d08a0c5bb1945271767df65bf",
+    strip_prefix = "protobuf-25.6",
+    urls = ["https://github.com/protocolbuffers/protobuf/releases/download/v25.6/protobuf-25.6.tar.gz"],
+    visibility = ["PUBLIC"],
+)
+
 cxx_zig_direct_toolchain(
     name = "cxx",
     distribution = ":zig",

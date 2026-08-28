@@ -1,11 +1,6 @@
-use buffa::view::OwnedView;
-use connectrpc::{RequestContext, Response, Router, ServiceResult};
+use connectrpc::{RequestContext, Response, Router, ServiceRequest, ServiceResult};
 use std::sync::Arc;
-
-pub mod proto {
-    connectrpc::include_generated!();
-}
-use proto::greet::v1::*;
+use UserCenter_lib::proto::greet::v1::*;
 
 struct MyGreet;
 
@@ -13,7 +8,7 @@ impl GreetService for MyGreet {
     async fn greet(
         &self,
         _ctx: RequestContext,
-        req: OwnedView<GreetRequestView<'static>>,
+        req: ServiceRequest<'_, GreetRequest>,
     ) -> ServiceResult<GreetResponse> {
         // req 解引用为 view：零拷贝字段访问。
         // 字符串字段是自请求缓冲区借用的 &str。

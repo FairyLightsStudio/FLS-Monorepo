@@ -4,8 +4,8 @@ version.workspace = true
 edition.workspace = true
 
 [dependencies]
-buffa = { version = "0.9", features = ["json"] }
-buffa-types = { version = "0.9", features = ["json"] }
+buffa = { version = "0.8", features = ["json"] }
+buffa-types = { version = "0.8", features = ["json"] }
 connectrpc = "0.8"
 serde = { version = "1", features = ["derive"] }
 http-body = "1"

@@ -1,7 +1,42 @@
+load("@prelude//rust:cargo_buildscript.bzl", "buildscript_run")
+
+filegroup(
+    name = "connectrpc-manifest",
+    srcs = {
+        "build.rs": "build.rs",
+    },
+)
+
 rust_binary(
-    name = "pow-captcha-server",
+    name = "connectrpc-build-script",
+    srcs = ["build.rs"],
+    crate = "build_script_build",
+    crate_root = "build.rs",
+    edition = "2024",
+    deps = ["root//third-party/rust:connectrpc-build"],
+)
+
+buildscript_run(
+    name = "connectrpc-codegen",
+    package_name = "pow_captcha_server",
+    version = "0.1.0",
+    buildscript_rule = ":connectrpc-build-script",
+    manifest_dir = ":connectrpc-manifest",
+    env = {
+        "POW_CAPTCHA_CONTRACTS_DIR": "$(location root//PoWCAPTCHA:connectrpc-contracts)",
+        "PROTOBUF_INCLUDE_DIR": "$(location toolchains//:protobuf-source)/src",
+        "PROTOC": "$(exe prelude//toolchains/android/tools/protobuf:protoc)",
+    },
+)
+
+rust_library(
+    name = "pow-captcha-server-lib",
     srcs = glob(["src/**/*.rs"]),
-    crate_root = "src/bin/server.rs",
+    crate = "pow_captcha",
+    crate_root = "src/lib.rs",
+    env = {
+        "OUT_DIR": "$(location :connectrpc-codegen[out_dir])",
+    },
     deps = [
         "root//PoWCAPTCHA/pow-captcha-core:pow-captcha-core",
         "root//third-party/rust:axum",
@@ -17,5 +52,21 @@ rust_binary(
         "root//third-party/rust:time",
         "root//third-party/rust:tokio",
         "root//third-party/rust:uuid",
+    ],
+)
+
+rust_binary(
+    name = "pow-captcha-server",
+    srcs = ["src/bin/server.rs"],
+    crate_root = "src/bin/server.rs",
+    deps = [
+        ":pow-captcha-server-lib",
+        "root//third-party/rust:axum",
+        "root//third-party/rust:config",
+        "root//third-party/rust:connectrpc",
+        "root//third-party/rust:exn",
+        "root//third-party/rust:serde",
+        "root//third-party/rust:sqlx",
+        "root//third-party/rust:tokio",
     ],
 )

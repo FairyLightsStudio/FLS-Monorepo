@@ -1,9 +1,41 @@
+load("@prelude//rust:cargo_buildscript.bzl", "buildscript_run")
 load("//build_defs:fls_project.bzl", "fls_project")
+
+filegroup(
+    name = "connectrpc-manifest",
+    srcs = {
+        "build.rs": "build.rs",
+        "testproto/greet.proto": "testproto/greet.proto",
+    },
+)
+
+rust_binary(
+    name = "connectrpc-build-script",
+    srcs = ["build.rs"],
+    crate = "build_script_build",
+    crate_root = "build.rs",
+    edition = "2024",
+    deps = ["root//third-party/rust:connectrpc-build"],
+)
+
+buildscript_run(
+    name = "connectrpc-codegen",
+    package_name = "UserCenter",
+    version = "0.1.0",
+    buildscript_rule = ":connectrpc-build-script",
+    manifest_dir = ":connectrpc-manifest",
+    env = {
+        "PROTOC": "$(exe prelude//toolchains/android/tools/protobuf:protoc)",
+    },
+)
 
 rust_library(
     name = "UserCenter-lib",
     srcs = glob(["src/**/*.rs"]),
     crate_root = "src/lib.rs",
+    env = {
+        "OUT_DIR": "$(location :connectrpc-codegen[out_dir])",
+    },
     visibility = ["PUBLIC"],
     deps = [
         "root//third-party/rust:axum",
@@ -28,7 +60,12 @@ rust_binary(
     name = "UserCenter",
     srcs = glob(["src/**/*.rs"]),
     crate_root = "src/main.rs",
-    deps = [":UserCenter-lib"],
+    deps = [
+        ":UserCenter-lib",
+        "root//third-party/rust:axum",
+        "root//third-party/rust:connectrpc",
+        "root//third-party/rust:tokio",
+    ],
 )
 
 fls_project(
