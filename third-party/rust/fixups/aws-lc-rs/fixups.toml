@@ -1,2 +1,4 @@
+# aws-lc-rs build.rs only forwards Cargo links metadata. Buck2 consumes the
+# native link flags directly from aws-lc-sys, so running it adds no usable output.
 [buildscript]
-run = true
+run = false
