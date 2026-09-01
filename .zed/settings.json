@@ -1,0 +1,27 @@
+{
+  "lsp": {
+    "rust-analyzer": {
+      "initialization_options": {
+        "workspace": {
+          "discoverConfig": {
+            "command": [
+              "rust-project",
+              "develop-json",
+              "{arg}"
+            ],
+            "progressLabel": "buck2/rust-project",
+            "filesToWatch": ["BUCK"]
+          }
+        }
+      }
+    }
+  },
+  "languages": {
+    "Starlark": {
+      "language_servers": ["buck2-lsp"]
+    }
+  },
+  "file_types": {
+    "ini": [".buckconfig", ".buckconfig.local"]
+  }
+}
