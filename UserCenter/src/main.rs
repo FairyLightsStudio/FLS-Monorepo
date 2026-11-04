@@ -1,6 +1,6 @@
-use user_center_lib::proto::greet::v1::*;
 use connectrpc::{RequestContext, Response, Router, ServiceRequest, ServiceResult};
 use std::sync::Arc;
+use user_center_lib::proto::greet::v1::*;
 
 struct MyGreet;
 

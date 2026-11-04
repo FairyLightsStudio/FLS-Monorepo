@@ -1,9 +1,0 @@
-{
-  "recommendations": [
-    "angular.ng-template",
-    "nrwl.angular-console",
-    "editorconfig.editorconfig",
-    "christian-kohler.path-intellisense",
-    "esbenp.prettier-vscode"
-  ]
-}
