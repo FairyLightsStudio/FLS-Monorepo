@@ -1,0 +1,110 @@
+"""FlightStudio Bazel module (Bzlmod).
+
+Bazel is the single build system for this repository; the previous Buck2
+configuration has been removed.
+
+Rust workspaces covered (each has its own Cargo.lock consumed by
+crate_universe):
+- UserCenter            (rust_library UserCenter-lib + rust_binary UserCenter)
+- PoWCAPTCHA            (rust_library pow-captcha-core + pow-captcha-server-lib,
+                         rust_binary pow-captcha-server; proto codegen)
+- ChatHistoryCat        (rust_binary ChatHistoryCat, no third-party deps)
+- tools/fls             (rust_library fls-lib + rust_binary fls + rust_test fls-test)
+- TeraPanel             (rust_library shared-types + rust_binary terad)
+
+TeraPanel note: the workspace table was missing the `sqlx` entry that
+crates/terapanel already referenced, which made `cargo generate-lockfile`
+fail for the whole workspace. The entry is now declared, so a Cargo.lock
+exists and the two crates that actually compile (shared-types, terad) are
+built. `crates/terapanel` itself is still not built because its sources are
+incomplete (empty config.rs/db.rs, missing state.rs/api.rs, undeclared
+volo_http, references to a nonexistent tera_common crate).
+
+Toolchain: rules_rust 0.75.0, Rust 1.97.1, edition 2024.
+rules_proto is pulled in on demand for the proto_library targets used
+by the connectrpc build-script codegen inputs.
+"""
+
+module(
+    name = "flight_studio",
+    version = "0.1.0",
+)
+
+# Core: rules_rust 0.75.0 per task spec.
+bazel_dep(name = "rules_rust", version = "0.75.0")
+
+# On-demand proto rules for the connectrpc IDL filegroups consumed by
+# the cargo_build_script codegen targets.
+bazel_dep(name = "rules_proto", version = "7.1.0")
+bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
+
+# Rust toolchain: pinned to the same Rust as mise (1.97.1) and edition 2024.
+rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
+rust.toolchain(
+    edition = "2024",
+    versions = ["1.97.1"],
+)
+use_repo(rust, "rust_toolchains")
+
+register_toolchains("@rust_toolchains//:all")
+
+# Third-party crates, one crate_universe repo per Cargo workspace so each
+# workspace keeps its own Cargo.lock as the source of truth.
+crate = use_extension("@rules_rust//crate_universe:extensions.bzl", "crate")
+
+# UserCenter (single-crate package + build.rs codegen on testproto/).
+crate.from_cargo(
+    name = "crates_user_center",
+    cargo_lockfile = "//UserCenter:Cargo.lock",
+    manifests = ["//UserCenter:Cargo.toml"],
+)
+use_repo(crate, "crates_user_center")
+
+# PoWCAPTCHA workspace (pow-captcha-server + pow-captcha-core).
+crate.from_cargo(
+    name = "crates_pow_captcha",
+    cargo_lockfile = "//PoWCAPTCHA:Cargo.lock",
+    manifests = [
+        "//PoWCAPTCHA:Cargo.toml",
+        "//PoWCAPTCHA/pow-captcha-server:Cargo.toml",
+        "//PoWCAPTCHA/pow-captcha-core:Cargo.toml",
+    ],
+)
+use_repo(crate, "crates_pow_captcha")
+
+# ChatHistoryCat (dependency-free hello-world binary; lockfile pins the
+# empty closure explicitly).
+crate.from_cargo(
+    name = "crates_chat_history_cat",
+    cargo_lockfile = "//ChatHistoryCat:Cargo.lock",
+    manifests = ["//ChatHistoryCat:Cargo.toml"],
+)
+use_repo(crate, "crates_chat_history_cat")
+
+# tools/fls (lib + bin + unit tests).
+crate.from_cargo(
+    name = "crates_fls",
+    cargo_lockfile = "//tools/fls:Cargo.lock",
+    manifests = ["//tools/fls:Cargo.toml"],
+)
+use_repo(crate, "crates_fls")
+
+# TeraPanel workspace. The shared workspace table was missing the `sqlx`
+# entry that crates/terapanel already referenced, which blocked lockfile
+# generation for every crate in the workspace; it is now declared, so a
+# Cargo.lock exists. Only the crates that actually compile (shared-types,
+# terad) get Bazel targets — crates/terapanel is still incomplete source-wise
+# (empty config.rs/db.rs, missing state.rs/api.rs, undeclared volo_http) and
+# is intentionally left out of the build.
+crate.from_cargo(
+    name = "crates_terapanel",
+    cargo_lockfile = "//TeraPanel:Cargo.lock",
+    manifests = [
+        "//TeraPanel:Cargo.toml",
+        "//TeraPanel/crates/shared-types:Cargo.toml",
+        "//TeraPanel/crates/terad:Cargo.toml",
+        "//TeraPanel/crates/terapanel:Cargo.toml",
+        "//TeraPanel/xtask:Cargo.toml",
+    ],
+)
+use_repo(crate, "crates_terapanel")

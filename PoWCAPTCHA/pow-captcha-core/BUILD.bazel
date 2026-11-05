@@ -1,0 +1,18 @@
+"""pow-captcha-core Bazel targets (mirrors pow-captcha-core/BUCK)."""
+
+load("@rules_rust//rust:defs.bzl", "rust_library")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_library(
+    name = "pow-captcha-core",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/lib.rs",
+    edition = "2024",
+    deps = [
+        "@crates_pow_captcha//:hex",
+        "@crates_pow_captcha//:rand",
+        "@crates_pow_captcha//:sha2",
+    ],
+)
+

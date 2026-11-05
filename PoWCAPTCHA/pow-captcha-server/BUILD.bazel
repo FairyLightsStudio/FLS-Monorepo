@@ -1,0 +1,101 @@
+"""pow-captcha-server Bazel targets (mirrors pow-captcha-server/BUCK).
+
+rust_library pow-captcha-server-lib + rust_binary pow-captcha-server,
+plus the connectrpc build.rs codegen over contracts/pow_captcha/v1/.
+"""
+
+load("@rules_rust//cargo:defs.bzl", "cargo_build_script")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+
+package(default_visibility = ["//visibility:public"])
+
+filegroup(
+    name = "connectrpc-manifest",
+    srcs = ["build.rs"],
+)
+
+# Stage google/protobuf/timestamp.proto (the only well-known import of the
+# contracts) into a hermetic include root for the build script's protoc.
+# The top-level @com_google_protobuf//:well_known_type_protos alias is public;
+# the per-file srcs/ targets underneath are not visible outside protobuf.
+genrule(
+    name = "wellknown-include",
+    srcs = ["@com_google_protobuf//:well_known_type_protos"],
+    outs = ["wellknown-include/google/protobuf/timestamp.proto"],
+    cmd = """
+        for src in $(SRCS); do
+            case "$$src" in
+                *timestamp.proto) cp "$$src" "$@" ;;
+            esac
+        done
+    """,
+)
+
+cargo_build_script(
+    name = "connectrpc-codegen",
+    srcs = ["build.rs"],
+    build_script_env = {
+        # CARGO_MANIFEST_DIR is <runfiles>/_main/PoWCAPTCHA/pow-captcha-server,
+        # so its parent holds PoWCAPTCHA/contracts — exactly the build.rs
+        # default fallback. PROTOC is overridden for hermeticity; the
+        # well-known protos include root is a genrule-staged dir below.
+        "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+        # Build scripts run with cwd=CARGO_MANIFEST_DIR; data runfiles are
+        # materialized relative to it, so this resolves to the staged
+        # well-known include root.
+        "PROTOBUF_INCLUDE_DIR": "wellknown-include",
+    },
+    crate_root = "build.rs",
+    data = [
+        ":connectrpc-manifest",
+        ":wellknown-include",
+        "//PoWCAPTCHA:contracts/pow_captcha/v1/pow_captcha_backend.proto",
+        "//PoWCAPTCHA:contracts/pow_captcha/v1/pow_captcha_frontend.proto",
+    ],
+    edition = "2024",
+    tools = ["@com_google_protobuf//:protoc"],
+    deps = ["@crates_pow_captcha//:connectrpc-build"],
+)
+
+rust_library(
+    name = "pow-captcha-server-lib",
+    srcs = glob(["src/**/*.rs"]),
+    crate_name = "pow_captcha",
+    crate_root = "src/lib.rs",
+    edition = "2024",
+    proc_macro_deps = ["@crates_pow_captcha//:async-trait"],
+    deps = [":connectrpc-codegen"] + [
+        "//PoWCAPTCHA/pow-captcha-core:pow-captcha-core",
+        "@crates_pow_captcha//:axum",
+        "@crates_pow_captcha//:buffa",
+        "@crates_pow_captcha//:buffa-types",
+        "@crates_pow_captcha//:config",
+        "@crates_pow_captcha//:connectrpc",
+        "@crates_pow_captcha//:hex",
+        "@crates_pow_captcha//:rand",
+        "@crates_pow_captcha//:serde",
+        "@crates_pow_captcha//:sqlx",
+        "@crates_pow_captcha//:thiserror",
+        "@crates_pow_captcha//:time",
+        "@crates_pow_captcha//:tokio",
+        "@crates_pow_captcha//:uuid",
+    ],
+)
+
+rust_binary(
+    name = "pow-captcha-server",
+    srcs = ["src/bin/server.rs"],
+    crate_root = "src/bin/server.rs",
+    edition = "2024",
+    deps = [
+        ":pow-captcha-server-lib",
+        "@crates_pow_captcha//:axum",
+        "@crates_pow_captcha//:config",
+        "@crates_pow_captcha//:connectrpc",
+        "@crates_pow_captcha//:exn",
+        "@crates_pow_captcha//:serde",
+        "@crates_pow_captcha//:sqlx",
+        "@crates_pow_captcha//:tokio",
+    ],
+)
+

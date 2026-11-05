@@ -1,0 +1,7 @@
+# Bazel must not descend into Buck2 outputs, vendored crates, or VCS internals.
+buck-out/
+third-party/rust/vendor/
+third-party/rust/.cargo/
+target/
+.jj/
+.git/

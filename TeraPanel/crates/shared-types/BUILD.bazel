@@ -1,0 +1,31 @@
+"""shared-types: protobuf/codegen shared crate (build.rs drives connectrpc)."""
+
+load("@rules_rust//cargo:defs.bzl", "cargo_build_script")
+load("@rules_rust//rust:defs.bzl", "rust_library")
+
+package(default_visibility = ["//visibility:public"])
+
+cargo_build_script(
+    name = "codegen",
+    srcs = ["build.rs"],
+    crate_root = "build.rs",
+    data = ["//TeraPanel:idl_srcs"],
+    edition = "2024",
+    deps = ["@crates_terapanel//:connectrpc-build"],
+)
+
+rust_library(
+    name = "shared-types",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/lib.rs",
+    edition = "2024",
+    deps = [
+        ":codegen",
+        "@crates_terapanel//:buffa",
+        "@crates_terapanel//:buffa-types",
+        "@crates_terapanel//:connectrpc",
+        "@crates_terapanel//:futures",
+        "@crates_terapanel//:http-body",
+        "@crates_terapanel//:serde",
+    ],
+)

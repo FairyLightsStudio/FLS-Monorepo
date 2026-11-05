@@ -1,0 +1,25 @@
+"""PoWCAPTCHA root: connectrpc IDL filegroup (mirrors PoWCAPTCHA/BUCK).
+
+Exposed as a proto_library so the pow-captcha-server build script can
+consume the contracts hermetically via POW_CAPTCHA_CONTRACTS_DIR.
+"""
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "connectrpc-contracts",
+    srcs = [
+        "contracts/pow_captcha/v1/pow_captcha_backend.proto",
+        "contracts/pow_captcha/v1/pow_captcha_frontend.proto",
+    ],
+    strip_import_prefix = "contracts",
+    deps = ["@com_google_protobuf//:timestamp_proto"],
+)
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+fls_project(
+    name = "workspace",
+)

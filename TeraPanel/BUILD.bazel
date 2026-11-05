@@ -1,0 +1,36 @@
+"""TeraPanel workspace package.
+
+Buildable crates:
+  * //TeraPanel/crates/shared-types:shared-types  (lib + connectrpc codegen)
+  * //TeraPanel/crates/terad:terad                (agent binary)
+
+crates/terapanel is intentionally NOT built: its sources are incomplete
+(empty config.rs/db.rs, missing state.rs/api.rs, undeclared volo_http, and
+references to a nonexistent tera_common crate). It stays in the Cargo
+workspace so the lockfile resolves, but no Bazel target is declared until
+that application code is finished.
+"""
+
+load("@rules_proto//proto:defs.bzl", "proto_library")
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+package(default_visibility = ["//visibility:public"])
+
+proto_library(
+    name = "connectrpc-idl",
+    srcs = glob(["idl/**/*.proto"]),
+    strip_import_prefix = "idl",
+    tags = ["manual"],
+)
+
+# shared-types/build.rs defaults to <manifest>/../../idl, i.e. TeraPanel/idl,
+# which is exactly where these protos land in the action execroot. Keeping
+# them as plain inputs is enough; no staging directory is required.
+filegroup(
+    name = "idl_srcs",
+    srcs = glob(["idl/**/*.proto"]),
+)
+
+fls_project(
+    name = "workspace",
+)

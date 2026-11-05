@@ -1,0 +1,1 @@
+"""Package marker so crate_universe can address this Cargo.toml."""

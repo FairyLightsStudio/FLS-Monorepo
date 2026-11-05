@@ -1,0 +1,79 @@
+"""UserCenter Bazel targets (mirrors UserCenter/BUCK).
+
+rust_library UserCenter-lib + rust_binary UserCenter, plus the
+connectrpc build.rs codegen over testproto/greet.proto.
+"""
+
+load("@rules_rust//cargo:defs.bzl", "cargo_build_script")
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library")
+
+package(default_visibility = ["//visibility:public"])
+
+# Proto inputs consumed by build.rs at codegen time.
+filegroup(
+    name = "connectrpc-manifest",
+    srcs = [
+        "build.rs",
+        "testproto/greet.proto",
+    ],
+)
+
+# Compile + run build.rs; exposes OUT_DIR-style outputs to the library.
+cargo_build_script(
+    name = "connectrpc-codegen",
+    srcs = ["build.rs"],
+    build_script_env = {
+        # build.rs only reads testproto/ relative to the manifest dir,
+        # plus the protoc binary for connectrpc-build.
+        "PROTOC": "$(execpath @com_google_protobuf//:protoc)",
+    },
+    crate_root = "build.rs",
+    data = [":connectrpc-manifest"],
+    edition = "2024",
+    tools = ["@com_google_protobuf//:protoc"],
+    deps = ["@crates_user_center//:connectrpc-build"],
+)
+
+rust_library(
+    name = "UserCenter-lib",
+    srcs = glob(["src/**/*.rs"]),
+    crate_name = "user_center_lib",
+    crate_root = "src/lib.rs",
+    edition = "2024",
+    deps = [":connectrpc-codegen"] + [
+        "@crates_user_center//:axum",
+        "@crates_user_center//:buffa",
+        "@crates_user_center//:clap",
+        "@crates_user_center//:connectrpc",
+        "@crates_user_center//:futures",
+        "@crates_user_center//:http",
+        "@crates_user_center//:http-body",
+        "@crates_user_center//:rand",
+        "@crates_user_center//:serde",
+        "@crates_user_center//:serde_json",
+        "@crates_user_center//:tokio",
+        "@crates_user_center//:tower-http",
+        "@crates_user_center//:tracing",
+        "@crates_user_center//:tracing-subscriber",
+    ],
+)
+
+rust_binary(
+    name = "UserCenter",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/main.rs",
+    edition = "2024",
+    deps = [
+        ":UserCenter-lib",
+        "@crates_user_center//:axum",
+        "@crates_user_center//:connectrpc",
+        "@crates_user_center//:tokio",
+    ],
+)
+
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+fls_project(
+    name = "workspace",
+)

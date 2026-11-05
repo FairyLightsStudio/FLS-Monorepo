@@ -51,6 +51,9 @@ config = "0.15"
 exn = "0.3"
 
 async-nats = "0.45"
+# Referenced by crates/terapanel but previously missing from the workspace table,
+# which made even cargo generate-lockfile fail for the whole workspace.
+sqlx = { version = "0.8", default-features = false }
 
 futures = "0.3"
 connectrpc = { version = "0.8", features = ["axum"] }

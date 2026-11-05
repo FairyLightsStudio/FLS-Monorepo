@@ -1,0 +1,9 @@
+"""DesignAssets Bazel workspace marker (mirrors DesignAssets/BUCK: fls_project only — no rust_* targets)."""
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+package(default_visibility = ["//visibility:public"])
+
+fls_project(
+    name = "workspace",
+)

@@ -1,0 +1,8 @@
+# FlightStudio Bazel flags.
+# Bzlmod is on by default in Bazel 9; keep it explicit for readability.
+common --enable_bzlmod
+# Rust 2024 edition is selected per-toolchain in MODULE.bazel; keep warnings visible.
+build --verbose_failures
+test --verbose_failures
+# Prefer the system protoc for connectrpc build scripts that honor PROTOC.
+# (Targets pass it explicitly via toolchains where needed.)

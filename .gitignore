@@ -1,7 +1,7 @@
-# Buck2 build output
-buck-out/
+# Bazel build output
+/bazel-*
 
-# Reindeer 本地缓存；Cargo.lock 和带校验和的 BUCK 规则需要提交
+# 第三方 crate 源码缓存（Bazel crate_universe 从 Cargo.lock 解析，不再需要本地 vendor）
 third-party/rust/vendor/
 third-party/rust/.cargo/
 
@@ -24,3 +24,4 @@ Thumbs.db
 
 # Rust
 target/
+

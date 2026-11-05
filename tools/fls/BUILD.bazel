@@ -1,0 +1,60 @@
+"""tools/fls Bazel targets (mirrors tools/fls/BUCK)."""
+
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_library(
+    name = "fls-lib",
+    srcs = glob(
+        ["src/**/*.rs"],
+        exclude = ["src/main.rs"],
+    ),
+    crate_name = "fls",
+    crate_root = "src/lib.rs",
+    edition = "2021",
+    deps = [
+        "@crates_fls//:atomic-write-file",
+        "@crates_fls//:clap",
+        "@crates_fls//:serde",
+        "@crates_fls//:serde_json",
+        "@crates_fls//:thiserror",
+        "@crates_fls//:toml",
+    ],
+)
+
+rust_binary(
+    name = "fls",
+    srcs = ["src/main.rs"],
+    crate_root = "src/main.rs",
+    edition = "2021",
+    deps = [
+        ":fls-lib",
+        "@crates_fls//:clap",
+    ],
+)
+
+rust_test(
+    name = "fls-test",
+    srcs = glob(
+        ["src/**/*.rs"],
+        exclude = ["src/main.rs"],
+    ),
+    crate_name = "fls",
+    crate_root = "src/lib.rs",
+    edition = "2021",
+    deps = [
+        "@crates_fls//:atomic-write-file",
+        "@crates_fls//:clap",
+        "@crates_fls//:serde",
+        "@crates_fls//:serde_json",
+        "@crates_fls//:thiserror",
+        "@crates_fls//:toml",
+    ],
+)
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+fls_project(
+    name = "workspace",
+)

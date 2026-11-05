@@ -1,0 +1,5 @@
+"""Bazel-only Starlark macros (Buck2 files under build_defs/ are untouched)."""
+
+package(default_visibility = ["//visibility:public"])
+
+exports_files(["fls_project.bzl"])

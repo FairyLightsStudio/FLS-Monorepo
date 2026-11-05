@@ -13,10 +13,6 @@ control-paths = [
 path = "AboutUs"
 description = "FairyLightsStudio 官方网站"
 
-[projects.AngularM3EComponents]
-path = "AngularM3EComponents"
-description = "Angular Material 3 扩展组件工作区"
-
 [projects.BetterInternet]
 path = "BetterInternet"
 description = "BetterInternet 架构与产品设计资料"

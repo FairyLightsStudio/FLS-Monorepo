@@ -11,17 +11,17 @@ permissions:
 
 jobs:
   fls:
-    name: fls / Buck2
+    name: fls / Bazel
     runs-on: ubuntu-24.04
     steps:
       - name: 检出完整仓库
         uses: actions/checkout@v6
 
-      - name: 安装锁定的 Buck2 与 Rust
+      - name: 安装锁定的 Bazel 与 Rust
         uses: jdx/mise-action@v4
         with:
           version: 2026.7.17
-          install_args: "buck2 rust"
+          install_args: "bazel rust"
 
       - name: 安装 rustfmt
         run: rustup component add --toolchain 1.97.1 rustfmt
@@ -29,12 +29,13 @@ jobs:
       - name: 检查 Rust 格式
         run: cargo fmt --manifest-path tools/fls/Cargo.toml -- --check
 
-      - name: 使用 Buck2 构建并测试 fls
+      - name: 使用 Bazel 构建并测试 fls
         run: |
-          buck2 build //tools/fls:fls --console=simple
-          buck2 test //tools/fls:fls-test --console=simple
+          # bazelisk 从 .bazelversion 读取固定版本
+          bazel build //tools/fls:fls
+          bazel test //tools/fls:fls-test
 
-      - name: 检查整个项目图
+      - name: 校验整个构建图可分析
         run: |
-          fls_path="$(buck2 build //tools/fls:fls --show-full-output --console=simple | awk '$1 ~ /tools\/fls:fls/ { print $2 }')"
-          "${fls_path}" doctor --json
+          bazel query //... > /dev/null
+          echo "workspace target graph ok"

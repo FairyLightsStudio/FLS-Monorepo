@@ -1,0 +1,4 @@
+"""Package marker so crate_universe can address this Cargo.toml.
+
+No Bazel targets: see //TeraPanel:BUILD.bazel for why this crate is not built.
+"""

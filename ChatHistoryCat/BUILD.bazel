@@ -1,0 +1,18 @@
+"""ChatHistoryCat Bazel targets (mirrors ChatHistoryCat/BUCK)."""
+
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_binary(
+    name = "ChatHistoryCat",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/main.rs",
+    edition = "2024",
+    deps = [],
+)
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+fls_project(
+    name = "workspace",
+)

@@ -1,0 +1,25 @@
+"""FlightStudio root package.
+
+Hosts the fls_project workspace marker (see build_defs/fls_project.bzl)
+for every project directory, mirroring the per-directory
+fls_project(name = "workspace") targets in the BUCK files.
+
+Only directories with real buildable content get additional aliases;
+TeraPanel intentionally has no rust_* Bazel targets (see MODULE.bazel
+docstring and TeraPanel/BUILD.bazel for the documented reason).
+"""
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+package(default_visibility = ["//visibility:public"])
+
+fls_project(
+    name = "workspace",
+    deps = [
+        "//ChatHistoryCat:workspace",
+        "//LiLi_converter:workspace",
+        "//PoWCAPTCHA:workspace",
+        "//TeraPanel:workspace",
+        "//UserCenter:workspace",
+    ],
+)

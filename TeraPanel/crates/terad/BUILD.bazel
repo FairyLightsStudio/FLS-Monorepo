@@ -1,0 +1,28 @@
+"""terad agent binary."""
+
+load("@rules_rust//rust:defs.bzl", "rust_binary")
+
+package(default_visibility = ["//visibility:public"])
+
+rust_binary(
+    name = "terad",
+    srcs = glob(["src/**/*.rs"]),
+    crate_root = "src/main.rs",
+    edition = "2024",
+    deps = [
+        "//TeraPanel/crates/shared-types:shared-types",
+        "@crates_terapanel//:async-nats",
+        "@crates_terapanel//:bollard",
+        "@crates_terapanel//:config",
+        "@crates_terapanel//:connectrpc",
+        "@crates_terapanel//:exn",
+        "@crates_terapanel//:futures",
+        "@crates_terapanel//:portable-pty",
+        "@crates_terapanel//:ractor",
+        "@crates_terapanel//:sysinfo",
+        "@crates_terapanel//:tokio",
+        "@crates_terapanel//:tracing",
+        "@crates_terapanel//:tracing-subscriber",
+        "@crates_terapanel//:zbus",
+    ],
+)
