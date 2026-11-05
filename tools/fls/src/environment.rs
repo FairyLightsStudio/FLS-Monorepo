@@ -42,37 +42,30 @@ pub fn ensure_supported_host() -> Result<String> {
     }
 }
 
-pub fn pinned_buck2_version(root: &Path) -> Result<String> {
-    let path = root.join("mise.toml");
+pub fn pinned_bazel_version(root: &Path) -> Result<String> {
+    let path = root.join(".bazelversion");
     let contents = fs::read_to_string(&path).map_err(|source| Error::Read {
         path: path.clone(),
         source,
     })?;
-    let document: toml::Value =
-        toml::from_str(&contents).map_err(|source| Error::ParseToml { path, source })?;
-    let buck2 = document
-        .get("tools")
-        .and_then(|tools| tools.get("buck2"))
-        .ok_or_else(|| Error::message("mise.toml 没有固定 Buck2 版本"))?;
-    if let Some(version) = buck2.as_str() {
-        return Ok(version.to_owned());
-    }
-    buck2
-        .get("version")
-        .and_then(toml::Value::as_str)
-        .map(str::to_owned)
-        .ok_or_else(|| Error::message("mise.toml 中的 Buck2 版本不是精确字符串"))
+    Ok(contents.trim().to_owned())
 }
 
-pub fn ensure_buck2_version(root: &Path, actual: &str) -> Result<String> {
-    let expected = pinned_buck2_version(root)?;
-    if expected == "latest" || expected.contains('*') || expected.contains(' ') {
+pub fn ensure_bazel_version(root: &Path, actual: &str) -> Result<String> {
+    let expected = pinned_bazel_version(root)?;
+    if expected.is_empty() || expected.contains('*') || expected.contains(' ') {
         return Err(Error::message(format!(
-            "mise.toml 必须精确固定 Buck2 版本，当前值为 `{expected}`"
+            ".bazelversion 必须精确固定 Bazel 版本，当前值为 `{expected}`"
         )));
     }
-    if actual.trim().is_empty() {
-        return Err(Error::message("锁定的 Buck2 没有返回版本信息"));
+    let actual = actual.trim();
+    if actual.is_empty() {
+        return Err(Error::message("锁定的 Bazel 没有返回版本信息"));
+    }
+    if actual != expected {
+        return Err(Error::message(format!(
+            "Bazel 版本 `{actual}` 与 .bazelversion 固定的 `{expected}` 不一致"
+        )));
     }
     Ok(expected)
 }

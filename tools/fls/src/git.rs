@@ -130,7 +130,12 @@ impl Git {
             let metadata = path
                 .file_name()
                 .and_then(OsStr::to_str)
-                .map(|name| name == "BUCK" || name.ends_with(".bzl"))
+                .map(|name| {
+                    name == "BUILD.bazel"
+                        || name == "MODULE.bazel"
+                        || name == ".bazelversion"
+                        || name.ends_with(".bzl")
+                })
                 .unwrap_or(false);
             if root_file || metadata {
                 patterns.insert(format!("/{tracked}"));
@@ -329,14 +334,14 @@ mod tests {
         };
         let full = SparseSnapshot {
             enabled: true,
-            patterns: "/TeraPanel/\n/TeraPanel/BUCK\n".to_owned(),
+            patterns: "/TeraPanel/\n/TeraPanel/BUILD.bazel\n".to_owned(),
         };
         assert!(git
             .inferred_materialized_projects(&manifest, &full)
             .contains("TeraPanel"));
         let metadata_only = SparseSnapshot {
             enabled: true,
-            patterns: "/TeraPanel/BUCK\n".to_owned(),
+            patterns: "/TeraPanel/BUILD.bazel\n".to_owned(),
         };
         assert!(git
             .inferred_materialized_projects(&manifest, &metadata_only)

@@ -127,7 +127,12 @@ impl Workspace {
             let metadata = path
                 .file_name()
                 .and_then(|name| name.to_str())
-                .map(|name| name == "BUCK" || name.ends_with(".bzl"))
+                .map(|name| {
+                    name == "BUILD.bazel"
+                        || name == "MODULE.bazel"
+                        || name == ".bazelversion"
+                        || name.ends_with(".bzl")
+                })
                 .unwrap_or(false);
             metadata && !self.git.root.join(path).exists()
         });
@@ -140,7 +145,12 @@ impl Workspace {
                 Path::new(tracked)
                     .file_name()
                     .and_then(|name| name.to_str())
-                    .map(|name| name == "BUCK" || name.ends_with(".bzl"))
+                    .map(|name| {
+                        name == "BUILD.bazel"
+                            || name == "MODULE.bazel"
+                            || name == ".bazelversion"
+                            || name.ends_with(".bzl")
+                    })
                     .unwrap_or(false)
             })
             .map(|tracked| format!("/{tracked}"))
@@ -150,7 +160,7 @@ impl Workspace {
         self.git.add_sparse_patterns(&patterns)?;
         self.sparse = self.git.sparse_snapshot()?;
         self.warnings.push(
-            "为了让 Buck2 解析完整项目图，fls 已补齐工作树中的 BUCK 与 .bzl 元数据。".to_owned(),
+            "为了让 Bazel 解析完整项目图，fls 已补齐工作树中的 BUILD.bazel 元数据。".to_owned(),
         );
         Ok(())
     }
@@ -249,8 +259,8 @@ impl Workspace {
         }
         let _host = environment::ensure_supported_host()?;
         let _git_version = self.git.version()?;
-        let buck_version = buck::version(&self.git.root)?;
-        environment::ensure_buck2_version(&self.git.root, &buck_version)?;
+        let bazel_version = buck::version(&self.git.root)?;
+        environment::ensure_bazel_version(&self.git.root, &bazel_version)?;
         self.validate_registered_paths()?;
         let mut warnings = self.warnings.clone();
         let mut explicit = self.state.explicit_projects.clone();
@@ -285,7 +295,7 @@ impl Workspace {
         let resolution = buck::resolve(&self.git.root, &self.manifest, &available_explicit)?;
         if !resolution.unknown_root_packages.is_empty() {
             return Err(Error::message(format!(
-                "Buck2 依赖图引用了未登记的顶层项目：{}。请先在 fls-projects.toml 中登记完整项目图。",
+                "Bazel 依赖图引用了未登记的顶层项目：{}。请先在 fls-projects.toml 中登记完整项目图。",
                 resolution
                     .unknown_root_packages
                     .iter()
@@ -299,7 +309,7 @@ impl Workspace {
                 .manifest
                 .projects
                 .get(id)
-                .ok_or_else(|| Error::message(format!("Buck2 解析到了清单外项目 `{id}`")))?;
+                .ok_or_else(|| Error::message(format!("Bazel 解析到了清单外项目 `{id}`")))?;
             buck::verify_workspace_target(&self.git.root, &project.path)?;
         }
 

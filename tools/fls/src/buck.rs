@@ -14,10 +14,22 @@ pub struct DependencyResolution {
 }
 
 pub fn version(root: &Path) -> Result<String> {
+    // Prefer the pinned .bazelversion so fls reports the version it will
+    // actually resolve with; fall back to `bazel --version`.
+    if let Ok(pinned) = environment::pinned_bazel_version(root) {
+        if !pinned.trim().is_empty() {
+            return Ok(pinned);
+        }
+    }
     let output = run(root, ["--version"])?;
-    String::from_utf8(output.stdout)
-        .map(|value| value.trim().to_owned())
-        .map_err(|source| Error::message(format!("Buck2 版本输出不是有效的 UTF-8: {source}")))
+    let text = String::from_utf8(output.stdout)
+        .map_err(|source| Error::message(format!("Bazel 版本输出不是有效的 UTF-8: {source}")))?;
+    // `bazel --version` prints e.g. "bazel 9.3.1".
+    text.split_whitespace()
+        .last()
+        .map(str::to_owned)
+        .filter(|version| !version.is_empty())
+        .ok_or_else(|| Error::message(format!("无法从 Bazel 版本输出解析版本号：{text:?}")))
 }
 
 pub fn resolve(
@@ -35,7 +47,7 @@ pub fn resolve(
     let expressions = explicit
         .iter()
         .filter_map(|id| manifest.projects.get(id))
-        .map(|project| format!("'//{}/...'", project.path))
+        .map(|project| format!("//{}/...", project.path))
         .collect::<Vec<_>>();
     if expressions.is_empty() {
         return Ok(DependencyResolution {
@@ -47,20 +59,28 @@ pub fn resolve(
     let query = format!("deps(set({}))", expressions.join(" "));
     let output = run(
         root,
-        ["uquery", query.as_str(), "--json", "--console=simple"],
+        [
+            "query",
+            query.as_str(),
+            "--output=label",
+            "--noshow_progress",
+            "--color=no",
+        ],
     )?;
-    let labels: Vec<String> = serde_json::from_slice(&output.stdout).map_err(|source| {
-        Error::message(format!("无法解析 Buck2 uquery 的 JSON 输出: {source}"))
-    })?;
+    let text = String::from_utf8(output.stdout)
+        .map_err(|source| Error::message(format!("无法解析 Bazel query 的输出: {source}")))?;
+    let labels: Vec<String> = text
+        .lines()
+        .map(str::trim)
+        .filter(|line| !line.is_empty())
+        .map(str::to_owned)
+        .collect();
     classify_labels(manifest, labels)
 }
 
 pub fn verify_workspace_target(root: &Path, project_path: &str) -> Result<()> {
     let target = format!("//{project_path}:workspace");
-    run(
-        root,
-        ["uquery", target.as_str(), "--json", "--console=simple"],
-    )?;
+    run(root, ["query", target.as_str(), "--noshow_progress", "--color=no"])?;
     Ok(())
 }
 
@@ -69,19 +89,12 @@ where
     I: IntoIterator<Item = S>,
     S: AsRef<std::ffi::OsStr>,
 {
-    let version = environment::pinned_buck2_version(root)?;
-    let mut command = vec![
-        std::ffi::OsString::from("--locked"),
-        std::ffi::OsString::from("exec"),
-        std::ffi::OsString::from(format!("buck2@{version}")),
-        std::ffi::OsString::from("--"),
-        std::ffi::OsString::from("buck2"),
-    ];
+    let mut command = Vec::new();
     command.extend(
         args.into_iter()
             .map(|argument| argument.as_ref().to_owned()),
     );
-    process::run("mise", command, root, None)
+    process::run("bazel", command, root, None)
 }
 
 fn classify_labels(manifest: &Manifest, labels: Vec<String>) -> Result<DependencyResolution> {
@@ -93,7 +106,13 @@ fn classify_labels(manifest: &Manifest, labels: Vec<String>) -> Result<Dependenc
     let mut projects = BTreeSet::new();
     let mut unknown_root_packages = BTreeSet::new();
     for label in &labels {
-        let Some(package) = label.strip_prefix("root//") else {
+        // Bazel main-repo labels look like "//UserCenter:workspace" (no
+        // "root//" prefix, unlike Buck2). External repos ("@@…//…",
+        // "@…//…") never map to local projects.
+        if label.starts_with('@') {
+            continue;
+        }
+        let Some(package) = label.strip_prefix("//") else {
             continue;
         };
         let package = package.split(':').next().unwrap_or(package);
@@ -140,10 +159,11 @@ mod tests {
         let resolution = classify_labels(
             &manifest,
             vec![
-                "root//UserCenter:workspace".to_owned(),
-                "root//third-party/rust:serde".to_owned(),
+                "//UserCenter:workspace".to_owned(),
+                "//third-party/rust:serde".to_owned(),
                 "toolchains//:rust".to_owned(),
-                "root//Unregistered:target".to_owned(),
+                "@@rules_rust+//rust:defs.bzl".to_owned(),
+                "//Unregistered:target".to_owned(),
             ],
         )
         .unwrap();

@@ -22,7 +22,7 @@ pub struct Cli {
 
 #[derive(Debug, Subcommand)]
 pub enum Command {
-    /// 显式选择项目，并自动检出其 Buck2 依赖闭包
+    /// 显式选择项目，并自动检出其 Bazel 依赖闭包
     Add(SelectionArgs),
     /// 取消显式选择项目；仍被依赖的项目会继续保留
     Remove(DestructiveSelectionArgs),
@@ -32,7 +32,7 @@ pub enum Command {
     List(OutputArgs),
     /// 根据当前 HEAD 重新计算依赖闭包
     Reconcile(ReconcileArgs),
-    /// 检查 Git、Buck2、清单、项目图、稀疏检出与 hooks
+    /// 检查 Git、Bazel、清单、项目图、稀疏检出与 hooks
     Doctor(OutputArgs),
 }
 

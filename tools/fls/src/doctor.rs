@@ -57,11 +57,11 @@ pub fn run(workspace: &Workspace) -> Report {
         Err(error) => report.push("host-triple", CheckStatus::Fail, error.to_string()),
     }
     match buck::version(&workspace.git.root).and_then(|actual| {
-        environment::ensure_buck2_version(&workspace.git.root, &actual)
-            .map(|expected| format!("{actual}（mise 固定 {expected}）"))
+        environment::ensure_bazel_version(&workspace.git.root, &actual)
+            .map(|expected| format!("{actual}（.bazelversion 固定 {expected}）"))
     }) {
-        Ok(version) => report.push("buck2", CheckStatus::Pass, version),
-        Err(error) => report.push("buck2", CheckStatus::Fail, error.to_string()),
+        Ok(version) => report.push("bazel", CheckStatus::Pass, version),
+        Err(error) => report.push("bazel", CheckStatus::Fail, error.to_string()),
     }
 
     if workspace.manifest.schema_version == manifest::CURRENT_SCHEMA {
@@ -101,7 +101,7 @@ pub fn run(workspace: &Workspace) -> Report {
             "dependency-graph",
             CheckStatus::Pass,
             format!(
-                "Buck2 已解析 {} 个项目、{} 个 targets",
+                "Bazel 已解析 {} 个项目、{} 个 targets",
                 resolution.projects.len(),
                 resolution.labels.len()
             ),
