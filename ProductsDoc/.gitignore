@@ -1,9 +1,0 @@
-# 依赖与构建产物
-node_modules/
-doc_build/
-.rspress/
-dist/
-
-# 本地临时文件
-*.log
-.DS_Store
