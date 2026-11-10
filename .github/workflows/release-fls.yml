@@ -24,6 +24,10 @@ jobs:
         run: |
           expected="fls-v$(sed -n 's/^version = "\([^"]*\)"/\1/p' tools/fls/Cargo.toml | head -1)"
           test "${GITHUB_REF_NAME}" = "${expected}"
+          # clap 的 --version 在 Bazel 下无法从 Cargo.toml 取到，cli.rs 里是硬编码的，
+          # 这里一并校验，避免发出 tag 是 0.1.1 但二进制报 0.1.0 的包。
+          version="${expected#fls-v}"
+          grep -q "version = \"${version}\"" tools/fls/src/cli.rs
 
   linux:
     name: ${{ matrix.target }}
