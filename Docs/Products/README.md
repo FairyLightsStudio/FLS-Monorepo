@@ -36,5 +36,6 @@ mise exec -- pnpm build    # 产物在 <产品>/doc_build/
 
 ## 说明
 
-- 文档站由 pnpm + Rspress 原生工具链构建，Bazel 当前只负责项目边界（见 [roadmap.md](../../roadmap.md)）。
+- 文档站由 pnpm + Rspress 原生工具链构建，Bazel 当前只负责项目边界（见 [roadmap.md](../../roadmap.md)；2026-11 的 rules_js 可行性调研结论也在那里）。
 - `node_modules/`、`doc_build/` 等构建产物已被 `.gitignore` 与 `.bazelignore` 忽略。
+- 根 `package.json` 用 `packageManager: pnpm@12.18.0` 锁定 pnpm 版本，因此 `pnpm-lock.yaml` 是 **pnpm 12 的两文档格式**（第一个是 pnpm 自身的 env 文档，最后一个是项目依赖图，两个文档都有 `lockfileVersion`）。这不是文件损坏：解析工具请用 YAML 的多文档 API 并取最后一个文档，见 [pnpm 文档](https://pnpm.io/lockfile)。
