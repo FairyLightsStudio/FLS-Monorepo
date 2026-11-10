@@ -16,7 +16,8 @@
 - `Docs/AboutUs/`：官网（Angular + pnpm，`cd Docs/AboutUs && mise exec -- pnpm install && mise exec -- pnpm start`）。
 - `Docs/Products/`：产品文档，一个产品一个 Rspress 站点（`Docs/Products/README.md`）。
   `cd Docs/Products && mise exec -- pnpm install && mise exec -- pnpm dev`；构建产物在 `<产品>/doc_build/`。
-- 前端项目统一用 pnpm（不再用 bun/npm/yarn）：`Docs/AboutUs`、`Docs/Products` 的 `package.json` 用 `packageManager: pnpm@12.19.0`。
+- 前端项目统一用 pnpm（不再用 bun/npm/yarn）：`Docs/AboutUs`、`Docs/Products`、`TeraPanel/teraclient-web`、`PoWCAPTCHA/web-component` 的 `package.json` 都用 `packageManager: pnpm@12.19.0`。
+- `PoWCAPTCHA/web-component` 依赖 BSR 上的 `@buf/*` 包，因此该目录有 `.npmrc` 把 `@buf` scope 指到 `https://buf.build/gen/npm/v1/`（公开包，无需 token）。
 - `Docs/` 在 `fls-projects.toml` 里是单个项目；新增文档站不需要改 fls 清单。
 - 旧的 `TeraPanelDocsSite/` 已删除（内容迁移到 `Docs/Products/TeraPanel`），git 历史里可找回。
 

@@ -8,3 +8,9 @@ Docs/AboutUs/node_modules/
 Docs/Products/node_modules/
 Docs/Products/TeraPanel/node_modules/
 Docs/Products/TeraPanel/doc_build/
+# 其余前端项目的 pnpm 依赖与产物（不进 Bazel 图）
+TeraPanel/teraclient-web/node_modules/
+TeraPanel/teraclient-web/.angular/
+TeraPanel/teraclient-web/dist/
+PoWCAPTCHA/web-component/node_modules/
+PoWCAPTCHA/web-component/dist/
