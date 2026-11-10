@@ -12,7 +12,7 @@ use crate::{Error, Result};
 #[derive(Debug, Parser)]
 #[command(
     name = "fls",
-    version = "0.1.0",
+    version = "0.1.1",
     about = "FairyLightsStudio 单仓库选择性工作树工具"
 )]
 pub struct Cli {
