@@ -1,4 +1,4 @@
-"""DesignAssets Bazel workspace marker (mirrors DesignAssets/BUCK: fls_project only — no rust_* targets)."""
+"""DesignAssets Bazel workspace marker."""
 
 load("//tools/bazel:fls_project.bzl", "fls_project")
 

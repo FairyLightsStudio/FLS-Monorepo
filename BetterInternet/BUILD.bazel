@@ -1,4 +1,4 @@
-"""BetterInternet Bazel workspace marker (mirrors BetterInternet/BUCK: fls_project only — no rust_* targets)."""
+"""BetterInternet Bazel workspace marker."""
 
 load("//tools/bazel:fls_project.bzl", "fls_project")
 

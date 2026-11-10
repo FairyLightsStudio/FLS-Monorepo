@@ -1,4 +1,4 @@
-"""tools/fls Bazel targets (mirrors tools/fls/BUCK)."""
+"""tools/fls Bazel targets."""
 
 load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_library", "rust_test")
 

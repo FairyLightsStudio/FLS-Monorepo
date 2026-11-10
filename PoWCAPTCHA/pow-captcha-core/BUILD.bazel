@@ -1,4 +1,4 @@
-"""pow-captcha-core Bazel targets (mirrors pow-captcha-core/BUCK)."""
+"""pow-captcha-core Bazel targets."""
 
 load("@rules_rust//rust:defs.bzl", "rust_library")
 

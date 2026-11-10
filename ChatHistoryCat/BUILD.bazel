@@ -1,4 +1,4 @@
-"""ChatHistoryCat Bazel targets (mirrors ChatHistoryCat/BUCK)."""
+"""ChatHistoryCat Bazel targets."""
 
 load("@rules_rust//rust:defs.bzl", "rust_binary")
 

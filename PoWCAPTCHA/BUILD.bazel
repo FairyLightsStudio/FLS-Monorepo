@@ -1,4 +1,4 @@
-"""PoWCAPTCHA root: connectrpc IDL filegroup (mirrors PoWCAPTCHA/BUCK).
+"""PoWCAPTCHA root: connectrpc IDL filegroup.
 
 Exposed as a proto_library so the pow-captcha-server build script can
 consume the contracts hermetically via POW_CAPTCHA_CONTRACTS_DIR.

@@ -1,4 +1,4 @@
-"""pow-captcha-server Bazel targets (mirrors pow-captcha-server/BUCK).
+"""pow-captcha-server Bazel targets.
 
 rust_library pow-captcha-server-lib + rust_binary pow-captcha-server,
 plus the connectrpc build.rs codegen over contracts/pow_captcha/v1/.

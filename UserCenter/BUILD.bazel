@@ -1,4 +1,4 @@
-"""UserCenter Bazel targets (mirrors UserCenter/BUCK).
+"""UserCenter Bazel targets.
 
 rust_library UserCenter-lib + rust_binary UserCenter, plus the
 connectrpc build.rs codegen over testproto/greet.proto.
