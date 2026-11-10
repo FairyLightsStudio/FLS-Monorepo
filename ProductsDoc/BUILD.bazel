@@ -1,0 +1,9 @@
+"""ProductsDoc: 彩灯工作室产品文档（每个产品一个 Rspress 站点）。"""
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+package(default_visibility = ["//visibility:public"])
+
+fls_project(
+    name = "workspace",
+)

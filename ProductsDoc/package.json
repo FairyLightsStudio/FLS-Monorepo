@@ -1,0 +1,16 @@
+{
+  "name": "products-doc",
+  "private": true,
+  "version": "0.0.0",
+  "packageManager": "pnpm@12.18.0",
+  "scripts": {
+    "dev": "pnpm --filter terapanel-docs dev",
+    "build": "pnpm --filter terapanel-docs build",
+    "preview": "pnpm --filter terapanel-docs preview",
+    "check": "biome check --write",
+    "format": "biome format --write"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.6.6"
+  }
+}

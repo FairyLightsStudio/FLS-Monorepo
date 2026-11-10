@@ -68,6 +68,10 @@ Rust 第三方依赖由各 Cargo 工作区自己的 `Cargo.lock` 锁定，Bazel 
 
 Bazel 已成为本仓唯一构建系统（Buck2 相关文件已于迁移中删除）。Angular/Nx/Bun 项目当前的构建状态见 [`roadmap.md`](roadmap.md)。
 
+## 产品文档
+
+工作室所有产品的文档统一放在 [`ProductsDoc/`](ProductsDoc/)，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板）。本地开发与构建方式见 [`ProductsDoc/README.md`](ProductsDoc/README.md)。
+
 ## Bazel 构建
 
 Rust 工作区的 Bazel 构建图与迁移前的目标一一对齐：

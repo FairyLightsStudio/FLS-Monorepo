@@ -5,3 +5,7 @@ third-party/rust/.cargo/
 target/
 .jj/
 .git/
+# ProductsDoc 的 pnpm / Rspress 依赖与产物（不进 Bazel 图）
+ProductsDoc/node_modules/
+ProductsDoc/TeraPanel/node_modules/
+ProductsDoc/TeraPanel/doc_build/

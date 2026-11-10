@@ -45,6 +45,10 @@ description = "OurScratch 项目"
 path = "PoWCAPTCHA"
 description = "工作量证明 CAPTCHA"
 
+[projects.ProductsDoc]
+path = "ProductsDoc"
+description = "彩灯工作室产品文档（Rspress 多站点）"
+
 [projects.SeekAstro]
 path = "SeekAstro"
 description = "SeekAstro 项目"
