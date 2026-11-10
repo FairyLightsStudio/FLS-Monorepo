@@ -3,15 +3,32 @@ min_version = "2026.7.17"
 [tool_alias]
 fls = "github:FairyLightsStudio/FLS-Monorepo"
 
+[settings]
+# 只生成团队实际使用的平台条目：riscv64 上不跑这些开发工具，
+# 而 bun 没有 riscv64 产物，包含该平台会让 `mise install` 刷新锁文件时 404。
+lockfile_platforms = [
+  "linux-x64",
+  "linux-arm64",
+  "linux-x64-musl",
+  "linux-arm64-musl",
+  "macos-x64",
+  "macos-arm64",
+  "windows-x64",
+  "windows-arm64",
+]
+
 [tools]
-bazel = "9.3.1"
-rust = "1.97.1"
-bun = "1.3.14"
-node = "24.18.0"
-fls = { version = "0.1.1", version_prefix = "fls-v", matching_regex = '^fls-.*\.(tar\.gz|zip)$' , github_attestations = false}
+# 构建图相关工具与 .bazelversion / MODULE.bazel 保持一致；其余工具用宽松版本，
+# 精确版本由 mise.lock 记录（CI 用 `mise install --locked` 安装）。
+bazel = "9.3"
+rust = "1.99"
+bun = "1"
+node = "26"
+# fls 是本仓自己的工具：关掉 24h 的 minimum_release_age 延迟，发版即可用
+fls = { version = "0.1", version_prefix = "fls-v", matching_regex = '^fls-.*\.(tar\.gz|zip)$' , minimum_release_age = "0s", github_attestations = false}
 # because of github api poor rate limit for ghost, we disable attestations for fls
 # NOTE: the build system for this monorepo is Bazel (see MODULE.bazel / .bazelversion).
-# Bazel itself is provided by bazelisk (bazel in ~/.local/bin), which honours .bazelversion.
+# Bazel 由 mise 提供；.bazelversion 是仓库内的权威版本号（两者需保持一致）。
 
 [tasks.build-fls]
 description = "build fls with Bazel"

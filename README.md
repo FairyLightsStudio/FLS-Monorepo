@@ -46,7 +46,7 @@ mise exec -- fls set TeraPanel --yes
 - 每个顶层项目必须提供 `//Project:workspace`，并通过 Bazel `deps` 声明跨项目关系。
 - target 和 `deps` 的形状必须是静态的，并覆盖 `select()` 的所有分支；`glob()` 只能用于填充 `srcs`，不能根据业务文件是否已检出来决定 target 或依赖是否存在。
 - 显式选择保存在当前工作树的 `<git-dir>/fls/state.toml`，不会提交，也不会与其他 Git worktree 共用。
-- 工具版本由 [`mise.toml`](mise.toml) 精确固定（含 `bazel 9.3.1`，同时以 `.bazelversion` 锁定）。`fls` 不会自更新，也不会管理或终止 Bazel server（`bazel shutdown` 由用户决定）。
+- 工具版本由 [`mise.toml`](mise.toml) 声明（宽松版本）并由 [`mise.lock`](mise.lock) 锁定精确版本；Bazel 同时以 `.bazelversion`（9.3.2）作为权威版本号。安装用 `mise install --locked`。`fls` 不会自更新，也不会管理或终止 Bazel server（`bazel shutdown` 由用户决定）。
 - `fls` 不执行 `fetch`、`pull`、`commit`、`reset` 或 `clean`；远程同步和提交仍由 Git/Jujutsu 负责。
 
 `fls-projects.toml` 当前及上一版 schema 可读取；上一版会提示迁移且 CI 失败。过新或过旧的 schema 会禁止工作树修改，但 `list` 和 `doctor` 仍可用于诊断。本地状态只保留当前及上一版，成功迁移时原子覆写，不创建备份。
@@ -84,10 +84,10 @@ bazel build //...
 bazel test //...
 ```
 
-- `MODULE.bazel`：rules_rust 0.75.0、Rust 1.97.1/edition 2024、按需 rules_proto（protobuf 29.1）。
+- `MODULE.bazel`：rules_rust 0.75.0、Rust 1.99.1/edition 2024、按需 rules_proto（protobuf 29.1）。
 - 每个 Cargo 工作区一个 crate_universe 仓库（消费各自的 `Cargo.lock`）：UserCenter、PoWCAPTCHA、ChatHistoryCat、tools/fls。
 - `cargo_build_script` 覆盖 2 处 proto codegen：UserCenter（`testproto/greet.proto`）、pow-captcha-server（`contracts/pow_captcha/v1/*.proto`，well-known include 由 `wellknown-include` genrule 提供）。
 - `//tools/bazel:fls_project.bzl` 提供 `fls_project(name = "workspace")` 标记规则，供 `fls` 用 `bazel query //Project:workspace` 校验项目边界。
 - TeraPanel 部分纳入：workspace 表里补上了 `crates/terapanel` 已引用但缺失的 `sqlx` 声明，因此现在有 `Cargo.lock`，可编译的两个 crate 已接入（`//TeraPanel/crates/shared-types:shared-types`、`//TeraPanel/crates/terad:terad`）。`crates/terapanel` 本身仍不构建——源码不完整（`config.rs`/`db.rs` 为空，缺 `state.rs`/`api.rs`，未声明 `volo_http`，引用不存在的 `tera_common`），待应用代码补齐后再加入。
-- 基础配置：`.bazelversion`（9.3.1）、`.bazelignore`、`./.bazelrc`；`/.gitignore` 增补 `/bazel-*`。
+- 基础配置：`.bazelversion`（9.3.2）、`.bazelignore`、`./.bazelrc`；`/.gitignore` 增补 `/bazel-*`。
 

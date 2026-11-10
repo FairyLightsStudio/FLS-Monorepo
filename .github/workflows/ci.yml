@@ -24,7 +24,7 @@ jobs:
           install_args: "bazel rust"
 
       - name: 安装 rustfmt
-        run: rustup component add --toolchain 1.97.1 rustfmt
+        run: rustup component add --toolchain 1.99.1 rustfmt
 
       - name: 检查 Rust 格式
         run: cargo fmt --manifest-path tools/fls/Cargo.toml -- --check

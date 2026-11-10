@@ -4,7 +4,7 @@
 
 ## 构建边界
 
-- Bazel 9.3.1 目前只负责 Rust（`rules_rust` + 各工作区 `Cargo.lock` 的 crate_universe）与 proto codegen。
+- Bazel 9.3.2 目前只负责 Rust（`rules_rust` + 各工作区 `Cargo.lock` 的 crate_universe）与 proto codegen。
   **没有**接入 JS/Node 规则（没有 `aspect_rules_js` / `rules_ts` / `npm_translate_lock`）。
 - 现代前端（Angular/Nx/Bun、Rspress 文档站）走原生工具链；Bazel 对它们只提供
   `fls_project(name = "workspace")` 项目边界标记（`//tools/bazel:fls_project.bzl`）。
@@ -27,7 +27,9 @@
 
 ## 工具版本
 
-- mise 固定：bazel 9.3.1、rust 1.97.1、node 24.18.0、bun 1.3.14、fls 0.1.1；pnpm 用系统版本。
+- mise：`mise.toml` 用宽松版本（bazel 9.3、rust 1.99、node 26、bun 1、fls 0.1），精确版本由 `mise.lock` 锁定（当前 bazel 9.3.2 / rust 1.99.1 / node 26.13.0 / bun 1.4.4 / fls 0.1.1）；pnpm 12 由全局 mise 配置提供。
+  更新工具：`mise lock --bump [工具]`（发版不到 24h 的版本需要 `MISE_MINIMUM_RELEASE_AGE=0`），安装：`mise install --locked`（仅项目工具）或 `mise install`。
+- `mise.lock` 只为 8 个常用平台生成（`[settings] lockfile_platforms`，排除 riscv64：bun 没有 riscv 产物，包含它会让 `mise install` 刷新锁文件时 404）。
 - `fls` 的发布流程：bump `tools/fls/Cargo.toml` 与 `tools/fls/src/cli.rs`（clap 版本是硬编码的）、
   打 `fls-v*` tag 触发 `.github/workflows/release-fls.yml`，再更新 `mise.toml` 与 `mise.lock`。
 

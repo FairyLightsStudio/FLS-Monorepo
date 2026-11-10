@@ -20,7 +20,7 @@ built. `crates/terapanel` itself is still not built because its sources are
 incomplete (empty config.rs/db.rs, missing state.rs/api.rs, undeclared
 volo_http, references to a nonexistent tera_common crate).
 
-Toolchain: rules_rust 0.75.0, Rust 1.97.1, edition 2024.
+Toolchain: rules_rust 0.75.0, Rust 1.99.1, edition 2024.
 rules_proto is pulled in on demand for the proto_library targets used
 by the connectrpc build-script codegen inputs.
 """
@@ -38,11 +38,11 @@ bazel_dep(name = "rules_rust", version = "0.75.0")
 bazel_dep(name = "rules_proto", version = "7.1.0")
 bazel_dep(name = "protobuf", version = "29.1", repo_name = "com_google_protobuf")
 
-# Rust toolchain: pinned to the same Rust as mise (1.97.1) and edition 2024.
+# Rust toolchain: pinned to the same Rust as mise (1.99.1) and edition 2024.
 rust = use_extension("@rules_rust//rust:extensions.bzl", "rust")
 rust.toolchain(
     edition = "2024",
-    versions = ["1.97.1"],
+    versions = ["1.99.1"],
 )
 use_repo(rust, "rust_toolchains")
 

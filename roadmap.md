@@ -77,7 +77,7 @@ bazel build //tools/fls:fls
 bazel test //tools/fls:fls-test
 ```
 
-Rust 版本由 mise 固定（1.97.1），Bazel 通过 `rules_rust` toolchain 使用同一版本。
+Rust 版本由 mise 固定（1.99.1），Bazel 通过 `rules_rust` toolchain 使用同一版本。
 
 GitHub Release 需要同时产出九个 host triple，其中包含 GNU/MUSL 和 RISC-V 交叉编译。发布阶段暂时使用 Cargo/cross 作为纯打包桥梁，但必须先通过 Bazel 测试，且两条路径编译同一份 Rust 源码和锁文件。等 Bazel 的 Rust 交叉工具链能够稳定覆盖完整发布矩阵后，应删除 Cargo/cross 例外，让发布资产也完全由 Bazel 产生。
 
