@@ -80,7 +80,10 @@ pub fn resolve(
 
 pub fn verify_workspace_target(root: &Path, project_path: &str) -> Result<()> {
     let target = format!("//{project_path}:workspace");
-    run(root, ["query", target.as_str(), "--noshow_progress", "--color=no"])?;
+    run(
+        root,
+        ["query", target.as_str(), "--noshow_progress", "--color=no"],
+    )?;
     Ok(())
 }
 
