@@ -33,23 +33,23 @@ cargo check
 cd web-component
 
 # Install dependencies
-yarn install
+pnpm install
 
 # Development server with hot reload
-yarn start
+pnpm start
 
 # Build for production
-yarn build
+pnpm run build
 
 # Run tests
-yarn test
+pnpm run test
 
 # Lint and format
-yarn lint
-yarn format
+pnpm run lint
+pnpm run format
 
 # Storybook for component development
-yarn storybook
+pnpm run storybook
 ```
 
 ### Database Setup

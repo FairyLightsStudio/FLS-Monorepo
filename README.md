@@ -75,6 +75,27 @@ Bazel 已成为本仓唯一构建系统（Buck2 相关文件已于迁移中删�
 - [`Docs/AboutUs/`](Docs/AboutUs/)：官网，Angular 应用（pnpm + Angular CLI）。
 - [`Docs/Products/`](Docs/Products/)：产品文档，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板），开发方式见 [`Docs/Products/README.md`](Docs/Products/README.md)。
 
+## 前端（pnpm）
+
+所有前端项目统一用 pnpm（`package.json` 中 `packageManager: pnpm@12.19.0`），Node 版本由 [mise.toml](mise.toml) 固定（当前 Node 26）。在仓库根目录即可安装/构建：
+
+```bash
+mise exec -- pnpm --dir Docs/AboutUs install
+mise exec -- pnpm --dir Docs/AboutUs run build
+
+mise exec -- pnpm --dir Docs/Products install
+mise exec -- pnpm --dir Docs/Products --filter terapanel-docs build   # 指定某个产品站点
+mise exec -- pnpm --dir Docs/Products -r build                        # 全部产品站点
+
+mise exec -- pnpm --dir TeraPanel/teraclient-web run build
+mise exec -- pnpm --dir PoWCAPTCHA/web-component run build
+```
+
+- `Docs/Products` 是唯一的 pnpm workspace（每个产品一个包）；其余前端项目是单包项目。
+- `PoWCAPTCHA/web-component` 的 `@buf/*` 依赖来自 BSR，目录内的 [`.npmrc`](PoWCAPTCHA/web-component/.npmrc) 已把 `@buf` scope 指向 `https://buf.build/gen/npm/v1/`（公开包，无需 token）。
+- 每个项目的 `pnpm-lock.yaml` 都是 pnpm 12 的两文档格式（env 文档 + 项目依赖图），解析工具请用 YAML 多文档 API。
+- Bazel 只负责 Rust/proto 与项目边界，前端构建不走 Bazel（原因见 [roadmap.md](roadmap.md)）。
+
 ## Bazel 构建
 
 Rust 工作区的 Bazel 构建图与迁移前的目标一一对齐：
