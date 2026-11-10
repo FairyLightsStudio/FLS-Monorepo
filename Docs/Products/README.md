@@ -34,6 +34,28 @@ mise exec -- pnpm build    # 产物在 <产品>/doc_build/
 
 `Docs/` 在 [`fls-projects.toml`](../../fls-projects.toml) 里是单个项目（`Docs`），项目边界由 [`Docs/BUILD.bazel`](../BUILD.bazel) 的 `fls_project(name = "workspace")` 声明；新增站点不需要再改 fls 清单。
 
+## 产品切换入口（共享主题）
+
+导航栏左上角的九宫格按钮可以在不同产品的文档站点之间跳转，实现在 `shared/theme/`，所有产品站点共用：
+
+```
+shared/theme/
+├── index.tsx            # 包装 Rspress 默认 Layout，在 beforeNavTitle 注入入口
+└── nav-icon/
+    ├── index.tsx        # 九宫格按钮 + 弹出面板（悬停/点击展开，Esc 或点击外部关闭）
+    ├── nav-config.ts    # 产品列表：名称、描述、图标、链接、状态
+    └── assets/          # 产品图标（打包进主题，避免各站点重复放 public）
+```
+
+新增一个产品时：
+
+1. 在 `shared/theme/nav-icon/nav-config.ts` 的 `products` 里加一条；已上线填 `url`、`status: 'ready'`，未上线用 `status: 'soon'`（面板里显示"即将上线"且不可点击）；
+2. 图标放进 `shared/theme/nav-icon/assets/`，在配置里 `import` 后赋给 `logo`；没有图标可用 `emoji` 兜底；
+3. 新站点在自己的 `rspress.config.ts` 里设置同一个主题目录：`themeDir: path.join(__dirname, '..', 'shared', 'theme')`；
+4. 站点部署到子路径（如 `/terapanel/`）时，把 `url` 改成实际地址。
+
+参考实现来自 Rstack 文档站的 [`@rstack-dev/doc-ui` NavIcon](https://github.com/rstackjs/rstack-doc-ui)（antd Popover + JSON 配置 + Rspress `beforeNavTitle` 插槽）；这里去掉了 antd 依赖，用原生 React + CSS 变量适配亮/暗色。
+
 ## 说明
 
 - 文档站由 pnpm + Rspress 原生工具链构建，Bazel 当前只负责项目边界（见 [roadmap.md](../../roadmap.md)；2026-11 的 rules_js 可行性调研结论也在那里）。
