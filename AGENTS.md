@@ -42,3 +42,4 @@
   只有 `--spawn_strategy=local` 才成功，等于放弃 hermetic 与远端缓存。
 - 因此现代前端继续走原生工具链；结论与重新评估触发条件写在 `roadmap.md`。
 - 所有 pnpm 项目的 `pnpm-lock.yaml` 都是 pnpm 12 的**两文档**格式（`packageManager` 锁定触发）：
+  第一个是 pnpm 自身的 env 文档、最后一个是项目依赖图；不是损坏，解析要用多文档 API。
