@@ -1,0 +1,17 @@
+"""dsh-scratch: 示例 DeepSeek Harness 插件（源码由 dsh 运行时直接加载，Bazel 只做项目边界与源文件分组）。"""
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+package(default_visibility = ["//visibility:public"])
+
+fls_project(
+    name = "workspace",
+)
+
+filegroup(
+    name = "srcs",
+    srcs = glob(["src/**/*.ts"]) + [
+        "cordis.yml.example",
+        "scripts/gen-cordis-yml.sh",
+    ],
+)

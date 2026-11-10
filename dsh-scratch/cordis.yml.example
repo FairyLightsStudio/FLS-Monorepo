@@ -1,0 +1,3 @@
+- insert:
+    - id: dsh-scratch
+      name: '__DSH_SCRATCH_DIR__/src/plugin.ts'
