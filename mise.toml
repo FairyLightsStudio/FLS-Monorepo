@@ -8,7 +8,7 @@ bazel = "9.3.1"
 rust = "1.97.1"
 bun = "1.3.14"
 node = "24.18.0"
-fls = { version = "0.1.0", version_prefix = "fls-v", matching_regex = '^fls-.*\.(tar\.gz|zip)$' , github_attestations = false}
+fls = { version = "0.1.1", version_prefix = "fls-v", matching_regex = '^fls-.*\.(tar\.gz|zip)$' , github_attestations = false}
 # because of github api poor rate limit for ghost, we disable attestations for fls
 # NOTE: the build system for this monorepo is Bazel (see MODULE.bazel / .bazelversion).
 # Bazel itself is provided by bazelisk (bazel in ~/.local/bin), which honours .bazelversion.
