@@ -19,8 +19,8 @@ FairyLightsStudio 使用 Bazel 统一工作室项目的构建入口、跨项目�
 | `fls` 与 Bazel 的版本和首次安装 | mise |
 | Rust 与 proto codegen 构建图 | Bazel（`rules_rust` + 各工作区 `Cargo.lock` 的 crate_universe） |
 | 当前 Rust 编译器入口 | mise 固定版本，经 Bazel toolchain 桥接 |
-| Angular、Nx、Storybook 等现代前端工作流 | 原生工具链（Bun / npm） |
-| 前端依赖解析和版本锁定 | `package.json` 与 `bun.lock` / `pnpm-lock.yaml` |
+| Angular、Nx、Storybook 等现代前端工作流 | 原生工具链（pnpm / Angular CLI） |
+| 前端依赖解析和版本锁定 | `package.json` 与 `pnpm-lock.yaml` / `package-lock.json` |
 | 前端项目与其他工作室项目之间的粗粒度依赖 | Bazel `fls_project` 项目边界标记 |
 | 暂时无法由 Bazel 合理接管的前端入口工具版本 | mise |
 
@@ -44,9 +44,9 @@ mise 只承担启动 Bazel 所必需的工具，以及 Bazel 当前无法合理�
 现代前端项目继续使用其原生工作流，例如：
 
 ```bash
-bun install --frozen-lockfile
-bun nx build <project>
-bun nx test <project>
+pnpm install --frozen-lockfile
+pnpm exec ng build <project>
+pnpm exec ng test <project>
 ```
 
 文档站（`Docs/Products`）使用 pnpm + Rspress：
@@ -66,7 +66,7 @@ fls_project(
 )
 ```
 
-`fls add` 会让 Bazel 扫描所选项目目录下的全部 targets，并从查询结果计算跨项目依赖闭包；前端开发者仍然使用受上游支持的 Bun、Nx、Angular 和 Storybook 命令。`//Project:workspace` 是稳定的项目边界和粗粒度依赖桥梁，不代表“构建整个项目”。
+`fls add` 会让 Bazel 扫描所选项目目录下的全部 targets，并从查询结果计算跨项目依赖闭包；前端开发者仍然使用受上游支持的 pnpm、Angular CLI（以及将来的 Nx/Storybook）命令。`//Project:workspace` 是稳定的项目边界和粗粒度依赖桥梁，不代表“构建整个项目”。
 
 ## fls 的构建与发布边界
 

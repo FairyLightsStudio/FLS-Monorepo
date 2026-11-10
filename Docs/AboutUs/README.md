@@ -1,5 +1,15 @@
 # AboutOur
 
+## 包管理器
+
+本仓库统一使用 pnpm（`package.json` 里 `packageManager: pnpm@12.19.0`）：
+
+```bash
+mise exec -- pnpm install
+mise exec -- pnpm run start   # 等价 ng serve
+mise exec -- pnpm run build   # 等价 ng build
+```
+
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.6.
 
 ## Development server

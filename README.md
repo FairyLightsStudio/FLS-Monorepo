@@ -66,13 +66,13 @@ bazel-bin/tools/fls/fls doctor
 
 Rust 第三方依赖由各 Cargo 工作区自己的 `Cargo.lock` 锁定，Bazel 通过 `rules_rust` 的 `crate_universe` 直接从 lockfile 解析并拉取 crate（带校验和），无需本地 vendor 目录。更新某个工作区的依赖后只需提交该工作区的 `Cargo.lock`，Bazel 下次构建自动重新解析。
 
-Bazel 已成为本仓唯一构建系统（Buck2 相关文件已于迁移中删除）。Angular/Nx/Bun 项目当前的构建状态见 [`roadmap.md`](roadmap.md)。
+Bazel 已成为本仓唯一构建系统（Buck2 相关文件已于迁移中删除）。Angular/Nx 等前端项目当前的构建状态见 [`roadmap.md`](roadmap.md)。
 
 ## 文档
 
 工作室的文档统一放在 [`Docs/`](Docs/)：
 
-- [`Docs/AboutUs/`](Docs/AboutUs/)：官网，Angular 应用（原生工具链构建）。
+- [`Docs/AboutUs/`](Docs/AboutUs/)：官网，Angular 应用（pnpm + Angular CLI）。
 - [`Docs/Products/`](Docs/Products/)：产品文档，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板），开发方式见 [`Docs/Products/README.md`](Docs/Products/README.md)。
 
 ## Bazel 构建

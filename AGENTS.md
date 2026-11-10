@@ -13,9 +13,10 @@
 
 ## 目录与文档
 
-- `Docs/AboutUs/`：官网（Angular + bun，`cd Docs/AboutUs && bun install && bun run start`）。
+- `Docs/AboutUs/`：官网（Angular + pnpm，`cd Docs/AboutUs && mise exec -- pnpm install && mise exec -- pnpm start`）。
 - `Docs/Products/`：产品文档，一个产品一个 Rspress 站点（`Docs/Products/README.md`）。
   `cd Docs/Products && mise exec -- pnpm install && mise exec -- pnpm dev`；构建产物在 `<产品>/doc_build/`。
+- 前端项目统一用 pnpm（不再用 bun/npm/yarn）：`Docs/AboutUs`、`Docs/Products` 的 `package.json` 用 `packageManager: pnpm@12.19.0`。
 - `Docs/` 在 `fls-projects.toml` 里是单个项目；新增文档站不需要改 fls 清单。
 - 旧的 `TeraPanelDocsSite/` 已删除（内容迁移到 `Docs/Products/TeraPanel`），git 历史里可找回。
 
@@ -27,9 +28,9 @@
 
 ## 工具版本
 
-- mise：`mise.toml` 用宽松版本（bazel 9.3、rust 1.99、node 26、bun 1、fls 0.1），精确版本由 `mise.lock` 锁定（当前 bazel 9.3.2 / rust 1.99.1 / node 26.13.0 / bun 1.4.4 / fls 0.1.1）；pnpm 12 由全局 mise 配置提供。
+- mise：`mise.toml` 用宽松版本（bazel 9.3、rust 1.99、node 26、pnpm 12、fls 0.1），精确版本由 `mise.lock` 锁定（当前 bazel 9.3.2 / rust 1.99.1 / node 26.13.0 / pnpm 12.19.0 / fls 0.1.1）。
   更新工具：`mise lock --bump [工具]`（发版不到 24h 的版本需要 `MISE_MINIMUM_RELEASE_AGE=0`），安装：`mise install --locked`（仅项目工具）或 `mise install`。
-- `mise.lock` 只为 8 个常用平台生成（`[settings] lockfile_platforms`，排除 riscv64：bun 没有 riscv 产物，包含它会让 `mise install` 刷新锁文件时 404）。
+- `mise.lock` 只为 8 个常用平台生成（`[settings] lockfile_platforms`，riscv64 上不跑这些开发工具）。
 - `fls` 的发布流程：bump `tools/fls/Cargo.toml` 与 `tools/fls/src/cli.rs`（clap 版本是硬编码的）、
   打 `fls-v*` tag 触发 `.github/workflows/release-fls.yml`，再更新 `mise.toml` 与 `mise.lock`。
 
@@ -39,5 +40,6 @@
   但默认 linux-sandbox 下因 rules_js #362（ESM 逃逸 sandbox/runfiles）稳定失败，
   只有 `--spawn_strategy=local` 才成功，等于放弃 hermetic 与远端缓存。
 - 因此现代前端继续走原生工具链；结论与重新评估触发条件写在 `roadmap.md`。
-- `Docs/Products/pnpm-lock.yaml` 是 pnpm 12 的**两文档**格式（`packageManager` 锁定触发），
-  第一个是 pnpm 自身的 env 文档、最后一个是项目依赖图；不是损坏，解析要用多文档 API。
+- `Docs/AboutUs/pnpm-lock.yaml` 与 `Docs/Products/pnpm-lock.yaml` 都是 pnpm 12 的**两文档**格式
+  （`packageManager` 锁定触发）：第一个是 pnpm 自身的 env 文档、最后一个是项目依赖图；
+  不是损坏，解析要用多文档 API。
