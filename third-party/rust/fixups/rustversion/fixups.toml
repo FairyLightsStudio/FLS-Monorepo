@@ -1,6 +1,0 @@
-extra_srcs = [
-    "build/rustc.rs",
-]
-
-[buildscript]
-run = true

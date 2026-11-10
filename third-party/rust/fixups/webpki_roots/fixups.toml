@@ -1,5 +1,0 @@
-extra_srcs = [
-    "tests/data/tubitak/inter.der",
-    "tests/data/tubitak/root.der",
-    "tests/data/tubitak/subj.der",
-]

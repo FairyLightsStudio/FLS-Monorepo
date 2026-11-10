@@ -1,5 +1,0 @@
-extra_srcs = [
-    "readme.md",
-    "src/imp/windows.rs",
-    "src/windows.rs",
-]

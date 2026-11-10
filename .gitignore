@@ -1,10 +1,6 @@
 # Bazel build output
 /bazel-*
 
-# 第三方 crate 源码缓存（Bazel crate_universe 从 Cargo.lock 解析，不再需要本地 vendor）
-third-party/rust/vendor/
-third-party/rust/.cargo/
-
 # Node / JS
 node_modules/
 .angular/

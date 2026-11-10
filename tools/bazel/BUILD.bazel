@@ -1,4 +1,4 @@
-"""Bazel-only Starlark macros (Buck2 files under build_defs/ are untouched)."""
+"""Bazel Starlark macros shared by the workspace packages."""
 
 package(default_visibility = ["//visibility:public"])
 

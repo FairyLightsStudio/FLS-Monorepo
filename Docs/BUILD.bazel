@@ -1,0 +1,9 @@
+"""Docs: 彩灯工作室文档目录（官网 AboutUs + 产品文档 Products，各站点用原生前端工具链构建）。"""
+
+load("//tools/bazel:fls_project.bzl", "fls_project")
+
+package(default_visibility = ["//visibility:public"])
+
+fls_project(
+    name = "workspace",
+)

@@ -1,6 +1,0 @@
-extra_srcs = [
-    "no_atomic.rs",
-]
-
-[buildscript]
-run = true

@@ -1,12 +1,12 @@
 """FlightStudio root package.
 
-Hosts the fls_project workspace marker (see build_defs/fls_project.bzl)
-for every project directory, mirroring the per-directory
-fls_project(name = "workspace") targets in the BUCK files.
+Every project directory provides an `fls_project(name = "workspace")` marker
+(see tools/bazel/fls_project.bzl); fls uses `bazel query deps(//Project/...)`
+to compute the coarse cross-project dependency closure.
 
-Only directories with real buildable content get additional aliases;
-TeraPanel intentionally has no rust_* Bazel targets (see MODULE.bazel
-docstring and TeraPanel/BUILD.bazel for the documented reason).
+This root package also exposes a workspace marker that depends on the projects
+with real buildable content. TeraPanel intentionally has no rust_* Bazel
+targets (see MODULE.bazel docstring and TeraPanel/BUILD.bazel).
 """
 
 load("//tools/bazel:fls_project.bzl", "fls_project")

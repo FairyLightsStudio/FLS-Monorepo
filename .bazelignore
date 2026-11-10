@@ -1,11 +1,10 @@
-# Bazel must not descend into Buck2 outputs, vendored crates, or VCS internals.
-buck-out/
-third-party/rust/vendor/
-third-party/rust/.cargo/
+# Bazel must not descend into VCS internals or generated build output,
+# or the docs sites' pnpm / Rspress output.
 target/
 .jj/
 .git/
-# ProductsDoc 的 pnpm / Rspress 依赖与产物（不进 Bazel 图）
-ProductsDoc/node_modules/
-ProductsDoc/TeraPanel/node_modules/
-ProductsDoc/TeraPanel/doc_build/
+# Docs 站点的 pnpm / Rspress 依赖与产物（不进 Bazel 图）
+Docs/AboutUs/node_modules/
+Docs/Products/node_modules/
+Docs/Products/TeraPanel/node_modules/
+Docs/Products/TeraPanel/doc_build/

@@ -1,1 +1,0 @@
-../TeraPanel/AGENTS.md

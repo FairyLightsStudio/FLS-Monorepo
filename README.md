@@ -68,9 +68,12 @@ Rust 第三方依赖由各 Cargo 工作区自己的 `Cargo.lock` 锁定，Bazel 
 
 Bazel 已成为本仓唯一构建系统（Buck2 相关文件已于迁移中删除）。Angular/Nx/Bun 项目当前的构建状态见 [`roadmap.md`](roadmap.md)。
 
-## 产品文档
+## 文档
 
-工作室所有产品的文档统一放在 [`ProductsDoc/`](ProductsDoc/)，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板）。本地开发与构建方式见 [`ProductsDoc/README.md`](ProductsDoc/README.md)。
+工作室的文档统一放在 [`Docs/`](Docs/)：
+
+- [`Docs/AboutUs/`](Docs/AboutUs/)：官网，Angular 应用（原生工具链构建）。
+- [`Docs/Products/`](Docs/Products/)：产品文档，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板），开发方式见 [`Docs/Products/README.md`](Docs/Products/README.md)。
 
 ## Bazel 构建
 
