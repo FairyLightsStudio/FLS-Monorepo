@@ -25,6 +25,10 @@ description = "聊天记录管理工具"
 path = "DesignAssets"
 description = "FairyLightsStudio 设计资产"
 
+[projects.dsh-scratch]
+path = "dsh-scratch"
+description = "DeepSeek Harness 示例插件"
+
 [projects.LiLi_converter]
 path = "LiLi_converter"
 description = "LiLi 文件转换服务"
