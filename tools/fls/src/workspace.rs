@@ -11,6 +11,16 @@ use crate::manifest::Manifest;
 use crate::state::{self, State, StateLock};
 use crate::{Error, Result};
 
+/// 把清单声明的项目路径补进状态。
+///
+/// `Workspace::open` 读取磁盘状态后会补上当前清单里新增的项目路径（不写回磁盘），
+/// `apply` 在比较状态指纹前必须做同样的补全，否则指纹会把“清单新增项目”误报成状态变化。
+fn merge_manifest_paths(state: &mut State, paths: BTreeMap<String, String>) {
+    for (id, path) in paths {
+        state.known_project_paths.entry(id).or_insert(path);
+    }
+}
+
 #[derive(Clone, Copy, Debug, Serialize)]
 #[serde(rename_all = "lowercase")]
 pub enum ChangeKind {
@@ -89,9 +99,7 @@ impl Workspace {
         let state_exists = loaded.state.is_some();
         let state = match loaded.state {
             Some(mut state) => {
-                for (id, path) in manifest.known_paths() {
-                    state.known_project_paths.entry(id).or_insert(path);
-                }
+                merge_manifest_paths(&mut state, manifest.known_paths());
                 state
             }
             None => Self::adopt_state(&git, &manifest, &sparse)?,
@@ -410,7 +418,13 @@ impl Workspace {
         }
         let current_loaded = state::load(&self.git.state_path())?;
         let current_state = match current_loaded.state {
-            Some(state) => state,
+            Some(mut state) => {
+                // `Workspace::open` 会把清单里新增项目的路径补进内存状态，
+                // 这里必须做同样的归一化，否则比较的是两种形状的状态，
+                // 新登记项目后每次 apply 都会被误判为“状态已改变”。
+                merge_manifest_paths(&mut state, self.manifest.known_paths());
+                state
+            }
             None => self.state.clone(),
         };
         if current_state.fingerprint()? != plan.expected_state {
@@ -484,5 +498,55 @@ impl Workspace {
             )));
         }
         Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn state_with(path: &str) -> State {
+        let mut state = State::current();
+        state
+            .known_project_paths
+            .insert(path.to_owned(), path.to_owned());
+        state
+    }
+
+    #[test]
+    fn merge_manifest_paths_makes_apply_fingerprint_match_open_state() {
+        let manifest_paths = BTreeMap::from([("dsh-scratch".to_owned(), "dsh-scratch".to_owned())]);
+
+        // plan 时的内存状态：`Workspace::open` 已经补上清单新增的项目路径
+        let mut planned = state_with("AboutUs");
+        merge_manifest_paths(&mut planned, manifest_paths.clone());
+
+        // apply 时从磁盘重新读到的状态：还没有新项目的路径
+        let mut on_disk = state_with("AboutUs");
+        assert_ne!(
+            on_disk.fingerprint().unwrap(),
+            planned.fingerprint().unwrap()
+        );
+
+        // 修复后的 apply 在比较指纹前做同样的补全，指纹必须一致
+        merge_manifest_paths(&mut on_disk, manifest_paths);
+        assert_eq!(
+            on_disk.fingerprint().unwrap(),
+            planned.fingerprint().unwrap()
+        );
+    }
+
+    #[test]
+    fn merge_manifest_paths_keeps_existing_known_paths() {
+        let mut state = state_with("TeraPanel");
+        merge_manifest_paths(
+            &mut state,
+            BTreeMap::from([
+                ("TeraPanel".to_owned(), "TeraPanel".to_owned()),
+                ("dsh-scratch".to_owned(), "dsh-scratch".to_owned()),
+            ]),
+        );
+        assert_eq!(state.known_project_paths.len(), 2);
+        assert_eq!(state.known_project_paths["TeraPanel"], "TeraPanel");
     }
 }
