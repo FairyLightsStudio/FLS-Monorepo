@@ -14,7 +14,7 @@
 ## 目录与文档
 
 - `Docs/AboutUs/`：官网（Angular + pnpm，`cd Docs/AboutUs && mise exec -- pnpm install && mise exec -- pnpm start`）。
-- `Docs/Products/`：产品文档，一个产品一个 Rspress 站点（`Docs/Products/README.md`）；目前有 `TeraPanel`（泰拉面板）和 `DSH-FLScratch`（把 DeepSeek Harness 当增强版 Scratch IDE）。
+- `Docs/Products/`：产品文档，一个产品一个 Rspress 站点（`Docs/Products/README.md`）；目前有 `TeraPanel`（泰拉面板）和 `DSH-FLScratch`（把 DeepSeek Harness 当增强版 Scratch IDE；品牌 SVG 与生成脚本在 `DesignAssets/DSH-FLScratch/`）。
   `cd Docs/Products && mise exec -- pnpm install && mise exec -- pnpm dev`；构建产物在 `<产品>/doc_build/`。
 - 前端项目统一用 pnpm（不再用 bun/npm/yarn）：`Docs/AboutUs`、`Docs/Products`、`TeraPanel/teraclient-web`、`PoWCAPTCHA/web-component` 的 `package.json` 都用 `packageManager: pnpm@12.19.0`。
 - `PoWCAPTCHA/web-component` 依赖 BSR 上的 `@buf/*` 包，因此该目录有 `.npmrc` 把 `@buf` scope 指到 `https://buf.build/gen/npm/v1/`（公开包，无需 token）。
