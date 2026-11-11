@@ -73,7 +73,7 @@ Bazel 已成为本仓唯一构建系统（Buck2 相关文件已于迁移中删�
 工作室的文档统一放在 [`Docs/`](Docs/)：
 
 - [`Docs/AboutUs/`](Docs/AboutUs/)：官网，Angular 应用（pnpm + Angular CLI）。
-- [`Docs/Products/`](Docs/Products/)：产品文档，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板），开发方式见 [`Docs/Products/README.md`](Docs/Products/README.md)。
+- [`Docs/Products/`](Docs/Products/)：产品文档，一个产品一个 [Rspress](https://rspress.dev/) 站点（目前有泰拉面板、DSH-FLScratch），开发方式见 [`Docs/Products/README.md`](Docs/Products/README.md)。
 
 ## 前端（pnpm）
 

@@ -10,9 +10,13 @@ Docs/
 └── Products/             # 产品文档（本目录）
     ├── pnpm-workspace.yaml   # pnpm workspace，每个产品是一个包
     ├── package.json          # 根脚本：统一 build / dev / preview
-    └── TeraPanel/            # 泰拉面板文档站
+    ├── TeraPanel/            # 泰拉面板文档站
+    │   ├── rspress.config.ts
+    │   ├── docs/             # Markdown / MDX 与静态资源（public/）
+    │   └── package.json
+    └── DSH-FLScratch/        # DSH-FLScratch 文档站（DeepSeek Harness 当增强版 Scratch IDE）
         ├── rspress.config.ts
-        ├── docs/             # Markdown / MDX 与静态资源（public/）
+        ├── docs/
         └── package.json
 ```
 
@@ -22,8 +26,9 @@ Docs/
 
 ```bash
 mise exec -- pnpm install
-mise exec -- pnpm dev      # 开发服务器
-mise exec -- pnpm build    # 产物在 <产品>/doc_build/
+mise exec -- pnpm dev                    # 开发服务器（泰拉面板）
+mise exec -- pnpm dev:dsh-flscratch      # 开发服务器（DSH-FLScratch）
+mise exec -- pnpm build                  # 构建全部站点，产物在 <产品>/doc_build/
 ```
 
 ## 新增一个产品的文档

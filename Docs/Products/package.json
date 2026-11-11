@@ -5,10 +5,12 @@
   "packageManager": "pnpm@12.19.0",
   "scripts": {
     "dev": "pnpm --filter terapanel-docs dev",
-    "build": "pnpm --filter terapanel-docs build",
+    "build": "pnpm -r build",
     "preview": "pnpm --filter terapanel-docs preview",
     "check": "biome check --write",
-    "format": "biome format --write"
+    "format": "biome format --write",
+    "dev:dsh-flscratch": "pnpm --filter dsh-flscratch-docs dev",
+    "preview:dsh-flscratch": "pnpm --filter dsh-flscratch-docs preview"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.6"

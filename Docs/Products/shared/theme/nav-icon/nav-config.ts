@@ -25,8 +25,8 @@ export type NavConfig = NavGroup[];
 
 /**
  * 所有产品文档站共用的导航配置：新增产品时在对应分组里加一条即可。
- * 如果站点部署到子路径（例如 /terapanel/），把 url 改成对应地址；
- * 当前只有一个文档站点，先用 '/' 表示「本站」。
+ * url 目前按「统一域名 + 子路径」的部署方式填写：泰拉面板是本站根路径，
+ * DSH-FLScratch 预留 /dsh-flscratch/；部署方案确定后统一改成实际地址。
  */
 export const navConfig: NavConfig = [
   {
@@ -40,11 +40,12 @@ export const navConfig: NavConfig = [
         status: 'ready',
       },
       {
-        name: 'FairyLightsStudio',
-        desc: '工作室官网',
-        descEn: 'Studio website',
-        emoji: '💞',
-        status: 'soon',
+        name: 'DSH-FLScratch',
+        desc: '增强版 Scratch IDE',
+        descEn: 'An enhanced Scratch IDE',
+        url: '/dsh-flscratch/',
+        logo: new URL('./assets/dsh-flscratch.webp', import.meta.url).href,
+        status: 'ready',
       },
     ],
   },

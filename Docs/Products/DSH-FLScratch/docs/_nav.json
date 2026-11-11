@@ -1,0 +1,12 @@
+[
+  {
+    "text": "使用指南",
+    "link": "/guide/",
+    "activeMatch": "/guide/"
+  },
+  {
+    "text": "设计理念",
+    "link": "/architecture/",
+    "activeMatch": "/architecture/"
+  }
+]
