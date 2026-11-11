@@ -1,5 +1,5 @@
-import { Layout as BaseLayout } from '@rspress/core/theme-original';
 import type { LayoutProps } from '@rspress/core/theme-original';
+import { Layout as BaseLayout } from '@rspress/core/theme-original';
 import { NavIcon } from './nav-icon';
 
 /**

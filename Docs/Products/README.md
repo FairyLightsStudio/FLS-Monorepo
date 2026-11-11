@@ -54,7 +54,9 @@ shared/theme/
 3. 新站点在自己的 `rspress.config.ts` 里设置同一个主题目录：`themeDir: path.join(__dirname, '..', 'shared', 'theme')`；
 4. 站点部署到子路径（如 `/terapanel/`）时，把 `url` 改成实际地址。
 
-参考实现来自 Rstack 文档站的 [`@rstack-dev/doc-ui` NavIcon](https://github.com/rstackjs/rstack-doc-ui)（antd Popover + JSON 配置 + Rspress `beforeNavTitle` 插槽）；这里去掉了 antd 依赖，用原生 React + CSS 变量适配亮/暗色。
+实现移植自 Rstack 文档站的 [`@rstack-dev/doc-ui` NavIcon](https://github.com/rstackjs/rstack-doc-ui)：antd `Popover`（`bottomLeft`、无箭头、hover 触发）+ `PopoverContent`/`LinkGroup`/`Link` 结构 + Rspress 自定义主题的 `beforeNavTitle` 插槽；产品列表换成我们自己的 `nav-config.ts`，样式用上游的面板尺寸/间距，并适配亮暗色。
+
+> 上游的 `@rstack-dev/doc-ui` 不能直接 `npm i` 后替换产品：它的产品列表 `nav-config.json` 是打包进组件里的（且 header 写死 Rstack）。所以这里是把它的组件源码和样式 vendor 进共享主题，产品数据由我们控制。
 
 ## 说明
 

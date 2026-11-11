@@ -1,174 +1,57 @@
-import { useEffect, useRef, useState } from 'react';
-import type { DocProduct } from './nav-config';
-import { products } from './nav-config';
+import Popover from 'antd/es/popover';
+import { PopoverContent } from './components/PopoverContent';
+import { navConfig } from './nav-config';
 import './index.css';
 
-const GridIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 20 20"
-    fill="none"
-    aria-hidden="true"
-  >
-    {[2, 8, 14].map((x) =>
-      [2, 8, 14].map((y) => (
-        <rect
-          key={`${x}-${y}`}
-          x={x}
-          y={y}
-          width="4"
-          height="4"
-          rx="1"
-          fill="currentColor"
-        />
-      )),
-    )}
-  </svg>
-);
-
-const ProductItem = ({ product }: { product: DocProduct }) => {
-  const icon = product.logo ? (
-    <img
-      className="fls-nav-icon__logo"
-      src={product.logo}
-      alt={product.name}
-    />
-  ) : (
-    <span className="fls-nav-icon__emoji" aria-hidden="true">
-      {product.emoji ?? '📄'}
-    </span>
-  );
-
-  const body = (
-    <>
-      {icon}
-      <span className="fls-nav-icon__content">
-        <span className="fls-nav-icon__name">
-          {product.name}
-          {product.status === 'soon' ? (
-            <span className="fls-nav-icon__badge">即将上线</span>
-          ) : null}
-        </span>
-        <span className="fls-nav-icon__desc">{product.desc}</span>
-      </span>
-    </>
-  );
-
-  if (product.status === 'ready' && product.url) {
-    return (
-      <a
-        className="fls-nav-icon__item"
-        href={product.url}
-        role="menuitem"
-        aria-label={`打开 ${product.name} 文档`}
-      >
-        {body}
-      </a>
-    );
-  }
-
-  return (
-    <span
-      className="fls-nav-icon__item fls-nav-icon__item--soon"
-      aria-disabled="true"
-    >
-      {body}
-    </span>
-  );
+export type NavIconProps = {
+  trigger?: 'hover' | 'focus' | 'click' | Array<'hover' | 'focus' | 'click'>;
 };
 
 /**
- * 导航栏左侧的「产品文档」切换入口。
- * 交互：鼠标悬停展开；点击按钮切换；Escape 或点击外部关闭。
+ * 导航栏左侧的产品切换入口。
+ * 实现方式参考 Rstack 文档站的 @rstack-dev/doc-ui NavIcon：
+ * antd Popover（bottomLeft、无箭头）+ 产品列表；这里换成我们自己的 nav-config。
  */
-export const NavIcon = () => {
-  const [open, setOpen] = useState(false);
-  const rootRef = useRef<HTMLDivElement>(null);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  useEffect(() => {
-    if (!open) {
-      return;
-    }
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setOpen(false);
-      }
-    };
-    const onPointerDown = (event: MouseEvent) => {
-      if (rootRef.current && !rootRef.current.contains(event.target as Node)) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener('keydown', onKeyDown);
-    document.addEventListener('mousedown', onPointerDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.removeEventListener('mousedown', onPointerDown);
-    };
-  }, [open]);
-
-  useEffect(
-    () => () => {
-      if (closeTimer.current) {
-        clearTimeout(closeTimer.current);
-      }
-    },
-    [],
-  );
-
-  const cancelClose = () => {
-    if (closeTimer.current) {
-      clearTimeout(closeTimer.current);
-      closeTimer.current = undefined;
-    }
-  };
-  const scheduleClose = () => {
-    cancelClose();
-    closeTimer.current = setTimeout(() => setOpen(false), 150);
-  };
-
-  return (
-    <div
-      className="fls-nav-icon"
-      ref={rootRef}
-      onMouseEnter={() => {
-        cancelClose();
-        setOpen(true);
+export const NavIcon = ({ trigger = 'hover' }: NavIconProps = {}) => (
+  <div className="fls-nav-icon">
+    <Popover
+      arrow={false}
+      trigger={trigger}
+      placement="bottomLeft"
+      content={<PopoverContent config={navConfig} />}
+      classNames={{ root: 'fls-nav-popover' }}
+      styles={{
+        root: {
+          padding: 0,
+          background: 'transparent',
+          boxShadow: 'none',
+          zIndex: 999,
+        },
+        container: {
+          padding: 0,
+          background: 'transparent',
+          boxShadow: 'none',
+        },
       }}
-      onMouseLeave={scheduleClose}
     >
       <button
         type="button"
-        className="fls-nav-icon__button"
+        className="fls-nav-icon__wrapper"
         aria-label="切换产品文档"
-        aria-expanded={open}
-        aria-haspopup="menu"
-        onClick={() => setOpen(true)}
       >
-        <GridIcon />
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 20 20"
+          fill="none"
+          aria-hidden="true"
+        >
+          <path
+            d="M2.5 5H5V2.5H2.5V5zM5 11.25H2.5v-2.5H5v2.5zm12.5 0H15v-2.5h2.5v2.5zm-8.75 0h2.5v-2.5h-2.5v2.5zM5 17.5H2.5V15H5v2.5zm10 0h2.5V15H15v2.5zm-3.75 0h-2.5V15h2.5v2.5zM17.5 5H15V2.5h2.5V5zM8.75 5h2.5V2.5h-2.5V5z"
+            fill="currentColor"
+          />
+        </svg>
       </button>
-      {open ? (
-        <div className="fls-nav-icon__panel" role="menu">
-          <div className="fls-nav-icon__header">
-            <span className="fls-nav-icon__brand">彩灯工作室 · 文档</span>
-            <a
-              className="fls-nav-icon__repo"
-              href="https://github.com/FairyLightsStudio/FLS-Monorepo"
-              target="_blank"
-              rel="noreferrer"
-            >
-              GitHub ↗
-            </a>
-          </div>
-          <div className="fls-nav-icon__grid">
-            {products.map((product) => (
-              <ProductItem key={product.id} product={product} />
-            ))}
-          </div>
-        </div>
-      ) : null}
-    </div>
-  );
-};
+    </Popover>
+  </div>
+);

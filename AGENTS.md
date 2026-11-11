@@ -19,7 +19,7 @@
 - 前端项目统一用 pnpm（不再用 bun/npm/yarn）：`Docs/AboutUs`、`Docs/Products`、`TeraPanel/teraclient-web`、`PoWCAPTCHA/web-component` 的 `package.json` 都用 `packageManager: pnpm@12.19.0`。
 - `PoWCAPTCHA/web-component` 依赖 BSR 上的 `@buf/*` 包，因此该目录有 `.npmrc` 把 `@buf` scope 指到 `https://buf.build/gen/npm/v1/`（公开包，无需 token）。
 - `Docs/` 在 `fls-projects.toml` 里是单个项目；新增文档站不需要改 fls 清单。
-- `Docs/Products/shared/theme/`：所有产品文档站点共用的 Rspress 主题，导航栏九宫格「产品切换」入口就在这里；产品列表在 `shared/theme/nav-icon/nav-config.ts`，新增站点时给自己的 `rspress.config.ts` 设置同一个 `themeDir`。
+- `Docs/Products/shared/theme/`：所有产品文档站点共用的 Rspress 主题，导航栏九宫格「产品切换」入口就在这里（antd Popover 实现，移植自 Rstack 的 `@rstack-dev/doc-ui`，antd 依赖在 `Docs/Products/package.json`）；产品列表在 `shared/theme/nav-icon/nav-config.ts`，新增站点时给自己的 `rspress.config.ts` 设置同一个 `themeDir`。
 - 旧的 `TeraPanelDocsSite/` 已删除（内容迁移到 `Docs/Products/TeraPanel`），git 历史里可找回。
 
 ## 历史与清理
